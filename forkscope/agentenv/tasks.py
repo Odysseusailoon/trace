@@ -2,9 +2,10 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 
-DB = "/home/dev/forkscope/data/agentenv/chinook.sqlite"
+DB = os.environ.get("FORKSCOPE_DB", "/home/dev/forkscope/data/agentenv/chinook.sqlite")
 
 
 def q(sql: str):

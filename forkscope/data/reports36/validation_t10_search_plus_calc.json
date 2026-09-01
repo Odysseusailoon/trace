@@ -1,0 +1,1831 @@
+{
+ "task_id": "t10_search_plus_calc",
+ "n": 200,
+ "gold": 67.5,
+ "overall_correct": 0.97,
+ "clusters": [
+  {
+   "cluster": "search_first",
+   "n": 200,
+   "share": 1.0,
+   "correct_rate": 0.97,
+   "outcomes": {
+    "correct": 194,
+    "raw_number_19.3": 2,
+    "no_answer": 2,
+    "wrong_other": 2
+   }
+  }
+ ],
+ "mi_bits": 0.0,
+ "spread_big_clusters": 0.0,
+ "decision_locked": false,
+ "outcome_dist": {
+  "correct": 194,
+  "raw_number_19.3": 2,
+  "no_answer": 2,
+  "wrong_other": 2
+ },
+ "rows": [
+  {
+   "seed": 10000,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10001,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 as percentage of total global recorded music revenue ifpi",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10002,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10003,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10004,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10005,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10006,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10007,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10008,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10009,
+   "outcome": "raw_number_19.3",
+   "correct": false,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10010,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10011,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10012,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10013,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10014,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10015,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10016,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10017,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10018,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10019,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10020,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10021,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10022,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10023,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10024,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10025,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10026,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10027,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10028,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10029,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10030,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10031,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10032,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10033,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10034,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10035,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10036,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10037,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10038,
+   "outcome": "no_answer",
+   "correct": false,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10039,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10040,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10041,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10042,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10043,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10044,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10045,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10046,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10047,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10048,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10049,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10050,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10051,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10052,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10053,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10054,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10055,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10056,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10057,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10058,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as a percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10059,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10060,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10061,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10062,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10063,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10064,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10065,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue in 2023 as percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10066,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10067,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10068,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10069,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10070,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10071,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10072,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10073,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10074,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10075,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10076,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10077,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10078,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10079,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 as percentage of total global recorded music revenue",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10080,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10081,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10082,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10083,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023 ifpi",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10084,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue in 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10085,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10086,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10087,
+   "outcome": "raw_number_19.3",
+   "correct": false,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10088,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10089,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10090,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10091,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10092,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10093,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10094,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10095,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10096,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10097,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10098,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10099,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10100,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue share of total global recorded music revenue 2023 percentage",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10101,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10102,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10103,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10104,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10105,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10106,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10107,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10108,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 as percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10109,
+   "outcome": "no_answer",
+   "correct": false,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 8
+  },
+  {
+   "seed": 10110,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10111,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue in 2023 as percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10112,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10113,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10114,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 as percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10115,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10116,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10117,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10118,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10119,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10120,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10121,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10122,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023 ifpi",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10123,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10124,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10125,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10126,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10127,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10128,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10129,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10130,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10131,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10132,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10133,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10134,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10135,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10136,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023 ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10137,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10138,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10139,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 as percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10140,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10141,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10142,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10143,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10144,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10145,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10146,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10147,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10148,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10149,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10150,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10151,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10152,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10153,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10154,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10155,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10156,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10157,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10158,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10159,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10160,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10161,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10162,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10163,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10164,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10165,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10166,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10167,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10168,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10169,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10170,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10171,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10172,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10173,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue share of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10174,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10175,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023 ifpi",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10176,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10177,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10178,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10179,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10180,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10181,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10182,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10183,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10184,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10185,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10186,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10187,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10188,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10189,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10190,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10191,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10192,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue as percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10193,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10194,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10195,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10196,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue in 2023 as percentage of total global recorded music revenue ifpi report",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10197,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue percentage of total global recorded music revenue 2023",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10198,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10199,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "search_first",
+   "first_tool": "web_search",
+   "first_arg": "subscription streaming revenue 2023 percentage of total global recorded music revenue",
+   "n_rounds": 4
+  }
+ ]
+}
