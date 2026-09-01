@@ -1,0 +1,1847 @@
+{
+ "task_id": "t7_avg_track_len_min",
+ "n": 200,
+ "gold": 6.56,
+ "overall_correct": 0.235,
+ "clusters": [
+  {
+   "cluster": "sql:avg_ms_raw",
+   "n": 197,
+   "share": 0.985,
+   "correct_rate": 0.22842639593908629,
+   "outcomes": {
+    "wrong_unit_seconds": 150,
+    "correct": 45,
+    "wrong_other": 2
+   }
+  },
+  {
+   "cluster": "sql:avg_convert_in_sql",
+   "n": 2,
+   "share": 0.01,
+   "correct_rate": 1.0,
+   "outcomes": {
+    "correct": 2
+   }
+  },
+  {
+   "cluster": "sql:other",
+   "n": 1,
+   "share": 0.005,
+   "correct_rate": 0.0,
+   "outcomes": {
+    "wrong_unit_seconds": 1
+   }
+  }
+ ],
+ "mi_bits": 0.022996924697372384,
+ "spread_big_clusters": 0.0,
+ "decision_locked": false,
+ "outcome_dist": {
+  "wrong_unit_seconds": 151,
+  "correct": 47,
+  "wrong_other": 2
+ },
+ "rows": [
+  {
+   "seed": 10000,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000, 2) as average_length from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10001,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10002,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10003,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10004,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10005,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as average_length from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10006,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10007,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000/60, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10008,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagemilliseconds from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10009,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10010,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10011,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10012,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10013,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10014,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as average_length from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10015,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10016,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10017,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10018,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10019,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagemilliseconds from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10020,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10021,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10022,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10023,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10024,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10025,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10026,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10027,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10028,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10029,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10030,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10031,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10032,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10033,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10034,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10035,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000/60, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10036,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10037,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10038,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds / 1000.0) as averagetracklengthminutes from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10039,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10040,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10041,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10042,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10043,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000, 2) as averagetracklengthminutes from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10044,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10045,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10046,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10047,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10048,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10049,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10050,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10051,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklengthminutes from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10052,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10053,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagemilliseconds from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10054,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10055,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10056,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10057,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10058,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10059,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10060,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_convert_in_sql",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds) / 60000, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10061,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10062,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10063,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10064,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10065,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10066,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10067,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10068,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10069,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10070,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10071,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10072,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10073,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10074,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10075,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10076,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10077,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10078,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10079,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10080,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10081,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10082,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10083,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10084,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10085,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10086,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10087,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10088,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10089,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10090,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as average_length from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10091,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10092,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10093,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10094,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagemilliseconds from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10095,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10096,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10097,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10098,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10099,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as average_length from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10100,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10101,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10102,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10103,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10104,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10105,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10106,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10107,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10108,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10109,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10110,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10111,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10112,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10113,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10114,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10115,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10116,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10117,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10118,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10119,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10120,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10121,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10122,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10123,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10124,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10125,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10126,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10127,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10128,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10129,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10130,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10131,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10132,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10133,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10134,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10135,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10136,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10137,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10138,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10139,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10140,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10141,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10142,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10143,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10144,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10145,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10146,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10147,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10148,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10149,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10150,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000/60, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10151,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10152,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10153,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10154,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10155,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10156,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_convert_in_sql",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds) / 60000, 2) from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10157,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10158,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10159,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 6
+  },
+  {
+   "seed": 10160,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10161,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10162,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10163,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10164,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagemilliseconds from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10165,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10166,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10167,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10168,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10169,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10170,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10171,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10172,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10173,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagemilliseconds from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10174,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10175,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10176,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000/60, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10177,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10178,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10179,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10180,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10181,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10182,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10183,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10184,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10185,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10186,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10187,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10188,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000/60, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10189,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10190,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000/60, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10191,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10192,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10193,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10194,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10195,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10196,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(milliseconds)/1000.0, 2) as averagetracklength from track",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10197,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagelength from track",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10198,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10199,
+   "outcome": "wrong_unit_seconds",
+   "correct": false,
+   "cluster": "sql:avg_ms_raw",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(milliseconds) as averagetracklength from track",
+   "n_rounds": 5
+  }
+ ]
+}
