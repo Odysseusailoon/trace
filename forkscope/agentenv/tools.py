@@ -9,7 +9,8 @@ import json
 import re
 import sqlite3
 
-DB_PATH = "/home/dev/forkscope/data/agentenv/chinook.sqlite"
+import os
+DB_PATH = os.environ.get("FORKSCOPE_DB", "/home/dev/forkscope/data/agentenv/chinook.sqlite")
 
 SCHEMA_DESC = """Available tables:
 - Artist(ArtistId, Name)
