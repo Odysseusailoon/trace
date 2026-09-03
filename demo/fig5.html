@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forkscope — Measuring Where Agent Trajectories Fork</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ /* PALM categorical preset (lieflat-charts) */
+    --bg:#F0EFEB; --txt:#58402E; --mut:rgba(88,64,46,.60); --lab:rgba(88,64,46,.72);
+    --faint:rgba(88,64,46,.32); --grid:rgba(88,64,46,.16); --track:rgba(88,64,46,.12);
+    --green:#43593B; --olive:#ACAD79; --mid:#77835A; --amber:#D4A017; --wheat:#F2D17E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:Inter,sans-serif;line-height:1.58}
+  .wrap{max-width:1020px;margin:0 auto;padding:48px 28px 90px}
+  header h1{font-size:28px;font-weight:800;letter-spacing:-.02em}
+  header .by{font-size:11px;color:var(--mut);margin-top:6px;letter-spacing:.05em}
+  p.lede{font-size:13.5px;color:var(--txt);margin-top:16px;max-width:700px}
+  p.lede b{color:var(--green)}
+  section.card{margin-top:64px}
+  h2{font-size:19px;font-weight:700;letter-spacing:-.02em}
+  p.sub{font-size:11.5px;color:var(--mut);margin:6px 0 18px;max-width:720px}
+  p.body{font-size:12.5px;margin:14px 0 0;max-width:740px}
+  .src{font-size:9.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:14px}
+  svg text{font-family:Inter,sans-serif}
+  .legend{display:flex;gap:16px;font-size:10.5px;color:var(--lab);margin:6px 0;flex-wrap:wrap}
+  .legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border-radius:2px}
+  .stat{display:inline-block;margin-right:28px;margin-top:8px}
+  .stat b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--green)}
+  .stat.bad b{color:var(--amber)}
+  .stat span{display:block;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+</style>
+<style>section.card{display:none}#fig5{display:block}p.lede{display:none}header h1{font-size:20px}</style></head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Forkscope: Measuring Where Agent Trajectories Fork</h1>
+  <div class="by">YUXI ZHENG · SEP 2026 · WORKING NOTES · QWEN3-8B + SGLANG, DETERMINISTIC INFERENCE</div>
+  <p class="lede">An LLM agent's behavior is a <b>distribution over trajectories</b>. Any single run is one draw from it.
+  We built a replay instrument that measures, for any decision step, the counterfactual outcome distribution
+  o<sub>d</sub>: what would have happened had the dice landed differently. With it we find single tokens that lock
+  an episode's fate, benchmark questions where the model's <i>majority answer is wrong</i>, forks the model walks
+  into confidently (invisible to entropy monitoring), and a thinking budget that multiplies success 50×.
+  Every number below is measured, and the preregistered parts are marked. The whole study cost about $60 of GPU time.</p>
+</header>
+
+<!-- ════ FIG 1 : METHOD ════ -->
+<section class="card" id="fig1">
+  <h2>1 · How we sample: replay at decision boundaries</h2>
+  <p class="sub">Record one episode (T=1.0, tools really execute). At each decision boundary d, rewind to that exact
+  state and sample K=50 full counterfactual continuations — tools re-execute, outcomes are checked against executable
+  gold. The outcome histogram is o<sub>d</sub>; where it collapses is where fate locks.</p>
+  <svg id="svg1" viewBox="0 0 1000 250" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>continuation → correct</span>
+    <span><i style="background:var(--amber)"></i>continuation → trap</span>
+    <span><i style="background:var(--olive)"></i>other / no answer</span></div>
+  <p class="body">Replay looks quadratic (K × D full re-prefills). With RadixAttention prefix sharing, the trunk is prefilled once: we measured a 99.2% cache hit over a 6.5M-token replay workload, which makes replay 67–206× cheaper than naive re-prefill. Reruns are bit-identical from derived seeds, so every number on this page can be regenerated.</p>
+  <p class="src">INSTRUMENT: SGLANG /GENERATE + CHAT-TEMPLATE-FAITHFUL REPLAY · K=50 · EXECUTABLE GOLD · TOTAL STUDY COST ≈ $60 GPU</p>
+</section>
+
+<!-- ════ FIG 2 : MCQ WAVERING ════ -->
+<section class="card" id="fig2">
+  <h2>2 · Token level: wavering is not forking</h2>
+  <p class="sub">Chain-of-thought MCQ, outcome distribution over answer options as generation proceeds.
+  This case (virology, 8B) swings between options B and C at 11 measured positions across 600 tokens and never locks. A method that calls every wobble a fork would be wrong here, and the changepoint smoother correctly refuses to. Decision-type forks turned up in about 1% of our 201 MCQ probes. The fork structure worth studying lives in the agent domain.</p>
+  <svg id="svg2" viewBox="0 0 1000 300" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>P(option C)</span>
+    <span><i style="background:var(--mid)"></i>P(option B)</span></div>
+  <p class="src">CASE VIROLOGY[5] · 11 FORК CANDIDATES, TVD 0.12–0.30, NONE LOCK · S=20/POSITION · DRIFT, NOT DECISION</p>
+</section>
+
+<!-- ════ FIG 3 : THE DIE TOKEN ════ -->
+<section class="card" id="fig3">
+  <h2>3 · Agent level: fate is sealed in four tokens</h2>
+  <p class="sub">Task: "average albums per artist" over a real SQLite DB. The tool schema primes an integer-division
+  trap (returns 1.000, raises no error, 0% self-repair). Inside the first SQL-writing turn we truncate the prefix at
+  every token, resample 20 continuations each, and classify the emitted SQL. Amber = trap cluster, green = correct
+  cluster. Dashed line = token entropy of the base path.</p>
+  <svg id="svg3" viewBox="0 0 1000 330" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--amber)"></i>intdiv (trap → 0% accuracy)</span>
+    <span><i style="background:var(--green)"></i>AVG+GROUP BY (→ 100%)</span>
+    <span><i style="background:var(--olive)"></i>other</span>
+    <span><i style="background:none;border-top:2px dashed var(--txt);width:18px;height:1px;vertical-align:3px"></i>entropy (bits)</span></div>
+  <p class="body">The turn has two entropy peaks and only one is a fork. At t=17, writing &nbsp;COUNT (H=1.31, the turn's maximum), the outcome distribution starts collapsing, and four tokens later it is welded shut. At t=28, naming an alias &nbsp;Average… (H=1.02), the distribution does not move at all. Hesitation and fate are different things, and only measurement tells them apart.</p>
+  <p class="src">T4 ZOOM 2026-09-01 · ANCHOR = REAL EPISODE (SQL BYTE-IDENTICAL TO RECORD) · S=20/POSITION · TOP-10 TRUNCATED ENTROPY</p>
+</section>
+
+<!-- ════ FIG 4 : IN THE WILD ════ -->
+<section class="card" id="fig4">
+  <h2>4 · In the wild: BIRD, where the model’s majority is wrong</h2>
+  <p class="sub">Same instrument, external benchmark (BIRD mini-dev, 10 questions selected by a frozen two-stage rule:
+  text criteria, then an uncertainty screen keeping questions whose 10-episode answer mode is 4–6 — dispersion,
+  not correctness). 200 episodes per question. Non-thinking Qwen3-8B sits near the floor, and the floor has structure.</p>
+  <svg id="svg4" viewBox="0 0 1000 330" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>correct</span>
+    <span><i style="background:var(--amber)"></i>wrong</span>
+    <span><i style="background:var(--olive)"></i>no answer (mostly intent-stall)</span></div>
+  <p class="body">Three findings hide in the floor. First, intent-stall: in the schema-heavy financial DB, up to 56% of episodes hit a column error, write "Let's check the available tables…", then voluntarily stop with budget and turns to spare. Announcing an action and executing it are separable events. Second, same opening, different fates: on b218 the most common correct first SQL is byte-identical to the most common wrong one. The fork sits mid-game, in how results get read, and where a task forks is a property of that task. Third, thinking: with the same weights and seeds, enabling the thinking budget takes b39 from 1/200 correct to 51/200.</p>
+  <div>
+    <span class="stat bad"><b>9/10</b><span>questions with fail ≥ 94% (non-thinking)</span></span>
+    <span class="stat"><b>0.5% → 25.5%</b><span>b39 correct, thinking on (same weights)</span></span>
+    <span class="stat bad"><b>56%</b><span>peak intent-stall rate (b137)</span></span>
+  </div>
+  <p class="src">BIRD MINI-DEV · PREREGISTERED SELECTION + AMENDMENTS (DATED) · N=200/QUESTION/ARM · THINKING ARM IN PROGRESS</p>
+</section>
+
+<!-- ════ FIG 5 : ENTROPY GATE ════ -->
+<section class="card" id="fig5">
+  <h2>5 · Can entropy find the forks? Mostly — and the misses are the story</h2>
+  <p class="sub">Cheap idea: only measure where the model hesitates. We tested it on the Forking Fast public release
+  (Llama-3-8B, 100 questions, S=200 ground-truth o<sub>t</sub> grids): gate positions by 1−p<sub>base</sub>, check
+  recall of PELT-detected forks. Amber = entropy-gated recall, olive = random-gate null.</p>
+  <svg id="svg5" viewBox="0 0 1000 300" width="100%"></svg>
+  <p class="body">Gating works: about 2× enrichment over random, and recall rises with fork size (0.87 at top-20% for large forks, 0.95 at top-30%). A two-stage instrument, entropy screen first and replay only at gated positions, cuts measurement cost 3–5×. But 13–29% of forks happen where the model is confident. No entropy-based monitor can see them, and the agent data shows why that matters: after the die lands, the trap path in §3 runs at near-zero entropy, confidently doomed.</p>
+  <p class="src">EG-0A QUICK PASS · PELT PEN=32 · 299 FORKS / 100 ROWS · PROXY = 1−P_BASE · NULL = PERMUTATION</p>
+</section>
+
+<!-- ════ FIG 6 : EVAL ════ -->
+<section class="card" id="fig6">
+  <h2>6 · Fork distributions as a fairer eval</h2>
+  <p class="sub">Single-sample evals score one draw from a random variable. Two measured cases show how that lies. On the schema-trap task the modal answer cluster is wrong (46% trap, 18% correct), so greedy and majority-vote evals reward the error. On BIRD b226 the model is a genuine coin flip (o₀ = 0.45).</p>
+  <svg id="svg6" viewBox="0 0 1000 280" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>correct mass</span>
+    <span><i style="background:var(--amber)"></i>modal wrong cluster</span>
+    <span><i style="background:var(--olive)"></i>other outcomes</span></div>
+  <p class="body">The distributional alternative is a brittleness profile: success probability o₀ with a confidence interval, the step where fate locks, the self-repair rate, and the coverage of correct strategies. It costs more samples than pass@1, but the same rollouts also provide the attribution in sections 1–4, and prefix caching pays most of the bill. On tasks where the mode is wrong, any eval that trusts the mode rewards the trap. Self-consistency included.</p>
+  <p class="src">T4: 200 EPISODES × 2 COLLECTIONS (45%/46% REPLICATED) · B226: N=200 · WILSON CIS IN REPO</p>
+</section>
+
+<p class="src" style="margin-top:70px">FORKSCOPE · COUNTERFACTUAL FORK ANALYSIS FOR LLM AGENTS · DATA & PREREGISTRATIONS IN REPO · PAGE IS A SINGLE OFFLINE-CAPABLE FILE (FONTS EXCEPTED)</p>
+</div>
+
+<script>
+const P={green:'#43593B',mid:'#77835A',olive:'#ACAD79',amber:'#D4A017',wheat:'#F2D17E',
+  txt:'#58402E',mut:'rgba(88,64,46,.6)',faint:'rgba(88,64,46,.32)',grid:'rgba(88,64,46,.16)'};
+const S=(t,a={})=>{const e=document.createElementNS('http://www.w3.org/2000/svg',t);
+  for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;};
+const txt=(svg,x,y,s,size=9.5,w=600,fill=P.mut,anchor='start')=>{
+  const t=S('text',{x,y,'font-size':size,'font-weight':w,fill,'text-anchor':anchor});t.textContent=s;svg.appendChild(t);return t;};
+
+/* ── FIG1: method diagram ── */
+(function(){
+  const svg=document.getElementById('svg1');
+  // recorded trajectory
+  const steps=['state s₀','tool call 1','state s₁','tool call 2','state s₂','final answer'];
+  steps.forEach((s,i)=>{
+    const x=20+i*128;
+    svg.appendChild(S('rect',{x,y:40,width:110,height:30,rx:3,fill:'none',
+      stroke:i%2?P.mid:P.txt,'stroke-width':1.3,'stroke-dasharray':i%2?'3 3':'none'}));
+    txt(svg,x+55,59,s,9.5,700,P.txt,'middle');
+    if(i<5)svg.appendChild(S('line',{x1:x+112,y1:55,x2:x+126,y2:55,stroke:P.mut,'stroke-width':1.2}));
+  });
+  txt(svg,20,28,'ONE RECORDED EPISODE (tools really execute)',8.5,600,P.mut);
+  // fan-out at boundary d=1 (under state s1)
+  const bx=20+2*128+55, by=72;
+  svg.appendChild(S('line',{x1:bx,y1:by,x2:bx,y2:100,stroke:P.txt,'stroke-width':1.6}));
+  txt(svg,bx+8,96,'rewind to this exact state → resample K=50 full continuations',9.5,700,P.txt);
+  const outc=[...Array(24)].map((_,i)=> i<6?P.green:(i<19?P.amber:P.olive));
+  outc.forEach((c,i)=>{
+    const x2=bx-160+i*14, y2=150+((i*37)%3)*9;
+    svg.appendChild(S('path',{d:`M ${bx} 100 C ${bx} 125, ${x2} ${y2-16}, ${x2} ${y2}`,
+      fill:'none',stroke:c,'stroke-width':1.4,opacity:.85}));
+    svg.appendChild(S('circle',{cx:x2,cy:y2,r:3.4,fill:c}));
+  });
+  // o_d histogram
+  const hx=760;
+  txt(svg,hx,120,'o_d  (outcome distribution at step d)',9.5,700,P.txt);
+  [['correct',.25,P.green],['trap',.54,P.amber],['other',.21,P.olive]].forEach(([n,v,c],i)=>{
+    svg.appendChild(S('rect',{x:hx+i*74,y:200-v*130,width:52,height:v*130,fill:c}));
+    txt(svg,hx+26+i*74,196-v*130,(v*100).toFixed(0)+'%',10.5,800,P.txt,'middle');
+    txt(svg,hx+26+i*74,216,n,9,600,P.mut,'middle');
+  });
+  txt(svg,20,236,'Where o_d collapses across d — that is the step where fate locks. Executable gold verifies every endpoint.',9.5,600,P.mut);
+})();
+
+/* ── FIG2: virology wavering (real fork-candidate data) ── */
+(function(){
+  const V=[[24,.55,.45],[36,.431,.462],[60,.4,.5],[72,.585,.295],[108,.45,.55],[120,.6,.4],
+    [168,.65,.35],[180,.4,.578],[216,.35,.65],[228,.65,.35],[276,.477,.473],[288,.344,.637],
+    [312,.384,.616],[324,.55,.45],[384,.293,.623],[396,.506,.494],[420,.332,.668],[432,.605,.395],
+    [504,.625,.375],[516,.2,.8],[576,.55,.4],[588,.4,.6]];
+  const svg=document.getElementById('svg2');
+  const x0=52,W=910,y0=30,H=200,yb=y0+H,tmax=600;
+  const X=t=>x0+t/tmax*W, Y=v=>yb-v*H;
+  [0,.25,.5,.75,1].forEach(v=>{svg.appendChild(S('line',{x1:x0,y1:Y(v),x2:x0+W,y2:Y(v),stroke:P.grid,'stroke-width':.7}));
+    txt(svg,x0-8,Y(v)+3,v.toFixed(2),9,600,P.mut,'end');});
+  const line=(idx,col)=>{let d='';V.forEach(p=>{d+=(d?' L':'M')+X(p[0])+','+Y(p[idx]);});
+    svg.appendChild(S('path',{d,fill:'none',stroke:col,'stroke-width':2.6}));};
+  line(2,P.green); line(1,P.mid);
+  V.forEach(p=>{svg.appendChild(S('circle',{cx:X(p[0]),cy:Y(p[2]),r:2.6,fill:P.green}));
+    svg.appendChild(S('circle',{cx:X(p[0]),cy:Y(p[1]),r:2.6,fill:P.mid}));});
+  svg.appendChild(S('line',{x1:x0,y1:Y(.5),x2:x0+W,y2:Y(.5),stroke:P.faint,'stroke-width':1,'stroke-dasharray':'6 5'}));
+  txt(svg,x0+W,Y(.5)-6,'coin-flip line',8.5,600,P.faint,'end');
+  txt(svg,X(516),Y(.8)-10,'swings to .80 …',9,700,P.txt,'middle');
+  txt(svg,X(588),Y(.6)-10,'… and back',9,700,P.txt,'middle');
+  [0,100,200,300,400,500,600].forEach(t=>txt(svg,X(t),yb+16,t,9,600,P.mut,'middle'));
+  txt(svg,x0+W/2,yb+34,'generation position (tokens into chain-of-thought)',9.5,600,P.mut,'middle');
+  txt(svg,x0,y0-8,'P(final answer = option) · 11 candidate forks, TVD 0.12–0.30 — none lock. This is drift, and the instrument says so.',9.5,600,P.mut);
+})();
+
+/* ── FIG3: t4 zoom (real) ── */
+(function(){
+  const rows=[{t:0,o:[.5,.4,.1]},{t:4,o:[.45,.4,.15]},{t:8,o:[.5,.2,.3]},{t:12,o:[.45,.3,.25]},
+    {t:14,o:[.35,.25,.4]},{t:15,o:[.45,.35,.2]},{t:16,o:[.45,.3,.25]},{t:17,o:[.5,.25,.25]},
+    {t:18,o:[.7,0,.3]},{t:19,o:[.8,0,.2]},{t:20,o:[1,0,0]},{t:24,o:[1,0,0]},{t:28,o:[1,0,0]},
+    {t:32,o:[1,0,0]},{t:38,o:[1,0,0]}]; // [intdiv, avg, other]
+  const Harr={0:.01,17:1.31,18:.91,19:.43,20:.16,25:.39,28:1.02,35:.53};
+  const toks={16:'SELECT',17:'␣COUNT',18:'(*)',19:'␣/',20:'␣COUNT',24:'␣Artist',28:'␣Average'};
+  const svg=document.getElementById('svg3');
+  const x0=52,W=910,y0=26,H=210,yb=y0+H,tmax=38;
+  const X=t=>x0+t/tmax*W, Y=v=>yb-v*H;
+  const cols=[P.amber,P.green,P.olive];
+  let base=rows.map(_=>0);
+  [0,1,2].forEach(k=>{
+    let top=[],bot=[];
+    rows.forEach((r,i)=>{top.push([X(r.t),Y(base[i]+r.o[k])]);bot.push([X(r.t),Y(base[i])]);base[i]+=r.o[k];});
+    const d='M'+top.map(p=>p.join(',')).join(' L')+' L'+bot.reverse().map(p=>p.join(',')).join(' L')+' Z';
+    svg.appendChild(S('path',{d,fill:cols[k],'fill-opacity':k===0?.92:.85}));
+  });
+  let dh='';
+  for(let t=0;t<=tmax;t++){const h=Harr[t]||0; dh+=(dh?' L':'M')+X(t)+','+(yb-h/1.4*H);}
+  svg.appendChild(S('path',{d:dh,fill:'none',stroke:P.txt,'stroke-width':1.7,'stroke-dasharray':'5 4'}));
+  [0,.5,1].forEach(v=>txt(svg,x0-8,Y(v)+3,v,9,600,P.mut,'end'));
+  Object.entries(toks).forEach(([t,tk])=>{txt(svg,X(+t),yb+15,tk,8.8,600,P.mut,'middle');
+    txt(svg,X(+t),yb+27,'t='+t,7.6,500,P.faint,'middle');});
+  const ann=(t,y,s,bold)=>{svg.appendChild(S('line',{x1:X(t),y1:y+5,x2:X(t),y2:yb,stroke:P.txt,'stroke-width':1,'stroke-dasharray':'2 3'}));
+    txt(svg,X(t)+5,y,s,9.5,bold?800:600,P.txt);};
+  ann(17,44,'the die: H=1.31, collapse begins',true);
+  ann(28,70,'naming peak: H=1.02, fate already sealed');
+  ann(20,96,'t=20: locked at 100% trap');
+})();
+
+/* ── FIG4: BIRD stacked bars + thinking pair ── */
+(function(){
+  const D=[['b39',1,199,0],['b89',1,168,31],['b93',0,198,2],['b116',7,123,70],['b137',3,86,111],
+    ['b192',0,105,95],['b197',3,194,3],['b218',13,179,8],['b219',0,143,57],['b226',90,100,10]];
+  const TH=[['b39 nt',1,199,0],['b39 think',51,149,0]];
+  const svg=document.getElementById('svg4');
+  const x0=40,y0=30,H=190,yb=y0+H,bw=52,gap=24;
+  D.forEach((q,i)=>{
+    const x=x0+i*(bw+gap); let acc=0;
+    [[q[1],P.green],[q[2],P.amber],[q[3],P.olive]].forEach(([v,c])=>{
+      const h=v/200*H;
+      svg.appendChild(S('rect',{x,y:yb-acc-h,width:bw,height:h,fill:c})); acc+=h;});
+    txt(svg,x+bw/2,yb+14,q[0],9.5,600,P.mut,'middle');
+    const fr=1-(q[1])/200;
+    txt(svg,x+bw/2,y0-8,(fr*100).toFixed(0)+'%',9.5,800,fr>0.9?P.txt:P.green,'middle');
+  });
+  txt(svg,x0,y0-22,'FAIL RATE (non-thinking, n=200) — only b226 lands in the informative band [20%,90%]',8.5,600,P.mut);
+  svg.appendChild(S('rect',{x:x0+9*(bw+gap)-8,y:y0-2,width:bw+16,height:H+22,rx:4,fill:'none',stroke:P.green,'stroke-width':1.6,'stroke-dasharray':'5 4'}));
+  // thinking pair
+  const px=x0+10*(bw+gap)+40;
+  txt(svg,px,y0-8,'THINKING SWITCH (same weights)',8.5,700,P.txt);
+  TH.forEach((q,i)=>{
+    const x=px+i*(bw+gap); let acc=0;
+    [[q[1],P.green],[q[2],P.amber],[q[3],P.olive]].forEach(([v,c])=>{
+      const h=v/200*H;
+      svg.appendChild(S('rect',{x,y:yb-acc-h,width:bw,height:h,fill:c}));acc+=h;});
+    txt(svg,x+bw/2,yb+14,q[0],9,600,P.mut,'middle');
+    txt(svg,x+bw/2,y0+8,q[1]+'/200 ✓',9.5,800,i?P.green:P.txt,'middle');
+  });
+  txt(svg,x0,yb+40,'no-answer (olive) concentrates in the schema-heavy financial DB: the intent-stall failure family — the model announces a check it never performs.',9.5,600,P.mut);
+})();
+
+/* ── FIG5: EG-0a recall ── */
+(function(){
+  const K=[5,10,20,30,50], R=[.318,.538,.783,.880,.977], N=[.155,.289,.512,.677,.886];
+  const svg=document.getElementById('svg5');
+  const x0=60,W=880,y0=24,H=200,yb=y0+H;
+  const X=k=>x0+(k-5)/45*W, Y=v=>yb-v*H;
+  [0,.25,.5,.75,1].forEach(v=>{svg.appendChild(S('line',{x1:x0,y1:Y(v),x2:x0+W,y2:Y(v),stroke:P.grid,'stroke-width':.7}));
+    txt(svg,x0-10,Y(v)+3,(v*100)+'%',9,600,P.mut,'end');});
+  const line=(vals,col,w)=>{let d='';K.forEach((k,i)=>d+=(d?' L':'M')+X(k)+','+Y(vals[i]));
+    svg.appendChild(S('path',{d,fill:'none',stroke:col,'stroke-width':w}));};
+  line(N,P.olive,2); line(R,P.amber,2.8);
+  K.forEach((k,i)=>{svg.appendChild(S('circle',{cx:X(k),cy:Y(R[i]),r:3.6,fill:P.amber}));
+    txt(svg,X(k),Y(R[i])-10,(R[i]*100).toFixed(0)+'%',10.5,800,P.txt,'middle');
+    txt(svg,X(k),yb+16,'top-'+k+'%',9.5,600,P.mut,'middle');});
+  txt(svg,X(30)+10,Y(R[3])+22,'entropy-gated recall',9.5,700,P.amber);
+  txt(svg,X(30)+10,Y(N[3])+24,'random-gate null',9.5,600,P.olive);
+  txt(svg,X(20),Y(1.0)-2,'the gap that stays: 13–29% of forks are CONFIDENT — no hesitation, no warning, fully fateful',9.5,700,P.txt);
+})();
+
+/* ── FIG6: anti-mode eval ── */
+(function(){
+  const svg=document.getElementById('svg6');
+  const cases=[
+    {name:'t4 "albums per artist" (schema trap)',parts:[[.18,P.green,'correct 18%'],[.46,P.amber,'modal cluster: TRAP 46%'],[.36,P.olive,'other 36%']],
+     note:'mode is wrong → greedy & majority-vote reward the trap'},
+    {name:'BIRD b226 (n=200)',parts:[[.45,P.green,'correct 45%'],[.50,P.amber,'wrong 50%'],[.05,P.olive,'5%']],
+     note:'a genuine coin flip — pass@1 is a lottery ticket'}];
+  cases.forEach((c,ci)=>{
+    const y=50+ci*105, x0=40, W=700;
+    txt(svg,x0,y-12,c.name,10.5,700,P.txt);
+    let acc=0;
+    c.parts.forEach(([v,col,lab])=>{
+      svg.appendChild(S('rect',{x:x0+acc*W,y,width:v*W,height:40,fill:col}));
+      if(v>0.08) txt(svg,x0+(acc+v/2)*W,y+25,lab,9.5,700,'#F0EFEB','middle');
+      acc+=v;});
+    txt(svg,x0+W+14,y+25,c.note,9.5,600,P.mut);
+  });
+  txt(svg,40,265,'Brittleness profile = { o₀ ± CI · lock-in step · self-repair rate · correct-strategy coverage } — an eval that ships with its own root-cause analysis.',10,700,P.txt);
+})();
+</script>
+</body>
+</html>

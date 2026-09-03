@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forkscope — Measuring Where Agent Trajectories Fork</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{ /* PALM categorical preset (lieflat-charts) */
+    --bg:#F0EFEB; --txt:#58402E; --mut:rgba(88,64,46,.60); --lab:rgba(88,64,46,.72);
+    --faint:rgba(88,64,46,.32); --grid:rgba(88,64,46,.16); --track:rgba(88,64,46,.12);
+    --green:#43593B; --olive:#ACAD79; --mid:#77835A; --amber:#D4A017; --wheat:#F2D17E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:Inter,sans-serif;line-height:1.58}
+  .wrap{max-width:1020px;margin:0 auto;padding:48px 28px 90px}
+  header h1{font-size:28px;font-weight:800;letter-spacing:-.02em}
+  header .by{font-size:11px;color:var(--mut);margin-top:6px;letter-spacing:.05em}
+  p.lede{font-size:13.5px;color:var(--txt);margin-top:16px;max-width:700px}
+  p.lede b{color:var(--green)}
+  section.card{margin-top:64px}
+  h2{font-size:19px;font-weight:700;letter-spacing:-.02em}
+  p.sub{font-size:11.5px;color:var(--mut);margin:6px 0 18px;max-width:720px}
+  p.body{font-size:12.5px;margin:14px 0 0;max-width:740px}
+  .src{font-size:9.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:14px}
+  svg text{font-family:Inter,sans-serif}
+  .legend{display:flex;gap:16px;font-size:10.5px;color:var(--lab);margin:6px 0;flex-wrap:wrap}
+  .legend i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px;border-radius:2px}
+  .stat{display:inline-block;margin-right:28px;margin-top:8px}
+  .stat b{font-size:22px;font-weight:800;letter-spacing:-.02em;color:var(--green)}
+  .stat.bad b{color:var(--amber)}
+  .stat span{display:block;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+  .controls{display:flex;gap:26px;flex-wrap:wrap;margin:14px 0 8px}
+  .ctl{min-width:150px}
+  .ctl label{display:block;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+  .ctl output{font-weight:800;font-size:12px;color:var(--txt);margin-left:6px}
+  input[type=range]{width:150px;accent-color:var(--green)}
+  button{background:var(--green);color:var(--bg);border:0;font:600 11px Inter;letter-spacing:.06em;text-transform:uppercase;padding:8px 16px;cursor:pointer;margin-top:10px}
+  button:hover{background:var(--mid)}
+  p.note{font-size:10.5px;color:var(--mut);margin-top:10px;max-width:740px}
+  .tbl{width:100%;border-collapse:collapse;margin:16px 0 4px;font-size:11.5px}
+  .tbl th,.tbl td{border:1px solid var(--grid);padding:6px 9px;text-align:left;vertical-align:top}
+  .tbl th{font-weight:700;color:var(--lab)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Forkscope：测量 agent 轨迹在哪里分叉</h1>
+  <div class="by">YUXI ZHENG · 2026-09 · 工作笔记 · QWEN3-8B &amp; QWEN3.6-35B-A3B · SGLANG 确定性推理</div>
+  <p class="lede">一个 LLM agent 的行为是一个<b>轨迹分布</b>，任何单次运行只是从中抽的一签。我们造了一台重放仪器：
+  对任意决策步测量反事实结局分布 o<sub>d</sub>——如果当时骰子落在别处，会发生什么。用它我们找到了锁死整个 episode
+  命运的单个 token、多数答案是错的 benchmark 题、模型自信走进的分叉（熵监控看不见它们），以及把成功率放大 50 倍的
+  thinking 开关。下面每个数字都是实测的，预注册的部分有标注。H100 部分成本约 $60，35B 复制跑在一台 DGX Spark 上。</p>
+</header>
+
+<!-- ═══════════ ① ARCHITECTURE ═══════════ -->
+<section class="card" id="arch">
+  <h2>0 · Transformer 一页图（以 Qwen3-8B 为例）——看 token 流动</h2>
+  <p class="sub">自回归：每一步把整段上文压进一次前向，输出「下一个 token」在 151,936 个词上的打分（logits），
+  采样出的词拼回上文，进入下一步。下面的动画正在逐 token 生成 t4 任务里那条著名的陷阱 SQL——
+  注意写到 <b>␣COUNT</b> 的那一步。</p>
+  <svg id="archsvg" viewBox="0 0 1000 360" width="100%"></svg>
+  <p class="note" id="archCap" style="min-height:2.6em"></p>
+  <p class="src">QWEN3-8B · 36 LAYERS · HIDDEN 4096 · GQA 32Q/8KV · VOCAB 151,936 · ROPE + RMSNORM + SWIGLU</p>
+</section>
+
+
+<!-- ════ FIG A : LOGITS PLAYGROUND ════ -->
+<section class="card" id="figA">
+  <h2>1 · Logits 怎么变成一个词：温度与截断</h2>
+  <p class="sub">场景取自我们实测的分叉 token：agent 刚写完 <b>SELECT</b>，下一个词决定整个 episode——
+  <b>&nbsp;COUNT</b> 通向整数除法陷阱（下游 0% 正确），<b>&nbsp;AVG</b> 通向正确聚合（100%）。一次前向给每个候选打分；
+  温度与截断规则把这些打分重塑成骰子真正落下的分布。拖动滑杆。</p>
+  <div class="controls">
+    <div class="ctl"><label>Temperature<output id="ovT">1.00</output></label>
+      <input type="range" id="inT" min="0.05" max="2" step="0.05" value="1"></div>
+    <div class="ctl"><label>Top-k<output id="ovK">off</output></label>
+      <input type="range" id="inK" min="0" max="12" step="1" value="0"></div>
+    <div class="ctl"><label>Top-p<output id="ovP">1.00</output></label>
+      <input type="range" id="inP" min="0.1" max="1" step="0.02" value="1"></div>
+    <div class="ctl"><label>Min-p<output id="ovM">0.00</output></label>
+      <input type="range" id="inM" min="0" max="0.3" step="0.01" value="0"></div>
+  </div>
+  <svg id="logitsvg" viewBox="0 0 1000 300" width="100%"></svg>
+  <div>
+    <span class="stat"><b id="stH">—</b><span>熵（bits）</span></span>
+    <span class="stat"><b id="stPB">—</b><span>1 − p<sub>top</sub>（犹豫度）</span></span>
+    <span class="stat"><b id="stCut">—</b><span>被截断的概率质量</span></span>
+    <span class="stat bad"><b id="stFate">—</b><span>P(走向陷阱 · COUNT 系)</span></span>
+  </div>
+  <button id="btnSample">采样 200 次</button>
+  <p class="note" id="sampleOut"></p>
+  <p class="note">T→0 就是 greedy：分布折叠成一个点。此处仍有 25% 质量流向正确簇（§5），在 greedy 视角下完全不可见——
+  这就是 pass@1-greedy 评测对分布性失败失明的原因。</p>
+  <p class="src">教学示意 · TOKEN 概率为构造值，簇结构参照 T4 ZOOM 实测（T=17 处：COUNT 系 0.50 / AVG 系 0.25 / 其他 0.25）</p>
+</section>
+
+<!-- ════ FIG B : O_T DEFINITION ════ -->
+<section class="card" id="figB">
+  <h2>2 · 我们测什么：结局分布 o<sub>t</sub></h2>
+  <p class="sub">"这个 token 重不重要？"不是可测的问题。可测的是：在位置 t，给定已生成的前缀，最终答案会落在哪里——
+  correct、某个具名错误簇、还是 no answer？这个条件分布就是 o<sub>t</sub>。放到整条生成上是一个 T×C 矩阵：
+  T 个位置，每处一个 C 维分布，每个终点都由执行判定。</p>
+  <svg id="otsvg" viewBox="0 0 1000 270" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>correct 上的质量</span>
+    <span><i style="background:var(--amber)"></i>陷阱簇上的质量</span>
+    <span><i style="background:var(--olive)"></i>其他结局</span></div>
+  <p class="body">这个定义把两个形容词变成两种形状。决策分叉是阶跃：o<sub>t</sub> 先是混合，然后一步收拢成点并停在那里。
+  漂移是移动但从不锁定。而 o<sub>0</sub>——写下任何 token 之前的分布——就是这道题自身的成功概率，
+  单样本评测悄悄用一次抽签顶替的正是它（§8）。</p>
+  <p class="src">O_T = P(最终结局簇 | 前缀 ≤ T) · 本图为示意 · 实测样例：§4（漂移）、§5（分叉）</p>
+</section>
+
+<!-- ════ FIG 1 : METHOD ════ -->
+<section class="card" id="fig1">
+  <h2>3 · 怎么采样：在决策边界重放</h2>
+  <p class="sub">录一条 episode（T=1.0，工具真执行）。在每个决策边界 d 回卷到那个精确状态，重采 K=50 条完整的反事实续写——
+  工具重新执行，结局对可执行 gold 判定。结局直方图就是 o<sub>d</sub>；它在哪里坍缩，命运就在哪里锁死。</p>
+  <svg id="svg1" viewBox="0 0 1000 250" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>续写 → 正确</span>
+    <span><i style="background:var(--amber)"></i>续写 → 陷阱</span>
+    <span><i style="background:var(--olive)"></i>其他 / 未作答</span></div>
+  <p class="body">重放看起来是平方级开销（K × D 次完整 prefill）。有 RadixAttention 前缀共享，主干只 prefill 一次：
+  在 650 万 token 的重放负载上实测 99.2% 缓存命中，重放比朴素重算便宜 67–206 倍。seed 派生使复跑 bit 级一致，
+  本页每个数字都能重新生成。</p>
+  <p class="body">扇形图藏着两个细节。剪点重掷不排除已录制的 token——原路完全可能被再次采到，所以 o<sub>d</sub> 是无偏的
+  "从这里重来"分布，录制运行只是其中一次抽签。剪断也不是改写：我们从不强迫另一个 token，只是选择从哪里开始不再信任记录。
+  下图：同一条轨迹，剪在分叉前与分叉后——剪点落在哪里，决定质量是否还流向两边。</p>
+  <svg id="cutsvg" viewBox="0 0 1000 310" width="100%"></svg>
+  <table class="tbl">
+    <thead><tr><th></th><th>token 层</th><th>决策步层（agent）</th></tr></thead>
+    <tbody>
+    <tr><td>剪点怎么定</td><td>网格铺满整轮：粗扫 stride 4 → o<sub>t</sub> 在动的段细扫 stride 1 → 变点统计</td><td>动作边界 d=0,1,…——每次工具调用剪一刀，不铺 token 网格</td></tr>
+    <tr><td>一条续写</td><td>纯文本采到 EOS，不碰环境</td><td>完整 episode：写 SQL → 真执行 → 读结果 → … → final</td></tr>
+    <tr><td>结局怎么判</td><td>正则聚 SQL 写法簇</td><td>可执行 gold，数值 1% 容差，另按首动作聚簇</td></tr>
+    <tr><td>规模</td><td>S=20 × 约 40 个剪点</td><td>K=50 × 2–8 个边界 · 实测 98.5% 前缀缓存命中</td></tr>
+    <tr><td>测出来能修什么</td><td>无——token 不是干预单元</td><td>tool description / prompt：RSI 补丁改的正是它</td></tr>
+    </tbody>
+  </table>
+  <p class="src">仪器：SGLANG /GENERATE + 忠实 CHAT 模板重放 · K=50 · 可执行 GOLD · 剪点网格：粗 4 → 细 1 → PELT · 全研究 GPU 成本约 $60</p>
+</section>
+
+<!-- ════ FIG 2 : MCQ WAVERING ════ -->
+<section class="card" id="fig2">
+  <h2>4 · token 层：犹豫不是分叉</h2>
+  <p class="sub">带思维链的 MCQ，生成过程中答案选项上的结局分布。这个 case（virology，8B）在 600 个 token 里
+  于 B、C 两个选项之间摆动 11 处，从不锁定。把每次摆动都叫分叉的方法在这里会全错，变点平滑器正确地全部拒绝。
+  决策型分叉在 201 道 MCQ 探针里只出现约 1%——值得研究的分叉结构住在 agent 域。</p>
+  <svg id="svg2" viewBox="0 0 1000 300" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>P(选项 C)</span>
+    <span><i style="background:var(--mid)"></i>P(选项 B)</span></div>
+  <p class="src">CASE VIROLOGY[5] · 11 个分叉候选，TVD 0.12–0.30，全部不锁定 · S=20/位置 · 漂移，非决策</p>
+</section>
+
+<!-- ════ FIG 3 : THE DIE TOKEN ════ -->
+<section class="card" id="fig3">
+  <h2>5 · agent 层：命运在四个 token 内焊死</h2>
+  <p class="sub">任务："平均每位艺术家几张专辑"，对真 SQLite 库执行。工具 schema prime 出整数除法陷阱
+  （返回 1.000，不报错，0% 自愈）。在第一条 SQL 轮内逐 token 截断前缀、每处重采 20 条续写、给产出的 SQL 聚簇。
+  琥珀 = 陷阱簇，绿 = 正确簇，虚线 = 基线路径的 token 熵。</p>
+  <svg id="svg3" viewBox="0 0 1000 330" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--amber)"></i>intdiv（陷阱 → 0% 正确）</span>
+    <span><i style="background:var(--green)"></i>AVG+GROUP BY（→ 100%）</span>
+    <span><i style="background:var(--olive)"></i>其他</span>
+    <span><i style="background:none;border-top:2px dashed var(--txt);width:18px;height:1px;vertical-align:3px"></i>熵（bits）</span></div>
+  <p class="body">这一轮有两个熵峰，只有一个是分叉。t=17 写下 &nbsp;COUNT（H=1.31，全轮最大）时，结局分布开始坍缩，
+  四个 token 后焊死。t=28 给结果列起别名 &nbsp;Average…（H=1.02）时，分布纹丝不动。犹豫和命运是两回事，
+  只有测量能把它们分开。</p>
+  <table class="tbl">
+    <thead><tr><th>首条 SQL 簇（d=0 处）</th><th>200 条 episode 中占比</th><th>最终正确率</th></tr></thead>
+    <tbody>
+    <tr><td>AVG + GROUP BY</td><td>18%</td><td>100%</td></tr>
+    <tr><td>COUNT(*)/COUNT(DISTINCT…) 整数除法</td><td>46%</td><td>0%，且 0% 自愈</td></tr>
+    <tr><td>错表（FROM Artist）</td><td>4%</td><td>0%</td></tr>
+    <tr><td>其他写法</td><td>33%</td><td>39%</td></tr>
+    </tbody>
+  </table>
+  <p class="src">T4 ZOOM 2026-09-01 · 锚点 = 真实 EPISODE（SQL 与记录逐字节一致）· S=20/位置 · TOP-10 截断熵</p>
+</section>
+
+<!-- ════ FIG 4 : IN THE WILD ════ -->
+<section class="card" id="fig4">
+  <h2>6 · 真题野外：BIRD 上的两个模型尺寸</h2>
+  <p class="sub">同一台仪器，外部 benchmark：BIRD mini-dev 按冻结的两段规则选 10 题（先文本标准，再用 10-episode
+  答案众数 4–6 的不确定性筛——筛离散度，不筛对错），每题每臂 200 条，四个条件：Qwen3-8B 与 Qwen3.6-35B-A3B ×
+  thinking 关/开。先看 8B 关思考的地板——地板有结构——再看规模和 thinking 各救什么。</p>
+  <svg id="svg4" viewBox="0 0 1000 330" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>correct</span>
+    <span><i style="background:var(--amber)"></i>wrong</span>
+    <span><i style="background:var(--olive)"></i>no answer（多为 intent-stall）</span></div>
+  <p class="body">地板里藏着三个发现。一，intent-stall：在 schema 大的 financial 库里，最多 56% 的 episode 撞上列错误后
+  写"我们来看下有哪些表…"，然后在预算和轮次都还有的情况下自愿停止——宣布一个动作和执行它是可分离的两件事。
+  二，同一开局、不同命运：b218 上最常见的正确首条 SQL 与最常见的错误首条 SQL 逐字节相同，分叉在中盘（读结果的方式），
+  "分叉在哪"是题的属性。三，thinking：同权重同 seed，打开思考预算把 b39 从 1/200 正确拉到 51/200。</p>
+  <p class="body">同样十道题铺到四个条件上，每格失败率：</p>
+  <svg id="birdsvg" viewBox="0 0 1000 340" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--txt)"></i>8B 关思考</span>
+    <span><i style="background:var(--mid)"></i>8B 开思考</span>
+    <span><i style="background:var(--olive)"></i>35B 关思考</span>
+    <span><i style="background:var(--wheat)"></i>35B 开思考</span>
+    <span><i style="background:var(--amber)"></i>▲ 四个条件全部失败 ≥97%</span></div>
+  <p class="body">规模把十题中的七题清到失败 ≤10%；thinking 救的是另一批（8B 上 b218 从 94% 失败到 2%，b226 从 55% 到 1%）。
+  两道题扛过了一切：b197 与 b219 在四个条件下全部失败 ≥97%。而且错误答案不是散的：错误数 ≥10 的 28 个条件格里，
+  18 格有一个值扛走至少 40% 的错误；三个吸引子跨规模复现——b39 的 203.8、b192 的 179&#8239;232.5、b219 的 0.081。
+  b219 上规模让事情更糟：8B 的错误散在几个值之间，35B 把 94–98% 的错误压进 0.081 一个数。更大的模型没有逃出错误解读，
+  它更坚定地选了它。</p>
+  <table class="tbl">
+    <thead><tr><th>题</th><th>gold</th><th>主导错误值</th><th>占该格全部错误的比例</th></tr></thead>
+    <tbody>
+    <tr><td>b39 · Fresno 1980 年均考生数</td><td>137.889</td><td>203.8</td><td>8B 开思考 97% · 35B 开思考 43%——跨规模同一个数</td></tr>
+    <tr><td>b192 · 运行合同平均贷款额</td><td>192&#8239;836.6</td><td>179&#8239;232.5</td><td>35B 关 52% · 35B 开 44% · 8B 关 11%</td></tr>
+    <tr><td>b219 · 三键分子中致癌占比</td><td>66.667</td><td>0.081</td><td>8B 开 37% → 35B 关 94% → 35B 开 98%</td></tr>
+    <tr><td>b89 / b93 / b137 / b192 的 8B 开思考臂</td><td>各异</td><td>0.0</td><td>96–100%——空查询结果被当成答案</td></tr>
+    </tbody>
+  </table>
+  <p class="body">那个 0 吸收态有已验证的机制。b89 上模型把过滤条件写成 'East Bohemia'，库里存的是小写 'east Bohemia'，
+  COUNT 返回 0 行，模型在推理里写"用户可能需要核对数据"——然后照样交出 0。首条 SQL，命运焊死，199 条错误 episode
+  条条如此；35B 同一道题 200 次里对 194–200 次。一个诚实的注脚：b197 的 gold 折出"每个分子平均 116.65 个氧原子"，
+  化学上不合理，四个条件的模型都答 2–4 之间。这个分歧更像 gold 端的分母口径问题，按预注册我们照报不改。</p>
+  <div>
+    <span class="stat bad"><b>2/10</b><span>四个条件全部失败 ≥97% 的题</span></span>
+    <span class="stat"><b>7/10</b><span>仅靠规模清到失败 ≤10%（35B 关思考）</span></span>
+    <span class="stat bad"><b>94–98%</b><span>35B 在 b219 的错误集中于一个值</span></span>
+  </div>
+  <p class="src">BIRD MINI-DEV · 预注册选题 + 注明日期的 AMENDMENT · N=200/题/臂 · 4 条件 = {8B, 35B} × {思考关, 开} · 35B 跑在 DGX SPARK (GB10) · 分析：BIRD_ANALYSIS_20260902.JSON</p>
+</section>
+
+<!-- ════ FIG 5 : ENTROPY GATE ════ -->
+<section class="card" id="fig5">
+  <h2>7 · 熵能不能找到分叉？大多数能——漏掉的才是故事</h2>
+  <p class="sub">便宜的想法：只在模型犹豫的地方测量。我们在 Forking Fast 公开数据上测它（Llama-3-8B，100 题，
+  S=200 的 ground-truth o<sub>t</sub> 网格）：按 1−p<sub>base</sub> 给位置做门控，看 PELT 检出分叉的召回。
+  琥珀 = 熵门控召回，橄榄 = 随机门控 null。</p>
+  <svg id="svg5" viewBox="0 0 1000 300" width="100%"></svg>
+  <p class="body">门控有效：约 2× 超随机富集，召回随分叉大小上升（大分叉在 top-20% 处 0.87，top-30% 处 0.95）。
+  两级仪器——先熵筛、只在过门的位置重放——能把测量成本降 3–5 倍。但 13–29% 的分叉发生在模型自信的位置，
+  任何基于熵的监控都看不见它们。agent 数据说明了这为什么要命：骰子落地之后，§5 的陷阱路径在近零熵下运行，
+  自信地走向注定的失败。</p>
+  <p class="src">EG-0A QUICK PASS · PELT PEN=32 · 299 FORKS / 100 ROWS · PROXY = 1−P_BASE · NULL = 置换检验</p>
+</section>
+
+<!-- ════ FIG 6 : EVAL ════ -->
+<section class="card" id="fig6">
+  <h2>8 · 用分叉分布做更公平的评测</h2>
+  <p class="sub">单样本评测给一个随机变量打一次分。两个实测 case 说明它怎么撒谎：schema 陷阱题上，众数答案簇是错的
+  （46% 陷阱 vs 18% 正确），greedy 和多数投票都在奖励错误；BIRD b226 上，模型是一枚真硬币（o<sub>0</sub> = 0.45）。</p>
+  <svg id="svg6" viewBox="0 0 1000 280" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>correct 质量</span>
+    <span><i style="background:var(--amber)"></i>众数错误簇</span>
+    <span><i style="background:var(--olive)"></i>其他结局</span></div>
+  <p class="body">分布式替代方案是一份脆性档案：带置信区间的成功概率 o<sub>0</sub>、命运锁死在哪一步、自愈率、
+  正确策略的覆盖度。它比 pass@1 费样本，但同一批 rollout 同时提供了 §3–§6 的归因，前缀缓存付掉了大部分账单。
+  在众数是错的题上，任何信任众数的评测都在奖励陷阱——self-consistency 也一样。</p>
+  <p class="src">T4：200 EPISODES × 2 次采集（45%/46% 复现）· B226：N=200 · WILSON CI 在 REPO</p>
+</section>
+
+
+<!-- ════ FIG C : STATISTICS ════ -->
+<section class="card" id="figC">
+  <h2>9 · 引擎盖下的统计</h2>
+  <p class="sub">三块零件保证上面每张图诚实：分支样本怎么变成合法的 iid 抽签，平滑怎么借力而不抹掉它要找的分叉，
+  以及怎么知道估计已经贴上采样噪声定下的地板。</p>
+  <svg id="rigsvg" viewBox="0 0 1000 300" width="100%"></svg>
+  <p class="body"><b>混合抽签（mixture draws）。</b>一个剪点的原始数据是分层的：若干分支各带权重、各有 S 条续写。
+  下游要跑的一切——1/√S 收敛检查、跨 run 锚定——都假设数据是同一个 multinomial 的 iid 抽签，分层样本不是。
+  所以先混合：按权重抽一个分支，从中取一条没用过的续写，重复 S 次。混完的抽签条件 iid 服从 Multinomial(o<sub>t</sub>)，
+  标准检验全部合法。这是人口普查的老技巧：分层抽样之后，先按人口比例混合，再报平均。</p>
+  <p class="body"><b>分段平滑器（M5a）。</b>相邻位置携带几乎相同的模型状态，借它们的样本能压噪声——但对称核会把
+  我们要找的那个阶跃抹平。M5a 先分段（PELT 变点检测），再在段内平滑，核在每个边界处硬截断：A 段永不漏进 B 段。
+  验证：22/22 合成检验恢复，TVD 估计误差降 36%，等效样本量 3.8×——在 §4 的漂移 case 上，它正确拒绝把 11 次摆动
+  中的任何一次叫成分叉。</p>
+  <p class="body"><b>留一重复（LRO）与噪声地板。</b>S=20 够不够？平滑器还值不值得改？把手里的池子切开：20 条进估计，
+  其余当伪 ground truth，轮换，平均 TV 差就是 S=20 的典型误差——不花新 GPU。再让一个知道真 o<sub>t</sub> 的 oracle
+  在同一协议下打分：它的 TV 就是 multinomial 噪声定下的地板。贴着地板的估计器无法靠建模改进，只能加样本。
+  replicate-TVD 按 1/√S 收缩，实测斜率 −0.493，理论 −0.5。</p>
+  <p class="note">链条比零件重要：定义（§2）说清估计的对象，混合让检验合法，识断的平滑把信号从 S=20 的噪声里捞出来，
+  地板告诉你什么时候停止调模型、开始买样本。每一块都是标准技术，工作量在把它们装到一个新对象上。</p>
+  <p class="src">混合 = 按权重无放回抽签（逐位置）· M5A = PELT-L2 + 边界截断核 + DIRICHLET POOLING · 22/22 合成 · LRO 用既有重复样本 · 地板 = 同协议下 ORACLE 的 TV</p>
+</section>
+
+<p class="src" style="margin-top:70px">FORKSCOPE · LLM AGENT 反事实分叉分析 · 数据与预注册在 REPO · 本页单文件离线可用（字体除外）</p>
+</div>
+
+<script>
+const P={green:'#43593B',mid:'#77835A',olive:'#ACAD79',amber:'#D4A017',wheat:'#F2D17E',
+  txt:'#58402E',mut:'rgba(88,64,46,.6)',faint:'rgba(88,64,46,.32)',grid:'rgba(88,64,46,.16)'};
+const S=(t,a={})=>{const e=document.createElementNS('http://www.w3.org/2000/svg',t);
+  for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;};
+const txt=(svg,x,y,s,size=9.5,w=600,fill=P.mut,anchor='start')=>{
+  const t=S('text',{x,y,'font-size':size,'font-weight':w,fill,'text-anchor':anchor});t.textContent=s;svg.appendChild(t);return t;};
+
+/* ── FIG1: method diagram ── */
+(function(){
+  const svg=document.getElementById('svg1');
+  // recorded trajectory
+  const steps=['state s₀','tool call 1','state s₁','tool call 2','state s₂','final answer'];
+  steps.forEach((s,i)=>{
+    const x=20+i*128;
+    svg.appendChild(S('rect',{x,y:40,width:110,height:30,rx:3,fill:'none',
+      stroke:i%2?P.mid:P.txt,'stroke-width':1.3,'stroke-dasharray':i%2?'3 3':'none'}));
+    txt(svg,x+55,59,s,9.5,700,P.txt,'middle');
+    if(i<5)svg.appendChild(S('line',{x1:x+112,y1:55,x2:x+126,y2:55,stroke:P.mut,'stroke-width':1.2}));
+  });
+  txt(svg,20,28,'ONE RECORDED EPISODE (tools really execute)',8.5,600,P.mut);
+  // fan-out at boundary d=1 (under state s1)
+  const bx=20+2*128+55, by=72;
+  svg.appendChild(S('line',{x1:bx,y1:by,x2:bx,y2:100,stroke:P.txt,'stroke-width':1.6}));
+  txt(svg,bx+8,96,'rewind to this exact state → resample K=50 full continuations',9.5,700,P.txt);
+  const outc=[...Array(24)].map((_,i)=> i<6?P.green:(i<19?P.amber:P.olive));
+  outc.forEach((c,i)=>{
+    const x2=bx-160+i*14, y2=150+((i*37)%3)*9;
+    svg.appendChild(S('path',{d:`M ${bx} 100 C ${bx} 125, ${x2} ${y2-16}, ${x2} ${y2}`,
+      fill:'none',stroke:c,'stroke-width':1.4,opacity:.85}));
+    svg.appendChild(S('circle',{cx:x2,cy:y2,r:3.4,fill:c}));
+  });
+  // o_d histogram
+  const hx=760;
+  txt(svg,hx,120,'o_d  (outcome distribution at step d)',9.5,700,P.txt);
+  [['correct',.25,P.green],['trap',.54,P.amber],['other',.21,P.olive]].forEach(([n,v,c],i)=>{
+    svg.appendChild(S('rect',{x:hx+i*74,y:200-v*130,width:52,height:v*130,fill:c}));
+    txt(svg,hx+26+i*74,196-v*130,(v*100).toFixed(0)+'%',10.5,800,P.txt,'middle');
+    txt(svg,hx+26+i*74,216,n,9,600,P.mut,'middle');
+  });
+  txt(svg,20,236,'Where o_d collapses across d — that is the step where fate locks. Executable gold verifies every endpoint.',9.5,600,P.mut);
+})();
+
+/* ── FIG2: virology wavering (real fork-candidate data) ── */
+(function(){
+  const V=[[24,.55,.45],[36,.431,.462],[60,.4,.5],[72,.585,.295],[108,.45,.55],[120,.6,.4],
+    [168,.65,.35],[180,.4,.578],[216,.35,.65],[228,.65,.35],[276,.477,.473],[288,.344,.637],
+    [312,.384,.616],[324,.55,.45],[384,.293,.623],[396,.506,.494],[420,.332,.668],[432,.605,.395],
+    [504,.625,.375],[516,.2,.8],[576,.55,.4],[588,.4,.6]];
+  const svg=document.getElementById('svg2');
+  const x0=52,W=910,y0=30,H=200,yb=y0+H,tmax=600;
+  const X=t=>x0+t/tmax*W, Y=v=>yb-v*H;
+  [0,.25,.5,.75,1].forEach(v=>{svg.appendChild(S('line',{x1:x0,y1:Y(v),x2:x0+W,y2:Y(v),stroke:P.grid,'stroke-width':.7}));
+    txt(svg,x0-8,Y(v)+3,v.toFixed(2),9,600,P.mut,'end');});
+  const line=(idx,col)=>{let d='';V.forEach(p=>{d+=(d?' L':'M')+X(p[0])+','+Y(p[idx]);});
+    svg.appendChild(S('path',{d,fill:'none',stroke:col,'stroke-width':2.6}));};
+  line(2,P.green); line(1,P.mid);
+  V.forEach(p=>{svg.appendChild(S('circle',{cx:X(p[0]),cy:Y(p[2]),r:2.6,fill:P.green}));
+    svg.appendChild(S('circle',{cx:X(p[0]),cy:Y(p[1]),r:2.6,fill:P.mid}));});
+  svg.appendChild(S('line',{x1:x0,y1:Y(.5),x2:x0+W,y2:Y(.5),stroke:P.faint,'stroke-width':1,'stroke-dasharray':'6 5'}));
+  txt(svg,x0+W,Y(.5)-6,'coin-flip line',8.5,600,P.faint,'end');
+  txt(svg,X(516),Y(.8)-10,'swings to .80 …',9,700,P.txt,'middle');
+  txt(svg,X(588),Y(.6)-10,'… and back',9,700,P.txt,'middle');
+  [0,100,200,300,400,500,600].forEach(t=>txt(svg,X(t),yb+16,t,9,600,P.mut,'middle'));
+  txt(svg,x0+W/2,yb+34,'generation position (tokens into chain-of-thought)',9.5,600,P.mut,'middle');
+  txt(svg,x0,y0-8,'P(final answer = option) · 11 candidate forks, TVD 0.12–0.30 — none lock. This is drift, and the instrument says so.',9.5,600,P.mut);
+})();
+
+/* ── FIG3: t4 zoom (real) ── */
+(function(){
+  const rows=[{t:0,o:[.5,.4,.1]},{t:4,o:[.45,.4,.15]},{t:8,o:[.5,.2,.3]},{t:12,o:[.45,.3,.25]},
+    {t:14,o:[.35,.25,.4]},{t:15,o:[.45,.35,.2]},{t:16,o:[.45,.3,.25]},{t:17,o:[.5,.25,.25]},
+    {t:18,o:[.7,0,.3]},{t:19,o:[.8,0,.2]},{t:20,o:[1,0,0]},{t:24,o:[1,0,0]},{t:28,o:[1,0,0]},
+    {t:32,o:[1,0,0]},{t:38,o:[1,0,0]}]; // [intdiv, avg, other]
+  const Harr={0:.01,17:1.31,18:.91,19:.43,20:.16,25:.39,28:1.02,35:.53};
+  const toks={16:'SELECT',17:'␣COUNT',18:'(*)',19:'␣/',20:'␣COUNT',24:'␣Artist',28:'␣Average'};
+  const svg=document.getElementById('svg3');
+  const x0=52,W=910,y0=26,H=210,yb=y0+H,tmax=38;
+  const X=t=>x0+t/tmax*W, Y=v=>yb-v*H;
+  const cols=[P.amber,P.green,P.olive];
+  let base=rows.map(_=>0);
+  [0,1,2].forEach(k=>{
+    let top=[],bot=[];
+    rows.forEach((r,i)=>{top.push([X(r.t),Y(base[i]+r.o[k])]);bot.push([X(r.t),Y(base[i])]);base[i]+=r.o[k];});
+    const d='M'+top.map(p=>p.join(',')).join(' L')+' L'+bot.reverse().map(p=>p.join(',')).join(' L')+' Z';
+    svg.appendChild(S('path',{d,fill:cols[k],'fill-opacity':k===0?.92:.85}));
+  });
+  let dh='';
+  for(let t=0;t<=tmax;t++){const h=Harr[t]||0; dh+=(dh?' L':'M')+X(t)+','+(yb-h/1.4*H);}
+  svg.appendChild(S('path',{d:dh,fill:'none',stroke:P.txt,'stroke-width':1.7,'stroke-dasharray':'5 4'}));
+  [0,.5,1].forEach(v=>txt(svg,x0-8,Y(v)+3,v,9,600,P.mut,'end'));
+  Object.entries(toks).forEach(([t,tk])=>{txt(svg,X(+t),yb+15,tk,8.8,600,P.mut,'middle');
+    txt(svg,X(+t),yb+27,'t='+t,7.6,500,P.faint,'middle');});
+  const ann=(t,y,s,bold)=>{svg.appendChild(S('line',{x1:X(t),y1:y+5,x2:X(t),y2:yb,stroke:P.txt,'stroke-width':1,'stroke-dasharray':'2 3'}));
+    txt(svg,X(t)+5,y,s,9.5,bold?800:600,P.txt);};
+  ann(17,44,'the die: H=1.31, collapse begins',true);
+  ann(28,70,'naming peak: H=1.02, fate already sealed');
+  ann(20,96,'t=20: locked at 100% trap');
+})();
+
+/* ── FIG4: BIRD stacked bars + thinking pair ── */
+(function(){
+  const D=[['b39',1,199,0],['b89',1,168,31],['b93',0,198,2],['b116',7,123,70],['b137',3,86,111],
+    ['b192',0,105,95],['b197',3,194,3],['b218',13,179,8],['b219',0,143,57],['b226',90,100,10]];
+  const TH=[['b39 nt',1,199,0],['b39 think',51,149,0]];
+  const svg=document.getElementById('svg4');
+  const x0=40,y0=30,H=190,yb=y0+H,bw=52,gap=24;
+  D.forEach((q,i)=>{
+    const x=x0+i*(bw+gap); let acc=0;
+    [[q[1],P.green],[q[2],P.amber],[q[3],P.olive]].forEach(([v,c])=>{
+      const h=v/200*H;
+      svg.appendChild(S('rect',{x,y:yb-acc-h,width:bw,height:h,fill:c})); acc+=h;});
+    txt(svg,x+bw/2,yb+14,q[0],9.5,600,P.mut,'middle');
+    const fr=1-(q[1])/200;
+    txt(svg,x+bw/2,y0-8,(fr*100).toFixed(0)+'%',9.5,800,fr>0.9?P.txt:P.green,'middle');
+  });
+  txt(svg,x0,y0-22,'FAIL RATE (non-thinking, n=200) — only b226 lands in the informative band [20%,90%]',8.5,600,P.mut);
+  svg.appendChild(S('rect',{x:x0+9*(bw+gap)-8,y:y0-2,width:bw+16,height:H+22,rx:4,fill:'none',stroke:P.green,'stroke-width':1.6,'stroke-dasharray':'5 4'}));
+  // thinking pair
+  const px=x0+10*(bw+gap)+40;
+  txt(svg,px,y0-8,'THINKING SWITCH (same weights)',8.5,700,P.txt);
+  TH.forEach((q,i)=>{
+    const x=px+i*(bw+gap); let acc=0;
+    [[q[1],P.green],[q[2],P.amber],[q[3],P.olive]].forEach(([v,c])=>{
+      const h=v/200*H;
+      svg.appendChild(S('rect',{x,y:yb-acc-h,width:bw,height:h,fill:c}));acc+=h;});
+    txt(svg,x+bw/2,yb+14,q[0],9,600,P.mut,'middle');
+    txt(svg,x+bw/2,y0+8,q[1]+'/200 ✓',9.5,800,i?P.green:P.txt,'middle');
+  });
+  txt(svg,x0,yb+40,'no-answer (olive) concentrates in the schema-heavy financial DB: the intent-stall failure family — the model announces a check it never performs.',9.5,600,P.mut);
+})();
+
+/* ── FIG5: EG-0a recall ── */
+(function(){
+  const K=[5,10,20,30,50], R=[.318,.538,.783,.880,.977], N=[.155,.289,.512,.677,.886];
+  const svg=document.getElementById('svg5');
+  const x0=60,W=880,y0=24,H=200,yb=y0+H;
+  const X=k=>x0+(k-5)/45*W, Y=v=>yb-v*H;
+  [0,.25,.5,.75,1].forEach(v=>{svg.appendChild(S('line',{x1:x0,y1:Y(v),x2:x0+W,y2:Y(v),stroke:P.grid,'stroke-width':.7}));
+    txt(svg,x0-10,Y(v)+3,(v*100)+'%',9,600,P.mut,'end');});
+  const line=(vals,col,w)=>{let d='';K.forEach((k,i)=>d+=(d?' L':'M')+X(k)+','+Y(vals[i]));
+    svg.appendChild(S('path',{d,fill:'none',stroke:col,'stroke-width':w}));};
+  line(N,P.olive,2); line(R,P.amber,2.8);
+  K.forEach((k,i)=>{svg.appendChild(S('circle',{cx:X(k),cy:Y(R[i]),r:3.6,fill:P.amber}));
+    txt(svg,X(k),Y(R[i])-10,(R[i]*100).toFixed(0)+'%',10.5,800,P.txt,'middle');
+    txt(svg,X(k),yb+16,'top-'+k+'%',9.5,600,P.mut,'middle');});
+  txt(svg,X(30)+10,Y(R[3])+22,'entropy-gated recall',9.5,700,P.amber);
+  txt(svg,X(30)+10,Y(N[3])+24,'random-gate null',9.5,600,P.olive);
+  txt(svg,X(20),Y(1.0)-2,'the gap that stays: 13–29% of forks are CONFIDENT — no hesitation, no warning, fully fateful',9.5,700,P.txt);
+})();
+
+/* ── FIG6: anti-mode eval ── */
+(function(){
+  const svg=document.getElementById('svg6');
+  const cases=[
+    {name:'t4 "albums per artist" (schema trap)',parts:[[.18,P.green,'correct 18%'],[.46,P.amber,'modal cluster: TRAP 46%'],[.36,P.olive,'other 36%']],
+     note:'mode is wrong → greedy & majority-vote reward the trap'},
+    {name:'BIRD b226 (n=200)',parts:[[.45,P.green,'correct 45%'],[.50,P.amber,'wrong 50%'],[.05,P.olive,'5%']],
+     note:'a genuine coin flip — pass@1 is a lottery ticket'}];
+  cases.forEach((c,ci)=>{
+    const y=50+ci*105, x0=40, W=700;
+    txt(svg,x0,y-12,c.name,10.5,700,P.txt);
+    let acc=0;
+    c.parts.forEach(([v,col,lab])=>{
+      svg.appendChild(S('rect',{x:x0+acc*W,y,width:v*W,height:40,fill:col}));
+      if(v>0.08) txt(svg,x0+(acc+v/2)*W,y+25,lab,9.5,700,'#F0EFEB','middle');
+      acc+=v;});
+    txt(svg,x0+W+14,y+25,c.note,9.5,600,P.mut);
+  });
+  txt(svg,40,265,'Brittleness profile = { o₀ ± CI · lock-in step · self-repair rate · correct-strategy coverage } — an eval that ships with its own root-cause analysis.',10,700,P.txt);
+})();
+
+/* ── FIG A: logits playground ── */
+const BASE=[
+ {tok:'\u2423COUNT',p:.42,fate:'trap'},{tok:'\u2423AVG',p:.28,fate:'good'},
+ {tok:'\u2423(SELECT',p:.08,fate:'mix'},{tok:'\u2423Album',p:.05,fate:'mix'},
+ {tok:'\u2423artist',p:.04,fate:'mix'},{tok:'\u2423Artist',p:.03,fate:'mix'},
+ {tok:'\u2423TOTAL',p:.025,fate:'mix'},{tok:'\u2423ROUND',p:.02,fate:'mix'},
+ {tok:'\u2423*',p:.015,fate:'mix'},{tok:'\u24231.0',p:.012,fate:'good'},
+ {tok:'\u2423COALESCE',p:.01,fate:'mix'},{tok:'(long tail)',p:.018,fate:'mix'}];
+const logitv=BASE.map(b=>Math.log(b.p));
+function applyPipeline(T,k,topp,minp){
+  let p=logitv.map(l=>Math.exp(l/T));
+  const Z=p.reduce((a,b)=>a+b,0); p=p.map(x=>x/Z);
+  const idx=p.map((v,i)=>i).sort((a,b)=>p[b]-p[a]);
+  const keep=new Set(idx);
+  if(k>0)idx.slice(k).forEach(i=>keep.delete(i));
+  if(topp<1){let c=0;const inP=new Set();
+    for(const i of idx){if(c<topp){inP.add(i);c+=p[i];}}
+    for(const i of idx)if(!inP.has(i))keep.delete(i);}
+  if(minp>0){const pm=p[idx[0]];idx.forEach(i=>{if(p[i]<minp*pm)keep.delete(i);});}
+  const cut=idx.filter(i=>!keep.has(i)).reduce((a,i)=>a+p[i],0);
+  const q=p.map((v,i)=>keep.has(i)?v/(1-cut):0);
+  return{q,keep,cut};
+}
+function renderLogits(){
+  const T=+inT.value,k=+inK.value,tp=+inP.value,mp=+inM.value;
+  ovT.textContent=T.toFixed(2);ovK.textContent=k===0?'off':k;
+  ovP.textContent=tp.toFixed(2);ovM.textContent=mp.toFixed(2);
+  const{q,keep,cut}=applyPipeline(T,k,tp,mp);
+  const svg=document.getElementById('logitsvg');svg.innerHTML='';
+  const bw=58,gap=22,x0=40,yb=230,hmax=185;
+  const qmax=Math.max(...q,.01);
+  BASE.forEach((b,i)=>{
+    const x=x0+i*(bw+gap),h=q[i]/qmax*hmax,kept=keep.has(i);
+    const fill=!kept?'none':(b.fate==='trap'?P.amber:b.fate==='good'?P.green:P.olive);
+    if(kept)svg.appendChild(S('rect',{x,y:yb-h,width:bw,height:Math.max(h,1),fill}));
+    else{svg.appendChild(S('rect',{x,y:yb-2,width:bw,height:2,fill:P.grid}));
+      txt(svg,x+bw/2,yb-8,'\u00d7\u622a\u65ad',8.5,600,P.faint,'middle');}
+    if(kept&&q[i]>0.005)txt(svg,x+bw/2,yb-h-6,(q[i]*100).toFixed(1)+'%',10.5,800,P.txt,'middle');
+    txt(svg,x+bw/2,yb+16,b.tok,8.8,600,kept?P.mut:P.faint,'middle');
+    if(b.fate!=='mix')txt(svg,x+bw/2,yb+30,b.fate==='trap'?'\u2192 \u9677\u9631':'\u2192 \u6b63\u786e',8,600,
+      b.fate==='trap'?P.amber:P.green,'middle');
+  });
+  svg.appendChild(S('line',{x1:x0-8,y1:yb,x2:980,y2:yb,stroke:P.grid,'stroke-width':1.2}));
+  const Hb=-q.filter(v=>v>0).reduce((a,v)=>a+v*Math.log2(v),0);
+  stH.textContent=Hb.toFixed(2);
+  stPB.textContent=(1-Math.max(...q)).toFixed(2);
+  stCut.textContent=(cut*100).toFixed(1)+'%';
+  stFate.textContent=(q.reduce((a,v,i)=>a+(BASE[i].fate==='trap'?v:0),0)*100).toFixed(1)+'%';
+  sampleOut.textContent='';
+}
+['inT','inK','inP','inM'].forEach(id=>document.getElementById(id).addEventListener('input',renderLogits));
+btnSample.onclick=()=>{
+  const{q}=applyPipeline(+inT.value,+inK.value,+inP.value,+inM.value);
+  const cnt=new Array(q.length).fill(0);
+  for(let n=0;n<200;n++){let r=Math.random(),acc=0;
+    for(let i=0;i<q.length;i++){acc+=q[i];if(r<=acc){cnt[i]++;break;}}}
+  const top=cnt.map((c,i)=>[BASE[i].tok,c]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1])
+    .map(x=>x[0]+'\u00d7'+x[1]).join(' \u00b7 ');
+  const trapN=cnt.reduce((a,c,i)=>a+(BASE[i].fate==='trap'?c:0),0);
+  sampleOut.textContent='200 \u6b21\u91c7\u6837\uff1a'+top+' \u2014 '+trapN+' ('+(trapN/2).toFixed(0)+'%) \u8d70\u5411\u9677\u9631';
+};
+renderLogits();
+
+/* ── FIG B: o_t schematic ── */
+(function(){
+  const svg=document.getElementById('otsvg');if(!svg)return;
+  function panel(x0,kind,title,note){
+    const w=420,h=150,y0=40;
+    svg.appendChild(S('rect',{x:x0,y:y0,width:w,height:h,fill:'none',stroke:P.grid,'stroke-width':1}));
+    const N=100,ts=[...Array(N+1)].map((_,i)=>i/N);
+    function bands(t){
+      if(kind==='fork'){
+        if(t<.45)return[.25,.25,.50];
+        return[0,0,1];
+      }
+      const g=.40+.12*Math.sin(t*9.5), a=.42-.10*Math.sin(t*7.3+1);
+      return[Math.max(g,0),Math.max(1-g-a,0),Math.max(a,0)];
+    }
+    const cols=[P.green,P.olive,P.amber];
+    for(let b=0;b<3;b++){
+      let d='M '+x0+' '+(y0+h);
+      ts.forEach(t=>{
+        const v=bands(t);let base=0;for(let j=0;j<b;j++)base+=v[j];
+        d+=' L '+(x0+t*w)+' '+(y0+h-(base+v[b])*h);
+      });
+      for(let i=N;i>=0;i--){
+        const t=ts[i],v=bands(t);let base=0;for(let j=0;j<b;j++)base+=v[j];
+        d+=' L '+(x0+t*w)+' '+(y0+h-base*h);
+      }
+      svg.appendChild(S('path',{d:d+' Z',fill:cols[b],opacity:.85,stroke:'none'}));
+    }
+    if(kind==='fork'){
+      const fx=x0+.45*w;
+      svg.appendChild(S('line',{x1:fx,y1:y0-8,x2:fx,y2:y0+h+8,stroke:P.txt,'stroke-width':1.4,'stroke-dasharray':'5 3'}));
+      txt(svg,fx,y0-14,'\u5206\u53c9\uff1a\u4e00\u6b21\u9636\u8dc3\uff0c\u7136\u540e\u9501\u6b7b',9.5,700,P.txt,'middle');
+    }
+    txt(svg,x0,y0+h+22,title,10.5,700,P.txt);
+    txt(svg,x0,y0+h+38,note,9,600,P.mut);
+    txt(svg,x0,y0-14,kind==='fork'?'':'',9,600,P.mut);
+    txt(svg,x0+w,y0+h+22,'\u4f4d\u7f6e t \u2192',8.5,600,P.faint,'end');
+  }
+  panel(30,'fork','\u51b3\u7b56\u5206\u53c9\uff08\u00a75 \u7684\u5f62\u72b6\uff09','o_t \u5148\u662f\u6df7\u5408\uff0c\u4e00\u6b65\u6536\u62e2\u6210\u70b9');
+  panel(550,'drift','\u6f02\u79fb\uff08\u00a74 \u7684\u5f62\u72b6\uff09','o_t \u79fb\u52a8 11 \u5904\u4f46\u4ece\u4e0d\u9501\u5b9a');
+  txt(svg,30,28,'\u5404\u7ed3\u5c40\u7c07\u7684\u8d28\u91cf\uff0c\u5806\u53e0\u4e3a 1.0 \u2014\u2014 \u793a\u610f\u56fe',8.5,600,P.mut);
+})();
+
+/* ── FIG 3b: two cuts on one trajectory ── */
+(function(){
+  const sv=document.getElementById('cutsvg');if(!sv)return;
+  const BG='#F0EFEB';
+  function panel(x0,nFrozen,cutTitle,buckets,zeros,caption){
+    const toks=['\u2026','SELECT','\u2423COUNT','(*)','\u2423/','\u2423COUNT'];
+    const y=44,h=26;let x=x0,cutX=0;
+    toks.forEach((tk,i)=>{
+      const w=16+tk.length*8.2,frozen=i<nFrozen;
+      sv.appendChild(S('rect',{x,y,width:w,height:h,rx:3,fill:frozen?BG:'none',
+        stroke:frozen?P.txt:P.faint,'stroke-width':frozen?1.2:1,
+        'stroke-dasharray':frozen?'none':'4 3'}));
+      txt(sv,x+w/2,y+17,tk,10.5,600,frozen?P.txt:P.mut,'middle');
+      x+=w+4;
+      if(i===nFrozen-1)cutX=x-2;
+    });
+    sv.appendChild(S('line',{x1:cutX,y1:y-16,x2:cutX,y2:y+h+16,stroke:P.txt,'stroke-width':1.6,'stroke-dasharray':'5 3'}));
+    txt(sv,cutX,y-22,'\u2702',13,600,P.txt,'middle');
+    txt(sv,cutX,y+h+30,cutTitle,9.5,600,P.mut,'middle');
+    const bx=x0+306,bw=120,by=118,totalH=128;
+    let yy=by;const anchors=[];
+    buckets.forEach(b=>{
+      const bh=Math.max(totalH*b.p,13);
+      sv.appendChild(S('rect',{x:bx,y:yy,width:bw,height:bh,fill:b.col}));
+      if(b.p>=0.99)txt(sv,bx+bw/2,yy+bh/2+4,b.name+' '+b.p.toFixed(2),10.5,700,BG,'middle');
+      else txt(sv,bx+bw+8,yy+bh/2+4,b.name+'  '+b.p.toFixed(2),10.5,600,P.txt);
+      anchors.push({x:bx,y:yy+bh/2,col:b.col,p:b.p});
+      yy+=bh+7;
+    });
+    if(zeros)txt(sv,bx+bw/2,yy+12,zeros,9.5,600,P.mut,'middle');
+    const fy=y+h+38;let li=0,tot=12;
+    anchors.forEach(a=>{
+      const n=Math.max(Math.round(a.p*tot),1);
+      for(let k=0;k<n;k++){
+        const sx=cutX+(li-tot/2)*1.6;li++;
+        const mx=(sx+a.x)/2;
+        sv.appendChild(S('path',{d:'M '+sx+' '+fy+' C '+mx+' '+(fy+16)+', '+(mx-30)+' '+a.y+', '+a.x+' '+a.y,
+          fill:'none',stroke:a.col,'stroke-width':1,opacity:.6}));
+      }
+    });
+    txt(sv,x0+230,296,caption,10.5,700,P.txt,'middle');
+  }
+  panel(16,2,'\u526a\u5728 t=17\uff1a\u2423COUNT \u6b63\u8981\u88ab\u63b7\u51fa',
+    [{name:'intdiv (trap)',p:.50,col:P.amber},
+     {name:'avg (correct)',p:.25,col:P.green},
+     {name:'other',p:.25,col:P.olive}],null,
+    '\u526a\u5728\u5206\u53c9\u524d\uff1a\u8d28\u91cf\u8fd8\u6d41\u5411\u4e24\u8fb9');
+  panel(516,5,'\u526a\u5728 t=20\uff1aCOUNT (*) / \u5df2\u5728\u524d\u7f00\u91cc',
+    [{name:'intdiv (trap)',p:1.0,col:P.amber}],'avg .00 \u00b7 other .00',
+    '\u526a\u8fc7\u5206\u53c9\uff1a\u710a\u6b7b');
+})();
+
+/* ── FIG 6b: BIRD four conditions ── */
+(function(){
+  const svg=document.getElementById('birdsvg');if(!svg)return;
+  const QS=['b39','b89','b93','b116','b137','b192','b197','b218','b219','b226'];
+  const F={
+    nt8:[.99,.99,1.00,.96,.98,1.00,.98,.94,1.00,.55],
+    th8:[.74,.99,1.00,.74,.48,1.00,.99,.02,1.00,.01],
+    nt35:[.10,.03,.01,.02,.03,.89,.97,.00,.99,.00],
+    th35:[.24,.00,.00,.17,.01,.71,.99,.12,1.00,.01]};
+  const cols={nt8:P.txt,th8:P.mid,nt35:P.olive,th35:P.wheat};
+  const W=1000,H=340,mL=48,mR=8,mT=16,mB=46,plotH=H-mT-mB;
+  [0,.25,.5,.75,1].forEach(v=>{
+    const y=mT+(1-v)*plotH;
+    svg.appendChild(S('line',{x1:mL,y1:y,x2:W-mR,y2:y,stroke:P.grid,'stroke-width':1}));
+    txt(svg,mL-8,y+4,(v*100)+'%',9,600,P.mut,'end');
+  });
+  const gw=(W-mL-mR)/QS.length,bw=gw/5.6,pitch=bw*1.15;
+  QS.forEach((q,i)=>{
+    const cx=mL+i*gw+gw/2,x0=cx-(3*pitch+bw)/2;
+    ['nt8','th8','nt35','th35'].forEach((k,j)=>{
+      const v=F[k][i],x=x0+j*pitch;
+      if(v===null){txt(svg,x+bw/2,mT+plotH-5,'\u2026',11,600,P.mut,'middle');return;}
+      const h=Math.max(v*plotH,1.5);
+      svg.appendChild(S('rect',{x,y:mT+plotH-h,width:bw,height:h,fill:cols[k]}));
+    });
+    txt(svg,cx,H-mB+17,q,10.5,700,P.txt,'middle');
+    if(q==='b197'||q==='b219'){
+      svg.appendChild(S('path',{d:'M '+(cx-5)+' '+(H-mB+26)+' L '+(cx+5)+' '+(H-mB+26)+' L '+cx+' '+(H-mB+18)+' Z',fill:P.amber}));
+    }
+  });
+  svg.appendChild(S('line',{x1:mL,y1:mT+plotH,x2:W-mR,y2:mT+plotH,stroke:P.txt,'stroke-width':1.2}));
+  txt(svg,W-mR,H-4,'\u5931\u8d25\u7387 \u00b7 \u6bcf\u683c n=200',9,600,P.mut,'end');
+})();
+
+/* ── FIG 9: statistics panels ── */
+(function(){
+  const svg=document.getElementById('rigsvg');if(!svg)return;
+  /* A: mixture draws */
+  txt(svg,16,26,'A \u00b7 MIXTURE DRAWS',9,800,P.txt);
+  const rows=[{w:.6,y:56,c:P.green},{w:.3,y:92,c:P.amber},{w:.1,y:128,c:P.olive}];
+  rows.forEach(r=>{
+    txt(svg,16,r.y+4,'p='+r.w,8.5,600,P.mut);
+    for(let i=0;i<10;i++)svg.appendChild(S('circle',{cx:62+i*17,cy:r.y,r:4,fill:r.c,opacity:.9}));
+  });
+  txt(svg,16,158,'branch-stratified samples',8.5,600,P.mut);
+  svg.appendChild(S('path',{d:'M 130 180 L 130 206',stroke:P.txt,'stroke-width':1.4}));
+  svg.appendChild(S('path',{d:'M 126 200 L 130 208 L 134 200 Z',fill:P.txt}));
+  txt(svg,142,196,'draw branch by weight, take one unused continuation',8.5,600,P.mut);
+  const mixc=[P.green,P.amber,P.green,P.olive,P.amber,P.green,P.green,P.amber,P.green,P.amber];
+  mixc.forEach((c,i)=>svg.appendChild(S('circle',{cx:62+i*17,cy:232,r:4,fill:c})));
+  txt(svg,16,260,'i.i.d. ~ Multinomial(o_t): tests become legal',8.5,700,P.txt);
+  /* B: M5a */
+  txt(svg,370,26,'B \u00b7 SEGMENTED SMOOTHER (M5A)',9,800,P.txt);
+  const bx=370,bw2=270;
+  function strip(y,label,mode,ok){
+    svg.appendChild(S('line',{x1:bx,y1:y,x2:bx+bw2,y2:y,stroke:P.grid,'stroke-width':1}));
+    const step=t=> t<.5? .65 : .18;
+    if(mode==='raw'){
+      for(let i=0;i<=26;i++){const t=i/26;
+        const v=step(t)+((i*73)%17-8)/60;
+        svg.appendChild(S('circle',{cx:bx+t*bw2,cy:y-v*44,r:2,fill:P.mut}));}
+    }else{
+      let d='';
+      for(let i=0;i<=52;i++){const t=i/52;let v;
+        if(mode==='naive'){const s=1/(1+Math.exp(-(t-.5)*10));v=.65*(1-s)+.18*s;}
+        else{v=step(t);if(mode==='m5a'&&Math.abs(t-.5)<.01)v=NaN;}
+        if(isNaN(v)){d+=' M';continue;}
+        d+=(d===''||d.endsWith('M')?(d.endsWith('M')?' ':'M ')+ (bx+t*bw2)+' '+(y-v*44):' L '+(bx+t*bw2)+' '+(y-v*44));
+      }
+      svg.appendChild(S('path',{d,fill:'none',stroke:mode==='m5a'?P.green:P.amber,'stroke-width':1.8}));
+      if(mode==='m5a')svg.appendChild(S('line',{x1:bx+.5*bw2,y1:y-52,x2:bx+.5*bw2,y2:y-4,stroke:P.txt,'stroke-width':1,'stroke-dasharray':'4 3'}));
+    }
+    txt(svg,bx+bw2+10,y-14,label,8.5,600,P.mut);
+    txt(svg,bx+bw2+10,y-2,ok,8.5,700,ok.indexOf('\u2717')>=0?P.amber:P.green);
+  }
+  strip(90,'raw counts \u00b7 S=20','raw','noisy');
+  strip(170,'symmetric kernel','naive','\u2717 smears the step');
+  strip(250,'PELT segments + truncated kernel','m5a','\u2713 break preserved');
+  /* C: LRO floor */
+  txt(svg,760,26,'C \u00b7 LRO + NOISE FLOOR',9,800,P.txt);
+  const cx0=760,cw=210,cy0=60,ch=190;
+  svg.appendChild(S('line',{x1:cx0,y1:cy0,x2:cx0,y2:cy0+ch,stroke:P.grid,'stroke-width':1}));
+  txt(svg,cx0-4,cy0+8,'TV vs held-out replicates',8,600,P.mut,'end');
+  const fy=cy0+ch-38;
+  svg.appendChild(S('line',{x1:cx0,y1:fy,x2:cx0+cw,y2:fy,stroke:P.txt,'stroke-width':1.2,'stroke-dasharray':'5 3'}));
+  txt(svg,cx0+cw,fy+14,'noise floor = oracle TV, same protocol',8,600,P.mut,'end');
+  svg.appendChild(S('circle',{cx:cx0+60,cy:cy0+34,r:5,fill:P.mut}));
+  txt(svg,cx0+72,cy0+38,'raw counts',8.5,600,P.mut);
+  svg.appendChild(S('circle',{cx:cx0+60,cy:fy-16,r:5,fill:P.green}));
+  txt(svg,cx0+72,fy-12,'M5a \u00b7 near the floor',8.5,700,P.green);
+  svg.appendChild(S('path',{d:'M '+(cx0+150)+' '+(cy0+40)+' L '+(cx0+150)+' '+(fy-8),stroke:P.faint,'stroke-width':1}));
+  txt(svg,cx0+156,cy0+120,'gap = modeling headroom',8,600,P.mut);
+  txt(svg,cx0,cy0+ch+24,'past the floor, only more samples help (1/\u221aS, slope \u22120.493)',8.5,600,P.mut);
+})();
+
+/* ── shim: old zh palette consts → PALM ── */
+const css = v => ({'--paper':'#F0EFEB','--faint':'rgba(88,64,46,.32)'})[v] || '';
+const INK = P.txt, MID = P.mid, LITE = P.olive, MUT = P.mut, GRID = P.grid;
+/* ══════════ ① 架构图（token flow 动画版）══════════ */
+(function arch(){
+  const svg = document.getElementById('archsvg');
+  const cap = document.getElementById('archCap');
+  const boxes = {};
+  const box = (id,x,y,w,h,label,sub)=>{
+    const r = S('rect',{x,y,width:w,height:h,fill:'none',stroke:INK,'stroke-width':1.3,rx:2});
+    svg.appendChild(r); boxes[id]={r,x,y,w,h};
+    const t=S('text',{x:x+w/2,y:y+h/2+(sub?-3:4),'text-anchor':'middle','font-size':11,'font-weight':700,fill:INK});
+    t.textContent=label; svg.appendChild(t);
+    if(sub){const s=S('text',{x:x+w/2,y:y+h/2+11,'text-anchor':'middle','font-size':8.5,fill:MUT});
+      s.textContent=sub; svg.appendChild(s);} };
+  const arrow=(x1,y1,x2,y2)=>{svg.appendChild(S('line',{x1,y1,x2,y2,stroke:MUT,'stroke-width':1.2,'marker-end':'url(#ah)'}))};
+  const defs=S('defs'); defs.innerHTML='<marker id="ah" markerWidth="7" markerHeight="7" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#6A6963" stroke-width="1.2"/></marker>';
+  svg.appendChild(defs);
+  const lbl=(x,y,txt,size=9)=>{const t=S('text',{x,y,'font-size':size,'font-weight':600,fill:MUT}); t.textContent=txt; svg.appendChild(t); return t;};
+
+  // input chips (vertical, static prompt)
+  ['On','␣average',',','␣how','…'].forEach((tk,i)=>{
+    svg.appendChild(S('rect',{x:20,y:40+i*36,width:74,height:24,fill:'none',stroke:LITE,'stroke-width':1,rx:2}));
+    const t=S('text',{x:57,y:56+i*36,'text-anchor':'middle','font-size':9.5,'font-weight':600,fill:MUT});
+    t.textContent=tk; svg.appendChild(t); });
+  lbl(20,28,'输入 token 序列');
+
+  box('embed',130,95,96,60,'Embedding','token → 4096 维');
+  arrow(96,125,128,125);
+  svg.appendChild(S('rect',{x:262,y:30,width:330,height:250,fill:'none',stroke:INK,'stroke-width':1.6,rx:4}));
+  const layerLbl = lbl(276,50,'× 36 层',10);
+  box('n1',286,64,120,44,'RMSNorm','');
+  box('attn',286,124,120,52,'Attention','GQA · 32Q/8KV · RoPE');
+  box('r1',286,192,120,44,'⊕ residual','');
+  box('n2',446,64,120,44,'RMSNorm','');
+  box('mlp',446,124,120,52,'SwiGLU MLP','4096→12288→4096');
+  box('r2',446,192,120,44,'⊕ residual','');
+  arrow(346,108,346,122); arrow(346,176,346,190);
+  arrow(406,214,444,214); arrow(506,190,506,178); arrow(506,122,506,110);
+  arrow(226,125,260,125);
+  box('fnorm',628,95,92,60,'RMSNorm','最终归一');
+  arrow(592,125,626,125);
+  box('head',756,95,96,60,'LM Head','4096 → 151,936');
+  arrow(720,125,754,125);
+  arrow(852,125,884,125);
+  lbl(884,60,'logits → softmax',10);
+
+  // dynamic distribution bars (8 slots)
+  const BARS=[], BARL=[];
+  for(let i=0;i<8;i++){
+    const b=S('rect',{x:888+i*13,y:190,width:9,height:0,fill:i===0?INK:(i===1?MID:LITE)});
+    svg.appendChild(b); BARS.push(b);
+  }
+  const topLbl=S('text',{x:888,y:110,'font-size':9,'font-weight':800,fill:INK}); svg.appendChild(topLbl);
+  lbl(886,212,'p(下一个 token)',9);
+
+  // generated strip (appended chips)
+  lbl(20,262,'生成中的第一条 SQL（t4 陷阱路径）：',9.5);
+  const STRIP={x:20,y:272,w:84,h:24,gap:6,chips:[]};
+  // autoregressive return path
+  svg.appendChild(S('path',{d:'M 930 230 C 940 300, 700 330, 420 320',fill:'none',stroke:LITE,'stroke-width':1.2,'stroke-dasharray':'4 4','marker-end':'url(#ah)'}));
+
+  // traveling pulse dot
+  const dot=S('circle',{r:5,fill:INK,opacity:0}); svg.appendChild(dot);
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const center=id=>{const b=boxes[id]; return [b.x+b.w/2,b.y+b.h/2];};
+  async function moveDot(pts, dur){
+    dot.setAttribute('opacity',1);
+    const t0=performance.now();
+    // total polyline length
+    let L=0, seg=[];
+    for(let i=1;i<pts.length;i++){const d=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]); seg.push(d); L+=d;}
+    return new Promise(res=>{
+      function step(now){
+        let u=Math.min((now-t0)/dur,1)*L, i=0;
+        while(i<seg.length && u>seg[i]){u-=seg[i]; i++;}
+        if(i>=seg.length){ dot.setAttribute('cx',pts.at(-1)[0]); dot.setAttribute('cy',pts.at(-1)[1]); return res(); }
+        const f=u/seg[i];
+        dot.setAttribute('cx',pts[i][0]+(pts[i+1][0]-pts[i][0])*f);
+        dot.setAttribute('cy',pts[i][1]+(pts[i+1][1]-pts[i][1])*f);
+        requestAnimationFrame(step);
+      } requestAnimationFrame(step); });
+  }
+  async function pulse(id, ms=170){
+    const b=boxes[id].r;
+    b.setAttribute('fill','#E3E2DC'); b.setAttribute('stroke-width',2.4);
+    await sleep(ms);
+    b.setAttribute('fill','none'); b.setAttribute('stroke-width',1.3);
+  }
+  function setBars(dist){ // dist: array of p, first = chosen
+    const pm=Math.max(...dist,.01);
+    dist.forEach((p,i)=>{ if(i<8){ const h=p/pm*76;
+      BARS[i].setAttribute('height',h); BARS[i].setAttribute('y',190-h); } });
+    for(let i=dist.length;i<8;i++){BARS[i].setAttribute('height',0);}
+  }
+  function chip(txt, dark){
+    const i=STRIP.chips.length;
+    const x=STRIP.x+i*(STRIP.w+STRIP.gap);
+    const g=S('g',{opacity:0});
+    g.appendChild(S('rect',{x,y:STRIP.y,width:STRIP.w,height:STRIP.h,rx:2,
+      fill:dark?INK:'none',stroke:dark?INK:MUT,'stroke-width':1.2}));
+    const t=S('text',{x:x+STRIP.w/2,y:STRIP.y+16,'text-anchor':'middle','font-size':9.5,
+      'font-weight':700,fill:dark?css('--paper'):INK});
+    t.textContent=txt; g.appendChild(t);
+    svg.appendChild(g); STRIP.chips.push(g); return g;
+  }
+  // script: token steps of the fateful first turn (概率为教学示意)
+  const STEPS=[
+    {tok:'"SELECT',  dist:[.55,.12,.08,.06,.05,.04,.03,.02], cap:'前向一次 → 分布尖锐 → 采出 "SELECT。到这里为止,命运仍是混合的(实测 o_t:45% 陷阱 / 30% 正确 / 25% 其他)。'},
+    {tok:'␣COUNT', dist:[.42,.28,.08,.05,.04,.03,.02,.015], dice:'␣AVG', cap:'⚂ 骰子时刻(实测 H=1.31,全 turn 最高):␣COUNT(→陷阱)对 ␣AVG(→正确)。这一次,骰子落在了 COUNT。', dark:true},
+    {tok:'(*)',      dist:[.62,.14,.08,.05,.04,.03,.02,.01], cap:'写下 (*) —— 正确命运(AVG 系)的概率质量实测归零。'},
+    {tok:'␣/',      dist:[.70,.10,.06,.05,.03,.02,.02,.01], cap:'除号落笔,陷阱概率升至 0.8(实测 o_t)。'},
+    {tok:'␣COUNT', dist:[.78,.08,.05,.03,.02,.02,.01,.01], cap:'第二个 COUNT —— 实测 o_t 锁死 1.00:整数除法陷阱成立,后续 0% 自愈。'},
+    {tok:'(DISTINCT',dist:[.88,.05,.03,.02,.01,.005,.005,.005], cap:'命运已定,余下只是把注定的 SQL 写完。SELECT COUNT(*) / COUNT(DISTINCT ArtistId) → 返回 1 → 最终答案错,且执行不报错,agent 毫无察觉。'},
+  ];
+  const fwdPath=async ()=>{
+    await moveDot([[57,150],[130,125],...[0]].slice(0,2),240); await pulse('embed');
+    for(let rep=0; rep<2; rep++){
+      layerLbl.textContent = rep===0?'× 36 层 · 前 18 层…':'× 36 层 · 后 18 层…';
+      await moveDot([center('embed'),center('n1')],150); await pulse('n1',110);
+      await moveDot([center('n1'),center('attn')],110); await pulse('attn',140);
+      await moveDot([center('attn'),center('r1')],110); await pulse('r1',90);
+      await moveDot([center('r1'),center('n2')],130); await pulse('n2',90);
+      await moveDot([center('n2'),center('mlp')],110); await pulse('mlp',140);
+      await moveDot([center('mlp'),center('r2')],110); await pulse('r2',90);
+    }
+    layerLbl.textContent='× 36 层';
+    await moveDot([center('r2'),center('fnorm')],180); await pulse('fnorm',120);
+    await moveDot([center('fnorm'),center('head')],160); await pulse('head',160);
+    await moveDot([center('head'),[900,150]],180);
+    dot.setAttribute('opacity',0);
+  };
+  async function run(){
+    while(true){
+      // reset strip
+      STRIP.chips.forEach(g=>g.remove()); STRIP.chips.length=0;
+      setBars([]); topLbl.textContent=''; cap.textContent='';
+      await sleep(600);
+      for(const st of STEPS){
+        await fwdPath();
+        setBars(st.dist);
+        if(st.dice){ // dice flicker between top-2
+          for(let f=0; f<6; f++){
+            topLbl.textContent = f%2 ? st.dice+'?' : st.tok+'?';
+            BARS[0].setAttribute('fill', f%2?MID:INK);
+            BARS[1].setAttribute('fill', f%2?INK:MID);
+            await sleep(190);
+          }
+          BARS[0].setAttribute('fill',INK); BARS[1].setAttribute('fill',MID);
+        }
+        topLbl.textContent=st.tok+'  '+(st.dist[0]*100).toFixed(0)+'%';
+        cap.textContent=st.cap;
+        // fly chip back along return curve
+        const g=chip(st.tok, st.dark);
+        const i=STRIP.chips.length-1, tx=STRIP.x+i*(STRIP.w+STRIP.gap);
+        g.setAttribute('opacity',1);
+        g.setAttribute('transform',`translate(${900-tx-STRIP.w/2}, ${170-STRIP.y})`);
+        const t0=performance.now(), dur=650;
+        await new Promise(res=>{ function fl(now){
+          const u=Math.min((now-t0)/dur,1), e=1-Math.pow(1-u,3);
+          const dx=(900-tx-STRIP.w/2)*(1-e), dy=(170-STRIP.y)*(1-e)-60*Math.sin(Math.PI*e);
+          g.setAttribute('transform',`translate(${dx},${dy})`);
+          u<1?requestAnimationFrame(fl):res(); } requestAnimationFrame(fl); });
+        g.removeAttribute('transform');
+        await sleep(st.dice?1000:550);
+      }
+      await sleep(2600);
+    }
+  }
+  run();
+})();
+
+</script>
+</body>
+</html>
