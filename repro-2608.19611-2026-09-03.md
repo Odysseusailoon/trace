@@ -57,8 +57,17 @@ regime where a fork can exist.
 
 **1. Decision tokens exist, in both chain of thought and agent trajectories.** On the Chinook ratio
 task the first tool call is close to dispositive: it splits 91 of 200 episodes into an
-integer-division cluster, none of those 91 reach the correct answer, 35 of 35 in the average-group-by
-cluster do, and only 2 of 126 that entered the bad cluster ever recover. Mirror replay isolates it.
+integer-division cluster, none of those 91 reach the correct answer, and 35 of 35 in the
+average-group-by cluster do.
+
+Self-repair needs its denominator stated or it looks like a contradiction. 91 is the count whose
+*first* SQL was the trap; 126 is the count that entered the trap at *any* point, so the first is
+contained in the second. Repair over the wider set is 2/126, and since none of the 91 recovered, both
+recoveries sit in the 35 that entered late: **opening with the trap is fatal at 0/91, wandering into it
+later is survivable at 2/35.** (91/200, 0/91 and 35/35 are recomputed from the cluster-by-outcome
+table; 126 is quoted from the collection report.)
+
+Mirror replay isolates it.
 Rewind a failed and a successful episode to the same pre-decision state and both give
 P(correct) = 0.22 at K = 50; replay after each one's own first query and they separate to 0.00 and
 1.00. Same state, same model, one different action.

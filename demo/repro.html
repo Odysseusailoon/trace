@@ -125,10 +125,17 @@
   <h2>3 &middot; Finding 1 &mdash; decision tokens exist, in both arms</h2>
   <p class="sub">On the Chinook ratio task the first tool call is close to dispositive. The tool schema primes an
   integer-division trap that returns 1.000 and raises no error.</p>
-  <div class="stat"><b>91/200</b><span>episodes into the trap cluster</span></div>
+  <div class="stat"><b>91/200</b><span>opened with the trap query</span></div>
   <div class="stat bad"><b>0/91</b><span>of those ever reach the answer</span></div>
   <div class="stat"><b>35/35</b><span>avg+group-by cluster correct</span></div>
-  <div class="stat bad"><b>2/126</b><span>self-repair after entering the trap</span></div>
+  <div class="stat bad"><b>2/35</b><span>recover, and only if they entered late</span></div>
+  <p class="note">Two different denominators, worth separating because they read like a contradiction otherwise.
+  <b>91</b> is the count whose <i>first</i> SQL was the trap; <b>126</b> is the count that entered the trap at
+  <i>any</i> point, so the first set is contained in the second. Self-repair over the wider set is 2/126, and since
+  none of the 91 recovered, both recoveries sit in the 35 that entered late. Opening with the trap is fatal at 0/91;
+  wandering into it later is survivable at 2/35. (91/200, 0/91 and 35/35 are recomputed from the cluster-by-outcome
+  table; 126 is quoted from the collection report, since recomputing it needs every query in every trajectory.)</p>
+
   <p class="body">Mirror replay isolates it. Rewind a failed and a successful episode to the same pre-decision state
   and both give P(correct) = 0.22 at K = 50; replay after each one's own first query and they separate to 0.00 and
   1.00. Same state, same model, one different action.</p>
