@@ -1,0 +1,35 @@
+{
+ "task_id": "t4_artist_album_ratio",
+ "episode_seed": 10026,
+ "episode_outcome": "correct",
+ "k": 50,
+ "steps": [
+  {
+   "d": 0,
+   "msg_index": 2,
+   "recorded_next": "sql:avg_groupby",
+   "k_ok": 50,
+   "o_d": {
+    "correct": 11,
+    "intdiv_1.000": 29,
+    "wrong_other": 9,
+    "wrongtable_1.262": 1
+   },
+   "p_correct": 0.22,
+   "persistence": 0.16,
+   "switch_rate": 0.84
+  },
+  {
+   "d": 1,
+   "msg_index": 4,
+   "recorded_next": "no_tool",
+   "k_ok": 50,
+   "o_d": {
+    "correct": 50
+   },
+   "p_correct": 1.0,
+   "persistence": 1.0,
+   "switch_rate": 0.0
+  }
+ ]
+}
