@@ -23,11 +23,24 @@ class Branch:
         return base.prefix_upto(self.t, self.tok_id)
 
 
-def observed_positions(n_gen: int, spacing: int, mode: str = "token") -> list[int]:
-    """Positions to branch at. For token mode: every `spacing` tokens starting at 0."""
-    if mode == "token":
-        return list(range(0, n_gen, spacing))
-    raise NotImplementedError(f"spacing_mode={mode} not yet implemented")
+def observed_positions(
+    n_gen: int,
+    spacing: int,
+    mode: str = "token",
+    tmin: int | None = None,
+    tmax: int | None = None,
+) -> list[int]:
+    """Positions to branch at. For token mode: every `spacing` tokens.
+
+    tmin/tmax restrict the sweep to a window, which is how the fine pass refines
+    a coarse hit without re-running the whole path (same two-stage shape as
+    scripts/zoom_t4_token.py).
+    """
+    if mode != "token":
+        raise NotImplementedError(f"spacing_mode={mode} not yet implemented")
+    lo = 0 if tmin is None else max(0, tmin)
+    hi = n_gen if tmax is None else min(n_gen, tmax + 1)
+    return list(range(lo, hi, spacing))
 
 
 def enumerate_branches(

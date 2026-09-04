@@ -25,6 +25,14 @@ class ReferenceCfg(BaseModel):
     spacing: int = 1
 
 
+class BranchStatCfg(BaseModel):
+    """Between-branch dispersion (src/forkscope/branchstat.py)."""
+    alpha: float = 0.05
+    persist_max: float = 0.9
+    sims: int = 20000
+    screen_sims: int = 2000
+
+
 class SmoothingCfg(BaseModel):
     pelt_cost: str = "l2"
     penalty_grid: list[float] = [1, 4, 16, 64, 256]
@@ -37,6 +45,7 @@ class Settings(BaseModel):
     server: ServerCfg = ServerCfg()
     fpa: FpaCfg = FpaCfg()
     reference: ReferenceCfg = ReferenceCfg()
+    branchstat: BranchStatCfg = BranchStatCfg()
     smoothing: SmoothingCfg = SmoothingCfg()
     fork_threshold: float = 0.10
     concurrency: int = 32
