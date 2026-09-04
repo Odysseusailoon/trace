@@ -1,0 +1,54 @@
+# Rerun config, 2026-09-03. Supersedes default.yaml for the MCQ token-level line.
+#
+# The original pass (spacing 12, S=20, threshold 0.05) could not have found what
+# it was looking for, for four independent reasons, all addressed here. The
+# fourth is the one measured on the recorded data and it dominates:
+#
+#   coverage    at threshold 0.05, 39 of 50 positions in college_physics_4 and
+#               31 of 51 in virology_5 had NO second branch. Most of the swept
+#               path had no counterfactual to compare against, so a "fork" there
+#               could only ever be noise in the greedy branch's own 20 draws.
+#   power       S=20 with Bonferroni over 50 positions puts the critical TVD at
+#               about 0.55 (measured: TVD 0.250 at 2x20 gives p = 0.13). "~1% of
+#               positions fork" was a statement about the rate of TVD > 0.5.
+#   resolution  51 observed positions over ~612 tokens compared t against t+12,
+#               so a single-token fork was never a testable object. (Only the
+#               adjacent-TVD curve needs this; fork_score is per-position.)
+#   threshold   0.05 excludes exactly the low-probability tokens that Bigelow
+#               et al. (arXiv:2412.07961) report as forking, punctuation above
+#               all. top_logprobs_num rises with it, or the top-k never reaches
+#               down to the new threshold.
+#
+# A fifth defect was in the outcome variable itself, not the fork rule. At a
+# 1500-token cap, 48 fresh samples truncate 37/48 (college_physics_4) and 24/48
+# (virology_5), and the loose extractor then reads option letters out of the
+# reasoning. At 4096 both truncate 0/48. Measured with scripts/probe_len.py;
+# the cap and extractor below are set from it.
+#
+# Stage A sweeps the whole path at spacing 4; stage B refines to spacing 1 in
+# windows around stage A's hits (--tmin/--tmax), the two-pass pattern already
+# used by scripts/zoom_t4_token.py.
+model: Qwen/Qwen3-8B
+server:
+  port: 30000
+  mem_fraction_static: 0.85
+fpa:
+  branch_prob_threshold: 0.02
+  samples_per_branch: 100       # S
+  samples_t0: 200               # N0
+  spacing: 4                    # stage A; stage B passes --spacing 1 in a window
+  spacing_mode: token
+  max_continuation_tokens: 4096   # 0/48 truncated at this cap; 1500 truncated 77%/50%
+  top_logprobs_num: 20
+branchstat:
+  alpha: 0.05
+  persist_max: 0.9              # token-level analog of the agent-side persistence filter
+  sims: 20000                   # matches scripts/fork_rule.py
+  screen_sims: 2000
+smoothing:
+  pelt_cost: l2
+  penalty_grid: [1, 4, 16, 64, 256]
+  bandwidth_grid: [2, 4, 8, 16]
+  cv_folds: 5
+fork_threshold: 0.10
+concurrency: 64
