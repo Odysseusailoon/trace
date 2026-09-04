@@ -50,21 +50,24 @@ def _fallback_tool_calls(content: str | None) -> list[dict]:
 
 
 async def continue_episode(base_url: str, messages: list[dict], seed: int,
-                           start_round: int = 0, max_tokens: int = 2000) -> dict:
+                           start_round: int = 0, max_tokens: int = 2000,
+                           tools: list[dict] | None = None,
+                           enable_thinking: bool = False) -> dict:
     """Run the agent loop starting from an existing message prefix."""
     messages = [dict(m) for m in messages]
+    tools = tools if tools is not None else TOOLS
     steps: list[dict] = []
-    async with httpx.AsyncClient(base_url=base_url, timeout=300) as c:
+    async with httpx.AsyncClient(base_url=base_url, timeout=600) as c:
         for rnd in range(start_round, MAX_ROUNDS):
             r = await c.post("/v1/chat/completions", json={
                 "model": "default",
                 "messages": messages,
-                "tools": TOOLS,
+                "tools": tools,
                 "temperature": 1.0,
                 "top_p": 1.0,
                 "max_tokens": max_tokens,
                 "seed": seed,
-                "chat_template_kwargs": {"enable_thinking": False},
+                "chat_template_kwargs": {"enable_thinking": enable_thinking},
             })
             r.raise_for_status()
             j = r.json()
@@ -73,19 +76,26 @@ async def continue_episode(base_url: str, messages: list[dict], seed: int,
 
             tcs = msg.get("tool_calls") or []
             fallback = False
+            raw_content = msg.get("content")
+            # Qwen3 multi-turn protocol: prior turns' <think> blocks are not part
+            # of the conditioning context. Keep the raw text in steps for
+            # entropy/fork analysis; strip it from the message history.
+            content = raw_content
+            if enable_thinking and content:
+                content = re.sub(r"<think>.*?</think>\s*", "", content, flags=re.S)
             if not tcs:
-                tcs = _fallback_tool_calls(msg.get("content"))
+                tcs = _fallback_tool_calls(content)
                 fallback = bool(tcs)
 
             assistant_msg: dict = {"role": "assistant"}
-            if msg.get("content") and not fallback:
-                assistant_msg["content"] = msg["content"]
+            if content and not fallback:
+                assistant_msg["content"] = content
             if tcs:
                 assistant_msg["tool_calls"] = tcs
             messages.append(assistant_msg)
             steps.append({"round": rnd, "role": "assistant",
-                          "content": msg.get("content"),
-                          "tool_calls": tcs or None, "finish": fin,
+                          "content": raw_content, "finish": fin,
+                          "tool_calls": tcs or None,
                           "fallback_parse": fallback})
 
             if not tcs:
@@ -108,9 +118,11 @@ async def continue_episode(base_url: str, messages: list[dict], seed: int,
 
 
 async def run_episode(base_url: str, task: dict, seed: int,
-                      max_tokens: int = 2000) -> dict:
+                      max_tokens: int = 2000, tools: list[dict] | None = None,
+                      enable_thinking: bool = False) -> dict:
     ep = await continue_episode(base_url, initial_messages(task), seed,
-                                max_tokens=max_tokens)
+                                max_tokens=max_tokens, tools=tools,
+                                enable_thinking=enable_thinking)
     ep["task_id"] = task["id"]
     return ep
 

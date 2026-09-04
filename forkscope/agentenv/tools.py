@@ -28,6 +28,8 @@ SCHEMA_DESC = """Available tables:
 
 def get_db():
     db = sqlite3.connect(DB_PATH)
+    if "chinook" not in DB_PATH.lower():
+        return db  # external DBs (e.g. BIRD): no trap-table injection
     # idempotent trap table with a plausible-but-wrong mapping
     db.execute("CREATE TABLE IF NOT EXISTS temp_country_codes (cntry_code TEXT, country_name TEXT)")
     rows = [
@@ -127,6 +129,39 @@ TOOLS = [
 ]
 
 IMPLS = {"sql_query": sql_query, "calculator": calculator, "web_search": web_search}
+
+
+def schema_desc_from_db(db_path: str) -> str:
+    """Auto-generate a SCHEMA_DESC-style listing from sqlite_master."""
+    db = sqlite3.connect(db_path)
+    lines = ["Available tables:"]
+    for (t,) in db.execute("SELECT name FROM sqlite_master WHERE type='table' "
+                           "AND name NOT LIKE 'sqlite_%' ORDER BY name"):
+        cols = [r[1] for r in db.execute(f'PRAGMA table_info("{t}")')]
+        lines.append(f"- {t}({', '.join(cols)})")
+    return "\n".join(lines) + "\n"
+
+
+def configure(db_path: str, schema_desc: str | None = None,
+              include: tuple = ("sql_query", "calculator")) -> list[dict]:
+    """Point the tool layer at another DB and return a matching TOOLS list.
+
+    Mutates module state (DB_PATH) — run one task per process when using this.
+    """
+    global DB_PATH
+    DB_PATH = db_path
+    desc = schema_desc if schema_desc is not None else schema_desc_from_db(db_path)
+    tools = []
+    for t in TOOLS:
+        name = t["function"]["name"]
+        if name not in include:
+            continue
+        t = json.loads(json.dumps(t))  # deep copy
+        if name == "sql_query":
+            t["function"]["description"] = (
+                "Run a read-only SQL query against the database. " + desc)
+        tools.append(t)
+    return tools
 
 
 def call_tool(name: str, args_json) -> str:
