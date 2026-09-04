@@ -20,3 +20,16 @@ forkscope/anim/media/
 RFC.md
 forking-fast-reference.md
 reports/
+
+# private drafts / commercial correspondence (not part of the release)
+dbs-vantage-email-draft.md
+ideas-*.md
+rigor-audit.md
+research-idea-*.md
+experiment-design-*.md
+blog-forkscope-*.md
+paper/
+forkscope/xfigs/ig/out/
+forkscope/.venv-analysis/
+.venv-analysis/
+litreview-*.md
