@@ -1,3 +1,26 @@
+> **INVALIDATED, 2026-09-03. Do not quote any number below.**
+>
+> This is the naive pre-null pass: forks are adjacent-position TVD on the
+> probability-weighted mixture curve, thresholded at 0.10, with no null
+> hypothesis. Five defects, each independently sufficient to void the fork counts:
+>
+> 1. The mixture `o_t = Sum_w p~(w)*hist(t,w)` averages over branches, so a fork
+>    carried by a low-probability branch is attenuated before any test sees it.
+>    Use `fork_score` (`src/forkscope/branchstat.py`) instead.
+> 2. At `branch_prob_threshold: 0.05`, most positions had **no second branch**
+>    (39 of 50 for college_physics_4, 31 of 51 for virology_5), so a "fork" there
+>    could only be noise in the greedy branch's own 20 draws.
+> 3. `S = 20` with Bonferroni over 50 positions puts the critical TVD near 0.55.
+>    Recomputed under a pooled multinomial null, **nothing here is significant**:
+>    max fork_score 0.250 (p = 0.13) and 0.350 (p = 0.09).
+> 4. The 1,500-token cap truncated 77% and 50% of fresh continuations, so the
+>    outcome distribution was partly reporting where the cap fell.
+> 5. The extractor accepted a bare `option (X)` anywhere in the text, so it could
+>    read an option the model was in the middle of rejecting.
+>
+> Corrected configuration: `configs/dense.yaml`. Status and method:
+> `repro-2608.19611-2026-09-03.md`.
+
 # forkscope report: virology_5
 
 - positions observed: 51
