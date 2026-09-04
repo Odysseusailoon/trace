@@ -69,17 +69,16 @@
 
 <header>
   <h1>Resampling-Based Uncertainty Analysis, Pushed Into Agent Trajectories</h1>
-  <div class="by">YUXI ZHENG &middot; SEP 2026 &middot; WEEKEND PROJECT &middot; QWEN3-8B &amp; QWEN3.6-35B-A3B &middot; SGLANG + VLLM</div>
+  <div class="by">YUXI ZHENG &middot; SEP 2026 &middot; WEEKEND PROJECT &middot; QWEN3-8B &amp; QWEN3.6-35B-A3B &middot; SGLANG</div>
   <div class="links">
-    <a href="https://github.com/Odysseusailoon/trace">CODE &middot; GITHUB.COM/ODYSSEUSAILOON/TRACE</a><span>&middot;</span>
-    <a href="en.html">THE INSTRUMENT &middot; MAIN WRITEUP &rarr;</a><span>&middot;</span>
-    <a href="lit.html">LITERATURE REVIEW &rarr;</a>
+    <a href="https://github.com/Odysseusailoon/trace">CODE &middot; GITHUB.COM/ODYSSEUSAILOON/TRACE</a>
   </div>
-  <p class="lede">A reproduction of <b>Forking Fast</b> (arXiv:2608.19611) on SGLang and vLLM, pushed past what the
-  paper covers: from token positions to <b>agent tool calls</b>, where a tool call is a natural fork position and the
-  environment state before it is reproducible. Nothing here is a finished result. What follows is what we tested,
-  what we found, <b>what we have not found, and what we failed at</b> &mdash; including a measurement error of our own
-  that voided one whole arm.</p>
+  <p class="lede">I read <b>Forking Fast</b> (arXiv:2608.19611) and thought the instrument looked genuinely
+  <b>useful</b>: if you can measure which step decided an outcome, you can debug a model instead of guessing at it.
+  So I reproduced it on SGLang over a weekend, then pushed it past what the paper covers &mdash; from token positions
+  to <b>agent tool calls</b>, where a tool call is a natural fork position and the environment state before it is
+  reproducible. Nothing here is a finished result. What follows is what we tested, what we found, <b>what we have not
+  found, and what we failed at</b> &mdash; including a measurement error of our own that voided one whole arm.</p>
 </header>
 
 <section class="card">
@@ -272,8 +271,7 @@ C_radix &asymp; (T/s)&middot;B&middot;[(P + t&#772;) + S&middot;L]    the prefix
   <p class="body">Direction 1. It is the one that is easy to verify, and we have clear thoughts on how to run the
   experiments. The others need further exploration.</p>
   <div class="links" style="margin-top:26px">
-    <a href="https://github.com/Odysseusailoon/trace">CODE, DATA AND PREREGISTRATION &middot; GITHUB.COM/ODYSSEUSAILOON/TRACE</a><span>&middot;</span>
-    <a href="en.html">&larr; THE INSTRUMENT, IN FULL</a>
+    <a href="https://github.com/Odysseusailoon/trace">CODE, DATA AND PREREGISTRATION &middot; GITHUB.COM/ODYSSEUSAILOON/TRACE</a>
   </div>
   <p class="src">LINEAGE: FORKING PATHS (ARXIV:2412.07961) &rarr; FORKING FAST (ARXIV:2608.19611) &rarr; ZUR ET AL. (ARXIV:2511.04527)</p>
 </section>
@@ -289,7 +287,7 @@ const txt=(svg,x,y,s,size=9.5,w=600,fill=P.mut,anchor='start')=>{
   const t=S('text',{x,y,'font-size':size,'font-weight':w,fill,'text-anchor':anchor});t.textContent=s;svg.appendChild(t);return t;};
 
 
-/* ── entropy gate recall (reused from en.html §8) ── */
+/* ── entropy gate recall ── */
 (function(){
   const K=[5,10,20,30,50], R=[.318,.538,.783,.880,.977], N=[.155,.289,.512,.677,.886];
   const svg=document.getElementById('svg5');
@@ -308,7 +306,7 @@ const txt=(svg,x,y,s,size=9.5,w=600,fill=P.mut,anchor='start')=>{
   txt(svg,X(20),Y(1.0)-2,'the gap that stays: 13–29% of forks are CONFIDENT — no hesitation, no warning, fully fateful',9.5,700,P.txt);
 })();
 
-/* ── agent-level fork vs entropy (reused from en.html §7) ── */
+/* ── agent-level fork vs entropy ── */
 (function(){
   const rows=[{t:0,o:[.5,.4,.1]},{t:4,o:[.45,.4,.15]},{t:8,o:[.5,.2,.3]},{t:12,o:[.45,.3,.25]},
     {t:14,o:[.35,.25,.4]},{t:15,o:[.45,.35,.2]},{t:16,o:[.45,.3,.25]},{t:17,o:[.5,.25,.25]},

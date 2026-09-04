@@ -1,7 +1,9 @@
 # Resampling-based uncertainty analysis, reproduced and pushed into agent trajectories
 
-Weekend project, 2026-09-03. Reproduction of arXiv:2608.19611 on SGLang and vLLM, plus early
-exploration past what the paper covers. Nothing here is a finished result.
+Weekend project, 2026-09-03. I read Forking Fast (arXiv:2608.19611) and thought the instrument looked
+genuinely useful: if you can measure which step decided an outcome, you can debug a model instead of
+guessing at it. So I reproduced it on SGLang, then pushed it past what the paper covers. Nothing here
+is a finished result.
 
 ## The method
 
