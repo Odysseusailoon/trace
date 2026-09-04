@@ -109,13 +109,27 @@ labels that mean something.
 ## Limitations
 
 **1. The task has to be verifiable.** You need a programmatic outcome to resample against. Less
-restrictive than it sounds, since high-fidelity sandboxes for eval and RL are now standard. It does
-mean you cannot test against production, but traditional software engineering cannot fully simulate a
-production incident either, least of all one that has not happened yet.
+restrictive than it sounds, since high-fidelity sandboxes for eval and RL are now standard. I think it
+is worth building an environment purely to test the fork-path distribution: **a staging environment
+for the agent era**.
 
-**2. It is expensive**, and it is worth being precise about which optimizations are free. With base
-path length `T`, spacing `s`, `B` branches per position, `S` samples per branch, prompt length `P`,
-mean continuation length `L`:
+**2. It is not a free lunch.** The floor is statistical, not engineering. Replicate TVD falls as
+`S^-1/2`, and we measured it: a log-log slope of **-0.49** over `S = 10` to 100, monotone, with
+iid-null ratios within a few percent of 1.0 across the range. Halving the error costs **4x** the
+samples, and the cost of a given precision grows as `precision^-2`. No amount of caching touches that.
+
+Forking Fast's own answer is to spend statistics instead of samples: PELT change-point detection over
+the `o_t` curve plus Dirichlet pooling across neighbouring positions, buying effective sample
+efficiency (the paper reports 4-15x) without buying samples. Our V1 check says the raw draws are only
+very slightly over-dispersed against an iid multinomial null (ratio 1.08 at `S = 20`), which is the
+condition pooling needs.
+
+The entropy gate is the other lever, and the numbers above are what it is worth: screening to the top
+20-30% of positions keeps 78-88% of forks at roughly 2x enrichment over random, cutting measurement
+cost **3-5x**. A prefilter, not a definition, since 13-29% of forks sit where the model is confident.
+
+What is left is engineering, and only half of it is free. With base path length `T`, spacing `s`, `B`
+branches per position, `S` samples per branch, prompt length `P`, mean continuation length `L`:
 
 ```
 C_naive = (T/s)·B·S·(P + t̄ + L)      every continuation re-prefills its own prefix

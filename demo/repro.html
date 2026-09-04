@@ -191,12 +191,25 @@
   <h2>6 &middot; Limitations</h2>
   <h3>1. The task has to be verifiable</h3>
   <p class="body">You need a programmatic outcome to resample against. Less restrictive than it sounds, since
-  high-fidelity sandboxes for eval and RL are now standard. It does mean you cannot test against production, but
-  traditional software engineering cannot fully simulate a production incident either, least of all one that has not
-  happened yet.</p>
-  <h3>2. It is expensive, and only two of the four levers are free</h3>
-  <p class="body">With base path length T, spacing s, B branches per position, S samples per branch, prompt length P,
-  mean continuation length L:</p>
+  high-fidelity sandboxes for eval and RL are now standard. I think it is worth building an environment purely to
+  test the fork-path distribution: <b>a staging environment for the agent era</b>.</p>
+
+  <h3>2. It is not a free lunch</h3>
+  <p class="body">The floor is statistical, not engineering. Replicate TVD falls as S<sup>&minus;1/2</sup>, and we
+  measured that: a log-log slope of <b>&minus;0.49</b> over S&nbsp;=&nbsp;10 to 100, monotone, with iid-null ratios
+  within a few percent of 1.0 across the whole range. So halving the error costs <b>4&times;</b> the samples, and the
+  cost of a given precision grows as precision<sup>&minus;2</sup>. No amount of caching touches that.</p>
+  <p class="body">Forking Fast's own answer is to spend statistics instead of samples: PELT change-point detection
+  over the o<sub>t</sub> curve plus Dirichlet pooling across neighbouring positions, which buys effective sample
+  efficiency (the paper reports 4&ndash;15&times;) without buying samples. Our V1 check says the raw draws are only
+  very slightly over-dispersed against an iid multinomial null (ratio 1.08 at S=20), which is the condition that
+  pooling needs.</p>
+  <p class="body">The entropy gate is the other lever, and &sect;4 is what it is worth: screening to the top 20&ndash;30%
+  of positions keeps 78&ndash;88% of forks at roughly 2&times; enrichment over random, cutting measurement cost
+  <b>3&ndash;5&times;</b>. It is a prefilter, not a definition &mdash; 13&ndash;29% of forks sit where the model is
+  confident and no entropy screen will ever surface them.</p>
+  <p class="body">What is left is engineering, and only half of it is free. With base path length T, spacing s, B
+  branches per position, S samples per branch, prompt length P, mean continuation length L:</p>
 <pre><code>C_naive = (T/s)&middot;B&middot;S&middot;(P + t&#772; + L)      every continuation re-prefills its own prefix
 C_radix &asymp; (T/s)&middot;B&middot;[(P + t&#772;) + S&middot;L]    the prefix is prefilled once per branch, decoded S times</code></pre>
   <p class="body">Our dense reference is s&nbsp;=&nbsp;1, S&nbsp;=&nbsp;200. On the shorter MMLU item
