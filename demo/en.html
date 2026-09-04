@@ -18,6 +18,10 @@
   header .by{font-size:11px;color:var(--mut);margin-top:6px;letter-spacing:.05em}
   p.lede{font-size:13.5px;color:var(--txt);margin-top:16px;max-width:700px}
   p.lede b{color:var(--green)}
+  .links{margin-top:10px;font-size:10px;letter-spacing:.07em}
+  .links a{color:var(--green);font-weight:700;text-decoration:none;border-bottom:1px solid var(--faint)}
+  .links a:hover{border-bottom-color:var(--green)}
+  .links span{color:var(--faint);margin:0 8px}
   section.card{margin-top:64px}
   h2{font-size:19px;font-weight:700;letter-spacing:-.02em}
   p.sub{font-size:11.5px;color:var(--mut);margin:6px 0 18px;max-width:720px}
@@ -48,18 +52,34 @@
 
 <header>
   <h1>Forkscope: Measuring Where Agent Trajectories Fork</h1>
-  <div class="by">YUXI ZHENG · SEP 2026 · WORKING NOTES · QWEN3-8B &amp; QWEN3.6-35B-A3B · SGLANG, DETERMINISTIC INFERENCE</div>
-  <p class="lede">An LLM agent's behavior is a <b>distribution over trajectories</b>. Any single run is one draw from it.
-  We built a replay instrument that measures, for any decision step, the counterfactual outcome distribution
-  o<sub>d</sub>: what would have happened had the dice landed differently. With it we find single tokens that lock
-  an episode's fate, benchmark questions where the model's <i>majority answer is wrong</i>, forks the model walks
-  into confidently (invisible to entropy monitoring), and a thinking budget that multiplies success 50×.
-  Every number below is measured, and the preregistered parts are marked. The whole study cost about $60 of GPU time.</p>
+  <div class="by">YUXI ZHENG · SEP 2026 · WORKING NOTES · QWEN3-8B &amp; QWEN3.6-35B-A3B</div>
+  <div class="links"><a href="https://github.com/Odysseusailoon/trace">CODE · GITHUB.COM/ODYSSEUSAILOON/TRACE</a><span>·</span><a href="lit.html">LITERATURE REVIEW · ANNOTATED PAPER LIST →</a></div>
+  <p class="lede">An LLM agent's behavior is a <b>distribution over trajectories</b>; any single run is one draw from it.
+  We built a replay instrument on SGLang that measures, at any decision step, the counterfactual outcome distribution
+  o<sub>d</sub>: what would have happened had the dice landed differently. The page runs in the order the work runs:
+  the problem (§1), the instrument (§2–4), what we hang on it — patches and probes (§5), what replay returns (§6)
+  and the two findings so far — <b>fate sealed in four tokens</b> (§7) and <b>forks that entropy cannot see</b> (§8) —
+  then the eval this implies (§9), the BIRD replication across two model sizes now in motion (§10), and the statistics
+  underneath (§11). Every number below is measured, the preregistered parts are marked, and the whole study cost
+  about $60 of GPU time.</p>
 </header>
 
+<!-- ════ SEC 1 : PROBLEM ════ -->
+<section class="card" id="problem">
+  <h2>1 · The problem: a few tokens are decisions</h2>
+  <p class="sub">An agent writes thousands of tokens per episode. Almost all of them are wording — resample one and the
+  final answer lands where it was always going to land. A few are decisions: the token where a SQL turn commits to
+  <b>COUNT</b> instead of <b>AVG</b> and enters a trap it will never report, the step where an agent accepts an empty
+  query result as its answer. On the transcript the two kinds look identical.</p>
+  <p class="body">Everything downstream currently reads the transcript anyway: debuggers eyeball it, LLM judges grade it
+  (they locate the decisive step 14% of the time — Who&amp;When, ICML 2025), evals score one draw of it, and
+  self-improvement loops feed it back as the learning signal. The object that actually carries the information is the
+  distribution over trajectories, and "where did this run commit?" is a measurable property of that distribution.
+  Measuring it is the whole project.</p>
+</section>
 <!-- ════ FIG A : LOGITS PLAYGROUND ════ -->
 <section class="card" id="figA">
-  <h2>1 · From logits to a word: temperature and truncation</h2>
+  <h2>2 · From logits to a word: temperature and truncation</h2>
   <p class="sub">The scene is our measured fork token. The agent has just written <b>SELECT</b>, and the next word decides
   the episode: <b>&nbsp;COUNT</b> leads into the integer-division trap (0% accuracy downstream), <b>&nbsp;AVG</b> into the
   correct aggregation (100%). One forward pass scores every candidate; temperature and the truncation rules reshape those
@@ -84,14 +104,14 @@
   <button id="btnSample">sample 200 times</button>
   <p class="note" id="sampleOut"></p>
   <p class="note">T→0 is greedy: the distribution collapses to a point. The 25% of mass still flowing to the correct
-  cluster at this position (§5) is invisible from the greedy path — which is how pass@1-greedy evals stay blind to
+  cluster at this position (§7) is invisible from the greedy path — which is how pass@1-greedy evals stay blind to
   distributional failure.</p>
   <p class="src">TEACHING WIDGET · TOKEN PROBABILITIES ARE CONSTRUCTED; CLUSTER STRUCTURE MATCHES THE MEASURED T4 ZOOM (T=17: COUNT FAMILY 0.50 / AVG 0.25 / OTHER 0.25)</p>
 </section>
 
 <!-- ════ FIG B : O_T DEFINITION ════ -->
 <section class="card" id="figB">
-  <h2>2 · What we measure: the outcome distribution o<sub>t</sub></h2>
+  <h2>3 · What we measure: the outcome distribution o<sub>t</sub></h2>
   <p class="sub">"Was this token important?" is not a measurable question. This one is: at position t, given the prefix
   generated so far, where will the final answer land — correct, one of the named wrong clusters, no answer? That
   conditional distribution is o<sub>t</sub>. Over a whole generation it is a T×C matrix: T positions, each holding one
@@ -103,16 +123,19 @@
   <p class="body">The definition turns two adjectives into shapes. A decision fork is a step change: o<sub>t</sub> holds a
   mixture, then snaps to a point and stays there. Drift is movement that never locks. And o<sub>0</sub> — the distribution
   before any token is written — is the task's own success probability, the number a single-sample eval silently replaces
-  with one draw (§8).</p>
-  <p class="src">O_T = P(FINAL OUTCOME CLUSTER | PREFIX UP TO T) · THIS FIGURE IS SCHEMATIC · MEASURED EXAMPLES: §4 (DRIFT), §5 (FORK)</p>
+  with one draw (§9).</p>
+  <p class="src">O_T = P(FINAL OUTCOME CLUSTER | PREFIX UP TO T) · THIS FIGURE IS SCHEMATIC · MEASURED EXAMPLES: §6 (DRIFT), §7 (FORK)</p>
 </section>
 
 <!-- ════ FIG 1 : METHOD ════ -->
 <section class="card" id="fig1">
-  <h2>3 · How we sample: replay at decision boundaries</h2>
-  <p class="sub">Record one episode (T=1.0, tools really execute). At each decision boundary d, rewind to that exact
-  state and sample K=50 full counterfactual continuations — tools re-execute, outcomes are checked against executable
-  gold. The outcome histogram is o<sub>d</sub>; where it collapses is where fate locks.</p>
+  <h2>4 · How we sample: find the forking step, then zoom token by token</h2>
+  <p class="sub">The search runs coarse to fine. Record one episode (T=1.0, tools really execute). <b>First pass, decision
+  steps:</b> at each action boundary d, rewind to that exact state and sample K=50 full counterfactual continuations —
+  tools re-execute, outcomes are checked against executable gold. The histogram is o<sub>d</sub>; the boundary where it
+  collapses is the turn where fate locks. <b>Second pass, tokens:</b> inside that flagged turn only, cut the prefix on a
+  token grid (stride 4, then stride 1 where o<sub>t</sub> moved, then changepoint statistics) and resample at each cut —
+  which is how the four-token collapse of §7 was found.</p>
   <svg id="svg1" viewBox="0 0 1000 250" width="100%"></svg>
   <div class="legend"><span><i style="background:var(--green)"></i>continuation → correct</span>
     <span><i style="background:var(--amber)"></i>continuation → trap</span>
@@ -125,32 +148,62 @@
   probability mass still flows both ways.</p>
   <svg id="cutsvg" viewBox="0 0 1000 310" width="100%"></svg>
   <table class="tbl">
-    <thead><tr><th></th><th>token level</th><th>decision-step level (agent)</th></tr></thead>
+    <thead><tr><th></th><th>decision-step level (agent) — pass 1</th><th>token level — pass 2, inside the flagged turn</th></tr></thead>
     <tbody>
-    <tr><td>where to cut</td><td>a grid over the whole turn: stride 4, then stride 1 where o<sub>t</sub> moved, then changepoint statistics</td><td>action boundaries d=0,1,… — one cut per tool call, no token grid</td></tr>
-    <tr><td>one continuation</td><td>plain text to EOS, no environment</td><td>a full episode: write SQL → execute → read result → … → final answer</td></tr>
-    <tr><td>outcome check</td><td>regex clustering of the emitted SQL</td><td>executable gold at 1% numeric tolerance, plus first-action clustering</td></tr>
-    <tr><td>scale</td><td>S=20 × ~40 cuts</td><td>K=50 × 2–8 boundaries · 98.5% prefix-cache hit measured</td></tr>
-    <tr><td>what it can fix</td><td>nothing — tokens are not an intervention surface</td><td>the tool description / prompt: exactly what the RSI patch edits</td></tr>
+    <tr><td>where to cut</td><td>action boundaries d=0,1,… — one cut per tool call, no token grid</td><td>a grid over the whole turn: stride 4, then stride 1 where o<sub>t</sub> moved, then changepoint statistics</td></tr>
+    <tr><td>one continuation</td><td>a full episode: write SQL → execute → read result → … → final answer</td><td>plain text to EOS, no environment</td></tr>
+    <tr><td>outcome check</td><td>executable gold at 1% numeric tolerance, plus first-action clustering</td><td>regex clustering of the emitted SQL</td></tr>
+    <tr><td>scale</td><td>K=50 × 2–8 boundaries · 98.5% prefix-cache hit measured</td><td>S=20 × ~40 cuts</td></tr>
+    <tr><td>what it can fix</td><td>the tool description / prompt: exactly what the RSI patch edits</td><td>nothing — tokens are not an intervention surface</td></tr>
     </tbody>
   </table>
   <p class="src">INSTRUMENT: SGLANG /GENERATE + CHAT-TEMPLATE-FAITHFUL REPLAY · K=50 · EXECUTABLE GOLD · TOTAL STUDY COST ≈ $60 GPU</p>
 </section>
 
-<!-- ════ FIG 2 : MCQ WAVERING ════ -->
+<!-- ════ SEC 5 : PATCHES & PROBES ════ -->
+<section class="card" id="patches">
+  <h2>5 · What hangs on the instrument: a patch and a probe</h2>
+  <p class="sub">A fork you can measure is a fork you can act on. Two things run on top of the replay data —
+  one intervention, one representation probe.</p>
+  <p class="body"><b>The RSI patch.</b> The trap of §7 is primed by the tool schema, and the instrument says exactly
+  where: decision step d=0, first SQL turn. So instead of feeding a repair loop its own transcripts, we feed it the fork
+  report. The loop rewrites the tool description at the measured decision point, and 200 fresh episodes re-score the
+  patch on the same instrument: the trap cluster drops 46% → 0% with the correct cluster intact. One patched run so far
+  — the multi-seed replication with cluster-robust intervals is queued (§10) — but the loop's shape is the point:
+  measured fork evidence in, targeted prompt edit out, effect verified by the same measurement. Judges reading logs
+  guess; an o<sub>d</sub> curve is not an opinion.</p>
+  <p class="body"><b>The SAE probe.</b> If o<sub>d</sub> is the behavioral readout of a commitment, the hidden state
+  should carry it before the token lands. We extract sparse-autoencoder latents at the fork position under trap-bound
+  and correct-bound prefixes and diff the active features. Token-level precedent exists — hidden-state probes recover
+  o<sub>t</sub> without resampling (Zur et al. 2025) — but the agent version needs replay ground truth to train against,
+  which is exactly what this instrument produces. The first 8B extraction is running now; nothing to report yet.</p>
+  <p class="src">PATCH: T4 TOOL-DESCRIPTION EDIT · N=200 RE-SCORE · SINGLE SEED, REPLICATION QUEUED · PROBE: SAE LATENT DIFF AT D=0, IN FLIGHT</p>
+</section>
+
+<!-- ════ FIG 2 : TAXONOMY + DRIFT ════ -->
 <section class="card" id="fig2">
-  <h2>4 · Token level: wavering is not forking</h2>
-  <p class="sub">Chain-of-thought MCQ, outcome distribution over answer options as generation proceeds.
-  This case (virology, 8B) swings between options B and C at 11 measured positions across 600 tokens and never locks. A method that calls every wobble a fork would be wrong here, and the changepoint smoother correctly refuses to. Decision-type forks turned up in about 1% of our 201 MCQ probes. The fork structure worth studying lives in the agent domain.</p>
+  <h2>6 · What replay returns: consensus error, drift, or a fork</h2>
+  <p class="sub">Replay never returns "the model failed". It returns a shape, and the shape names the pathology.
+  <b>Consensus error:</b> o<sub>t</sub> is a point mass on a wrong value from the start — b89 filters on 'East Bohemia'
+  against a database storing 'east Bohemia' and answers 0, 199 of 199 errors identical; nothing forks, the task is lost
+  before the first token. <b>Drift:</b> o<sub>t</sub> moves and never locks. <b>Fork:</b> a mixture snaps to a point
+  mid-trajectory. The three demand different fixes — knowledge, decoding, decision-point intervention — and the shape
+  doubles as a quality readout for the task itself: an eval item or RL environment whose modal answer is wrong pays
+  reward into the trap under any majority-vote signal (§9).</p>
+  <p class="body">Below, the drift case, chain-of-thought MCQ with the outcome distribution tracked as generation
+  proceeds. This case (virology, 8B) swings between options B and C at 11 measured positions across 600 tokens and never
+  locks. A method that calls every wobble a fork would be wrong here, and the changepoint smoother correctly refuses to.
+  Decision-type forks turned up in about 1% of our 201 MCQ probes — rare at token level, which is exactly why the agent
+  domain (§7) is where the fork structure lives.</p>
   <svg id="svg2" viewBox="0 0 1000 300" width="100%"></svg>
   <div class="legend"><span><i style="background:var(--green)"></i>P(option C)</span>
     <span><i style="background:var(--mid)"></i>P(option B)</span></div>
-  <p class="src">CASE VIROLOGY[5] · 11 FORК CANDIDATES, TVD 0.12–0.30, NONE LOCK · S=20/POSITION · DRIFT, NOT DECISION</p>
+  <p class="src">CASE VIROLOGY[5] · 11 FORK CANDIDATES, TVD 0.12–0.30, NONE LOCK · S=20/POSITION · DRIFT, NOT DECISION</p>
 </section>
 
 <!-- ════ FIG 3 : THE DIE TOKEN ════ -->
 <section class="card" id="fig3">
-  <h2>5 · Agent level: fate is sealed in four tokens</h2>
+  <h2>7 · Finding 1 — agent level: fate is sealed in four tokens</h2>
   <p class="sub">Task: "average albums per artist" over a real SQLite DB. The tool schema primes an integer-division
   trap (returns 1.000, raises no error, 0% self-repair). Inside the first SQL-writing turn we truncate the prefix at
   every token, resample 20 continuations each, and classify the emitted SQL. Amber = trap cluster, green = correct
@@ -173,12 +226,39 @@
   <p class="src">T4 ZOOM 2026-09-01 · ANCHOR = REAL EPISODE (SQL BYTE-IDENTICAL TO RECORD) · S=20/POSITION · TOP-10 TRUNCATED ENTROPY</p>
 </section>
 
-<!-- ════ FIG 4 : IN THE WILD ════ -->
+<!-- ════ FIG 5 : ENTROPY GATE ════ -->
+<section class="card" id="fig5">
+  <h2>8 · Finding 2 — entropy finds most forks, and the misses are the story</h2>
+  <p class="sub">Cheap idea: only measure where the model hesitates. We tested it on the Forking Fast public release
+  (Llama-3-8B, 100 questions, S=200 ground-truth o<sub>t</sub> grids): gate positions by 1−p<sub>base</sub>, check
+  recall of PELT-detected forks. Amber = entropy-gated recall, olive = random-gate null.</p>
+  <svg id="svg5" viewBox="0 0 1000 300" width="100%"></svg>
+  <p class="body">Gating works: about 2× enrichment over random, and recall rises with fork size (0.87 at top-20% for large forks, 0.95 at top-30%). A two-stage instrument, entropy screen first and replay only at gated positions, cuts measurement cost 3–5×. But 13–29% of forks happen where the model is confident. No entropy-based monitor can see them, and the agent data shows why that matters: after the die lands, the trap path in §7 runs at near-zero entropy, confidently doomed.</p>
+  <p class="src">EG-0A QUICK PASS · PELT PEN=32 · 299 FORKS / 100 ROWS · PROXY = 1−P_BASE · NULL = PERMUTATION</p>
+</section>
+
+<!-- ════ FIG 6 : EVAL ════ -->
+<section class="card" id="fig6">
+  <h2>9 · Fork distributions as a fairer eval</h2>
+  <p class="sub">Single-sample evals score one draw from a random variable. Two measured cases show how that lies. On the schema-trap task the modal answer cluster is wrong (46% trap, 18% correct), so greedy and majority-vote evals reward the error. On BIRD b226 the model is a genuine coin flip (o₀ = 0.45).</p>
+  <svg id="svg6" viewBox="0 0 1000 280" width="100%"></svg>
+  <div class="legend"><span><i style="background:var(--green)"></i>correct mass</span>
+    <span><i style="background:var(--amber)"></i>modal wrong cluster</span>
+    <span><i style="background:var(--olive)"></i>other outcomes</span></div>
+  <p class="body">The distributional alternative is a brittleness profile: success probability o₀ with a confidence interval, the step where fate locks, the self-repair rate, and the coverage of correct strategies. It costs more samples than pass@1, but the same rollouts also provide the attribution in sections 4–8, and prefix caching pays most of the bill. On tasks where the mode is wrong, any eval that trusts the mode rewards the trap. Self-consistency included.</p>
+  <p class="src">T4: 200 EPISODES × 2 COLLECTIONS (45%/46% REPLICATED) · B226: N=200 · WILSON CIS IN REPO</p>
+</section>
+
+
+
+<!-- ════ FIG 4 : IN THE WILD / FURTHER WORK ════ -->
 <section class="card" id="fig4">
-  <h2>6 · In the wild: BIRD across two model sizes</h2>
-  <p class="sub">Same instrument, external benchmark (BIRD mini-dev, 10 questions selected by a frozen two-stage rule:
-  text criteria, then an uncertainty screen keeping questions whose 10-episode answer mode is 4–6 — dispersion,
-  not correctness). 200 episodes per question per arm, four conditions: Qwen3-8B and Qwen3.6-35B-A3B, thinking off and on. First the 8B non-thinking floor — the floor has structure — then what scale and thinking each rescue.</p>
+  <h2>10 · Further work: the instrument in the wild — BIRD across two model sizes</h2>
+  <p class="sub">The follow-up track, already in motion. Same instrument, external benchmark (BIRD mini-dev, 10 questions
+  selected by a frozen two-stage rule: text criteria, then an uncertainty screen keeping questions whose 10-episode
+  answer mode is 4–6 — dispersion, not correctness). 200 episodes per question per arm, four conditions: Qwen3-8B and
+  Qwen3.6-35B-A3B, thinking off and on. First the 8B non-thinking floor — the floor has structure — then what scale and
+  thinking each rescue.</p>
   <svg id="svg4" viewBox="0 0 1000 330" width="100%"></svg>
   <div class="legend"><span><i style="background:var(--green)"></i>correct</span>
     <span><i style="background:var(--amber)"></i>wrong</span>
@@ -222,36 +302,19 @@
     <span class="stat"><b>7/10</b><span>cleared to ≤10% fail by scale alone (35B, thinking off)</span></span>
     <span class="stat bad"><b>94–98%</b><span>of 35B's wrong answers on b219 are one value</span></span>
   </div>
+  <p class="body"><b>Follow-ups, in order.</b> (1) Decision-step replay on b192, where the 35B's correct answer and the
+  179&#8239;232.5 attractor still split the distribution in both thinking arms — if o<sub>d</sub> flips mid-game there,
+  decision forks survive a 4× scale jump. (2) The SAE latent diff of §5, repeated at 35B. (3) Multi-seed replication of
+  the RSI patch with cluster-robust intervals. (4) A replay-noise audit: a replica floor under deterministic inference,
+  against the 14–28pp re-feed drift reported for stock engines ("Re-feeding Is Not Replaying", 2026) — every fork we
+  report should clear the noise bar that result implies. (5) The entropy-gated two-stage instrument of §8 as a
+  production screening mode.</p>
   <p class="src">BIRD MINI-DEV · PREREGISTERED SELECTION + DATED AMENDMENTS · N=200/QUESTION/ARM · 4 CONDITIONS = {8B, 35B} × {THINKING OFF, ON} · 35B RAN ON A DGX SPARK (GB10) · ANALYSIS: BIRD_ANALYSIS_20260902.JSON</p>
 </section>
 
-<!-- ════ FIG 5 : ENTROPY GATE ════ -->
-<section class="card" id="fig5">
-  <h2>7 · Can entropy find the forks? Mostly — and the misses are the story</h2>
-  <p class="sub">Cheap idea: only measure where the model hesitates. We tested it on the Forking Fast public release
-  (Llama-3-8B, 100 questions, S=200 ground-truth o<sub>t</sub> grids): gate positions by 1−p<sub>base</sub>, check
-  recall of PELT-detected forks. Amber = entropy-gated recall, olive = random-gate null.</p>
-  <svg id="svg5" viewBox="0 0 1000 300" width="100%"></svg>
-  <p class="body">Gating works: about 2× enrichment over random, and recall rises with fork size (0.87 at top-20% for large forks, 0.95 at top-30%). A two-stage instrument, entropy screen first and replay only at gated positions, cuts measurement cost 3–5×. But 13–29% of forks happen where the model is confident. No entropy-based monitor can see them, and the agent data shows why that matters: after the die lands, the trap path in §5 runs at near-zero entropy, confidently doomed.</p>
-  <p class="src">EG-0A QUICK PASS · PELT PEN=32 · 299 FORKS / 100 ROWS · PROXY = 1−P_BASE · NULL = PERMUTATION</p>
-</section>
-
-<!-- ════ FIG 6 : EVAL ════ -->
-<section class="card" id="fig6">
-  <h2>8 · Fork distributions as a fairer eval</h2>
-  <p class="sub">Single-sample evals score one draw from a random variable. Two measured cases show how that lies. On the schema-trap task the modal answer cluster is wrong (46% trap, 18% correct), so greedy and majority-vote evals reward the error. On BIRD b226 the model is a genuine coin flip (o₀ = 0.45).</p>
-  <svg id="svg6" viewBox="0 0 1000 280" width="100%"></svg>
-  <div class="legend"><span><i style="background:var(--green)"></i>correct mass</span>
-    <span><i style="background:var(--amber)"></i>modal wrong cluster</span>
-    <span><i style="background:var(--olive)"></i>other outcomes</span></div>
-  <p class="body">The distributional alternative is a brittleness profile: success probability o₀ with a confidence interval, the step where fate locks, the self-repair rate, and the coverage of correct strategies. It costs more samples than pass@1, but the same rollouts also provide the attribution in sections 3–6, and prefix caching pays most of the bill. On tasks where the mode is wrong, any eval that trusts the mode rewards the trap. Self-consistency included.</p>
-  <p class="src">T4: 200 EPISODES × 2 COLLECTIONS (45%/46% REPLICATED) · B226: N=200 · WILSON CIS IN REPO</p>
-</section>
-
-
 <!-- ════ FIG C : STATISTICS ════ -->
 <section class="card" id="figC">
-  <h2>9 · The statistics under the hood</h2>
+  <h2>11 · The statistics under the hood</h2>
   <p class="sub">Three pieces keep every picture above honest: how branch samples become legal i.i.d. draws, how smoothing
   borrows strength without erasing the very forks it hunts, and how to know when an estimate has hit the floor that
   sampling noise sets.</p>
@@ -266,7 +329,7 @@
   borrowing their samples cuts noise — but a symmetric kernel would smear the one thing we are hunting, the step change.
   M5a segments first (PELT changepoint detection), then smooths within segments, with the kernel hard-truncated at every
   boundary: segment A never leaks into segment B. Validation: 22/22 synthetic recoveries, TVD estimation error down 36%,
-  effective sample size 3.8× — and on the drift case of §4 it correctly refuses to call any of the 11 wobbles a fork.</p>
+  effective sample size 3.8× — and on the drift case of §6 it correctly refuses to call any of the 11 wobbles a fork.</p>
   <p class="body"><b>Leave-replicate-out, and the noise floor.</b> Is S=20 enough, and is the smoother worth improving?
   Split the pool you already have: 20 draws in, the rest as pseudo-ground-truth, rotate, and the average TV gap is the
   typical S=20 error — no new GPU time. Then score an oracle that knows the true o<sub>t</sub> under the same protocol:
@@ -278,7 +341,7 @@
   <p class="src">MIXTURE = WEIGHTED DRAW WITHOUT REPLACEMENT, PER POSITION · M5A = PELT-L2 + BOUNDARY-TRUNCATED KERNEL, DIRICHLET POOLING · 22/22 SYNTHETIC · LRO ON POOLED REPLICATES · FLOOR = ORACLE TV UNDER THE SAME PROTOCOL</p>
 </section>
 
-<p class="src" style="margin-top:70px">FORKSCOPE · COUNTERFACTUAL FORK ANALYSIS FOR LLM AGENTS · DATA & PREREGISTRATIONS IN REPO · PAGE IS A SINGLE OFFLINE-CAPABLE FILE (FONTS EXCEPTED)</p>
+<p class="src" style="margin-top:70px">FORKSCOPE · COUNTERFACTUAL FORK ANALYSIS FOR LLM AGENTS · CODE: GITHUB.COM/ODYSSEUSAILOON/TRACE · DATA &amp; PREREGISTRATIONS IN REPO · PAGE IS A SINGLE OFFLINE-CAPABLE FILE (FONTS EXCEPTED)</p>
 </div>
 
 <script>
@@ -554,9 +617,9 @@ renderLogits();
     txt(svg,x0,y0-14,kind==='fork'?'':'',9,600,P.mut);
     txt(svg,x0+w,y0+h+22,'position t \u2192',8.5,600,P.faint,'end');
   }
-  panel(30,'fork','a decision fork (shape of \u00a75)','o_t holds a mixture, snaps to a point, stays');
-  panel(550,'drift','drift (shape of \u00a74)','o_t moves at 11 places and never locks');
-  txt(svg,30,28,'mass on each outcome cluster, stacked to 1.0 \u2014 SCHEMATIC',8.5,600,P.mut);
+  panel(30,'fork','a decision fork (shape of \u00a77)','o_t holds a mixture, snaps to a point, stays');
+  panel(550,'drift','drift (shape of \u00a76)','o_t moves at 11 places and never locks');
+  txt(svg,30,14,'mass on each outcome cluster, stacked to 1.0 \u2014 SCHEMATIC',8.5,600,P.mut);
 })();
 
 /* ── FIG 3b: two cuts on one trajectory ── */
