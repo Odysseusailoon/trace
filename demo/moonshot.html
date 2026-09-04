@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Edit the Weights in Natural Language, and Kill Post-Training</title>
+<title>Moonshot project for interpretability</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{ /* PALM categorical preset (lieflat-charts) */
@@ -72,219 +72,145 @@
 <div class="wrap">
 
 <header>
-  <div class="moon">MOONSHOT &middot; INTERPRETABILITY</div>
-  <h1>Edit the Weights in Natural Language, and Kill Post-Training</h1>
-  <div class="by">YUXI ZHENG &middot; SEP 2026 &middot; RESEARCH PITCH &middot; NOT A RESULT</div>
+  <div class="moon">MOONSHOT PROJECT FOR INTERPRETABILITY</div>
+  <h1>I want to build a model where you can edit the weights directly in natural language, and kill post-training entirely.</h1>
+  <div class="by">YUXI ZHENG &middot; SEP 2026 &middot; RESEARCH PITCH</div>
   <div class="links">
     <a href="https://scholar.google.com/citations?user=WbPQ45kAAAAJ&amp;hl=zh-CN">GOOGLE SCHOLAR</a><span>&middot;</span>
     <a href="https://x.com/VoidAsuka">X &middot; @VOIDASUKA</a><span>&middot;</span>
     <a href="https://github.com/Odysseusailoon/trace">GITHUB</a>
   </div>
-  <p class="lede">Changing a model's behaviour today costs a full forward pass, backward pass, RL step and eval
-  cycle &mdash; even when the behaviour touches a fraction of a percent of the weights. Models get <b>tamed like
-  alchemy, not built like a computer</b>. The bet: pretrain a sparse MoE with enough experts that behaviours land in
-  <b>named, addressable slots</b>, then edit the slot instead of running the loop. If it works, post-training gets
-  dramatically more precise and sample-efficient, and interpretability finally ships inside the production frontier
-  models &mdash; the only place existential risk actually lives.</p>
+  <p class="lede">ref: <a class="inl" href="https://arxiv.org/html/2412.04139v1">https://arxiv.org/html/2412.04139v1</a></p>
 </header>
 
 <section class="card">
-  <h2>1 &middot; The waste, stated plainly</h2>
-  <p class="body">A model that prefers <code>pip</code> over <code>uv</code> because its pretraining data was older
-  does not need a new mental model of package management. It needs <b>one routing decision redirected</b>. Changing
-  that means the whole loop, to move something affecting a sliver of the weights. You are being roughly four orders of
-  magnitude more wasteful than the size of the actual change warrants.</p>
-  <p class="body">The reason is that the model has no internal vocabulary for what it just learned. There is no slot
-  labelled &ldquo;package manager preference&rdquo; for an engineer to edit. Gradient descent diffuses the change
-  across millions of parameters, and the only way to undo it is to run the loop again.</p>
-  <div class="verdict bad">
-    <span class="tag">Why post-hoc interpretability cannot close this</span>
-    <p>Sparse, interpretable structure does emerge inside trained models. But extracting it with an SAE means
-    training an auxiliary model that is <b>by definition smaller than the substrate it reads</b>. That capacity gap
-    is baked into the post-hoc approach; it is not a solvable engineering problem within it. And the fidelity loss
-    compounds as the size gap grows, which is exactly the wrong direction for frontier scale.</p>
-  </div>
-  <p class="body">So the only model that can interpret a frontier model is that model itself, which means
-  interpretability has to be a training objective rather than an afterthought. It also has to ride on compute people
-  are <i>already</i> willing to spend, because that spending happens whether or not interpretability comes along.</p>
-</section>
+  <p class="body">Right now, changing a model&rsquo;s behaviour costs a full forward pass, backward pass, RL step, and eval cycle, even for something touching a fraction of a percent of the weights. I&rsquo;ve worked on post-training data, and the amount of money and compute that gets burned moving one narrow behaviour is absurd. Models get &ldquo;tamed&rdquo; through training like alchemy, not built like a computer, and that&rsquo;s both wasteful and basically impossible to interpret.</p>
 
-<section class="card">
-  <h2>2 &middot; The substrate is already being built</h2>
-  <p class="sub">Every frontier lab now ships a sparse MoE, for capability and cost reasons that have nothing to do
-  with interpretability. Expert count per layer, against ship date. Amber = Monet.</p>
+  <p class="body">The reason this has to happen at pretraining, not bolted on after: a smaller model used to interpret a bigger one has to compress it, which is literally what SAEs do, and a human can&rsquo;t know in advance every risk a much smarter model might contain. The only thing that can actually interpret a frontier model is the frontier model itself, and building that in after the fact is too expensive. It has to be part of the pretraining run.</p>
+
+  <p class="body">The industry is already moving toward sparser mixture-of-experts models anyway, every frontier lab ships one now, and Monet already shows a version of this works: pretrain a sparse MoE with enough experts and you get monosemantic, addressable circuits instead of a polysemantic mess, at close to no cost in performance. There&rsquo;s no obvious reason this stops working with more scale and the right tweaks, which is exactly what the current experiments are testing.</p>
+
+  <p class="sub" style="margin-top:26px">Expert count per layer, against ship date. Amber = Monet.</p>
   <svg id="experts" viewBox="0 0 1000 300" width="100%"></svg>
-  <p class="body">Monet (<a class="inl" href="https://arxiv.org/abs/2412.04139">arXiv:2412.04139</a>, Park, Ahn, Kim,
-  Kang) folds sparse dictionary learning into end-to-end MoE pretraining rather than reconstructing it afterward,
-  and pushes to <b>262,144 experts per layer</b> &mdash; roughly 300&times; beyond the densest shipped model on this
-  chart. It reports knowledge manipulation across domains, languages and toxicity without degrading general
-  performance. That is the closest existing thing to named, addressable circuits at scale.</p>
-  <p class="note">Counts are per-layer routed experts as published or as stated in the pitch; Mixtral, DeepSeek-V2/V3
+  <p class="note">Counts are per-layer routed experts as published or as stated in this note; Mixtral, DeepSeek-V2/V3
   and Monet are from their papers, Kimi K3 and DeepSeek V4 are the figures I am working from and are not
   independently checked here.</p>
   <p class="src">EXPERTS PER LAYER &middot; LOG SCALE &middot; PLUMB SCATTER</p>
+
+  <p class="body">If it works, this cuts both ways on purpose. Getting monosemanticity close to perfect at close to no performance cost makes post-training dramatically more precise, and more compute- and sample-efficient. It also means interpretability actually makes it into the production frontier models people train and deploy at scale, which is the only place existential risk actually lives and where the compute and money already are.</p>
 </section>
 
 <section class="card">
-  <h2>3 &middot; Square-root scaling is what makes it affordable</h2>
-  <p class="sub">Monet's expert decomposition scales total parameters with the <b>square root</b> of expert count.
-  Without it, 262,144 experts is not an architecture, it is a bill.</p>
-  <svg id="sqrtscale" viewBox="0 0 1000 290" width="100%"></svg>
-  <p class="body">This is the load-bearing engineering claim. A linear law makes monosemanticity a luxury nobody
-  deploys; a square-root law makes it a design choice. It is also the claim most worth attacking, since it is the one
-  that has to survive another two orders of magnitude of scale.</p>
-  <p class="src">PARAMETER MULTIPLIER UNDER THE SQUARE-ROOT LAW &middot; HAIRLINE LINE</p>
+  <h2>The problem in more detail</h2>
+  <p class="body">Frontier model interpretability has to use a model as large as the target model, for a few reasons that all point the same direction:</p>
+  <ul class="tight">
+    <li>At the level of existential risk, we need to interpret frontier models at scale. Interpretability methods have to work on the largest models, not toy versions of them.</li>
+    <li>We should use methods that scale with compute, so pouring in more resources makes the method better instead of exposing its limits.</li>
+    <li>Using a smaller model, especially of a different architecture, to interpret a larger model forces semantic compression, and the fidelity loss compounds as the size gap grows.</li>
+    <li>Given the above, the only model that can interpret the largest frontier models is the model itself. That means interpretability has to be baked into training as an objective or loss, not added afterward.</li>
+    <li>We should use methods people are already willing to spend enormous compute on for production models, since that spending happens regardless of whether interpretability comes along for the ride.</li>
+  </ul>
+  <p class="body">Post-training is the dominant lever for behaviour control now, and the loop is expensive even when the target behaviour is trivial. A model that prefers pip over uv because its pretraining data was older doesn&rsquo;t need a new mental model of package management, it needs one routing decision redirected. Changing that means a full forward pass, backward pass, RL step, and eval cycle, just to move something that affects a fraction of a percent of the weights. You&rsquo;re being ten thousand times more wasteful than the size of the actual change warrants.</p>
+
+  <p class="body">The model has no internal vocabulary for what it just learned. There&rsquo;s no slot labelled &ldquo;package manager preference&rdquo; that an engineer can edit directly. The change gets diffused across millions of parameters by gradient descent, and the only way to undo or modify it is to run the loop again. Sparse, interpretable structure does emerge inside trained models, but extracting it with post-hoc methods like sparse autoencoders means training an auxiliary model that&rsquo;s by definition smaller than the substrate it&rsquo;s trying to read. That capacity gap is baked into the post-hoc approach. It&rsquo;s not a solvable engineering problem within it.</p>
+
+  <p class="body">Every frontier lab is already moving toward sparser mixture-of-experts architectures for capability and cost reasons that have nothing to do with interpretability, which means the substrate this bet needs is getting built anyway. Monet already shows a working version at moderate scale: push expert count up during pretraining and you get monosemantic, addressable circuits instead of a superposed mess, without an obvious tax on performance. There&rsquo;s no clear reason that breaks down with more scale or the right routing tweaks. Confirming that, not guessing at it, is what the current ablation sweep is for.</p>
 </section>
 
 <section class="card">
-  <h2>4 &middot; Why agentic coding is the sharpest wedge</h2>
-  <p class="body">Coding fits this architecture for a structural reason: <b>functions are tokens</b>. If a model picks
-  the right tokens in the right sequence it has produced the right function; there is no extra representation to
-  bridge. That is plausibly why LLMs are already unusually good at code &mdash; the thing predicted and the thing
-  that counts as success are the same object.</p>
-  <p class="body">The actual bottleneck in long-horizon agentic coding is not generation, it is <b>attribution</b>. A
-  model can diverge at any one of five hundred steps, and today there is no way to say which. It is teaching a child
-  advanced mathematics by handing back only the final answer. Over ten steps you can find it by inspection; over five
-  hundred you cannot, which is why current RL throws whole trajectories at a verifier and hopes the gradient sorts it
-  out.</p>
-  <div class="verdict">
-    <span class="tag">This part is not speculative &mdash; it is measured</span>
-    <p>The rest of this site is an attribution instrument built on exactly this premise. On a text-to-SQL task,
-    twenty-one mirror replays rewind episodes to the <b>same pre-decision state</b>, where the outcome distribution is
-    identical at o&#8320;&nbsp;=&nbsp;0.22, and then replay after each episode's own first query.</p>
-  </div>
-  <svg id="mirror" viewBox="0 0 1000 300" width="100%"></svg>
-  <div class="legend"><span><i style="background:var(--green)"></i>separates upward, toward certain success</span>
-    <span><i style="background:var(--amber)"></i>separates downward, toward certain failure</span>
-    <span><i style="background:none;border:1.3px solid var(--txt);border-radius:50%;width:9px;height:9px"></i>before the first query</span></div>
-  <p class="body">One action, and the distribution goes to 0.00 or 1.00. That is attribution at step granularity,
-  already working with an external verifier. The architectural bet is what happens when the model can do this
-  <b>internally, at every branch point</b>, instead of once at the end: post-training coding goes from &ldquo;generate
-  five hundred steps, verify once, hope the signal is dense enough&rdquo; to continuous verification against the
-  model's own attribution.</p>
-  <p class="body">This also solves the go-to-market problem that the safety framing alone does not. Every lab already
-  wants better agentic coding, so the pitch does not require anyone to first buy an interpretability thesis. You do
-  not win by being twenty percent better; you need one dimension where you are an order of magnitude better, and
-  coding throughput is the dimension every lab already has a reason to care about.</p>
-  <p class="src">T4 MIRROR REPLAY &middot; 21 EPISODES &middot; K=50/STEP &middot; 5 SHOWN &middot; DUMBBELL QUEUE</p>
+  <h2>Why it must be model-driven, not human-labelled</h2>
+  <p class="body">The strongest form of the safety argument isn&rsquo;t that post-hoc interpretability is slow. It&rsquo;s that known risks aren&rsquo;t the risks that matter. If a problem is already known, the field already knows how to attach a post-training patch or a system-prompt guardrail to it, and that&rsquo;s not a real solution, just a workaround dressed up as one. A model that &ldquo;can&rsquo;t do biology&rdquo; because its safety training made it refuse anything biology-adjacent hasn&rsquo;t been made safe against bioweapon risk. A system prompt saying &ldquo;don&rsquo;t do biology&rdquo; would get you the identical outcome, and wouldn&rsquo;t need a research programme to discover. The risks that actually matter are the ones nobody thought to test for, because no human declared &ldquo;focus on this domain&rdquo; in advance.</p>
+
+  <p class="body">This is also why unsupervised discovery beats human-curated modules: a module built by a human, for a capability a human already named, only ever covers what humans anticipated. If the model has more room to discover its own internal boundaries, even crudely, the way sparse autoencoders sweep for features without a human specifying which concepts to look for, you get coverage of risks nobody would have thought to name. The tradeoff is that unsupervised discovery still needs a way to label and act on what it finds, which is exactly the addressability problem this whole architecture is trying to solve.</p>
 </section>
 
 <section class="card">
-  <h2>5 &middot; Why it must be model-driven, not human-labelled</h2>
-  <p class="body">The strongest form of the safety argument is not that post-hoc interpretability is slow. It is that
-  <b>known risks are not the risks that matter</b>. If a problem is already known, the field already knows how to
-  attach a post-training patch or a system-prompt guardrail, and that is a workaround dressed up as a solution. A
-  model that &ldquo;cannot do biology&rdquo; because safety training made it refuse anything biology-adjacent has not
-  been made safe against bioweapon risk &mdash; a system prompt saying &ldquo;don't do biology&rdquo; gets the
-  identical outcome and needs no research programme to discover.</p>
-  <p class="body">The risks that matter are the ones nobody thought to test for. A module built by a human, for a
-  capability a human already named, only ever covers what humans anticipated. Give the model room to discover its own
-  internal boundaries &mdash; the way an SAE sweeps for features without anyone specifying which concepts to look for
-  &mdash; and you get coverage of risks nobody would have named. The cost is that unsupervised discovery still needs a
-  way to label and act on what it finds, which is precisely the addressability problem this architecture exists to
-  solve.</p>
-</section>
-
-<section class="card">
-  <h2>6 &middot; The reliability threshold</h2>
-  <p class="sub">Framed as nines. The value is not linear in accuracy; there is a phase change.</p>
+  <h2>The reliability threshold, and why it matters practically</h2>
+  <p class="body">Framed as a nines-of-reliability problem, the tiers look like this:</p>
   <table class="tbl">
-    <thead><tr><th>ablation accuracy</th><th>what it unlocks</th></tr></thead>
     <tbody>
-      <tr><td><b>~50%</b></td><td>Curiosity. Not useful for anything downstream.</td></tr>
-      <tr><td><b>90%</b></td><td>A viable first pass before reaching for a full RL cycle. A cheap filter that sometimes works.</td></tr>
-      <tr><td><b>99.99%</b></td><td><b>The character of the problem changes.</b> The loop goes on autopilot: the model runs its own post-training, automating identify-and-edit instead of requiring a human to curate data, run rollouts and evaluate.</td></tr>
+      <tr><td style="width:150px"><b>~50%</b></td><td>At roughly 50% ablation accuracy, the method isn&rsquo;t useful for anything beyond curiosity.</td></tr>
+      <tr><td><b>90%</b></td><td>At 90%, it becomes a viable first pass to try before reaching for a full RL cycle, a cheap filter that sometimes works.</td></tr>
+      <tr><td><b>99.99%</b></td><td>At 99.99%, the character of the problem changes. You can put the loop on autopilot. The model runs its own post-training in a loop, automating the identify-and-edit cycle instead of requiring a human to curate data, run rollouts, and evaluate results.</td></tr>
     </tbody>
   </table>
-  <p class="body">There is probably still a human bottleneck for genuine preference calls. But most of the mechanical
-  cost &mdash; a thousand rollouts, manual labelling, forward and backward passes for a change touching a sliver of
-  the weights &mdash; disappears.</p>
+  <p class="body">There will likely still be a human bottleneck somewhere, if only for genuine preference calls, but most of the mechanical cost of post-training (a thousand rollouts, manual labelling, forward and backward passes for a change touching a sliver of the weights) disappears.</p>
 </section>
 
 <section class="card">
-  <h2>7 &middot; What the architecture has to deliver</h2>
+  <h2>The architectural hope</h2>
+  <p class="body">What I want from a model architecture, in priority order:</p>
   <ul class="tight">
-    <li>Behaviours of interest correspond to <b>identifiable, named structures</b>. The granularity need not be
-    perfect, but a meaningful share of behaviours should be addressable rather than diffuse.</li>
-    <li>Edits to those structures produce <b>predictable</b> behaviour changes without retraining the rest.</li>
-    <li>It stays <b>competitive at scale</b> on standard pretraining metrics. Interpretability that costs twenty
-    points of perplexity is interpretability that never gets deployed.</li>
-    <li>The interpretability is <b>not an auxiliary system living below the model's own capacity</b>. Same forward
-    pass, same compute.</li>
+    <li>Behaviours of interest correspond to identifiable, named structures inside the network. The granularity doesn&rsquo;t have to be perfect, but a meaningful share of behaviours should be addressable rather than diffuse.</li>
+    <li>Edits to those structures produce predictable changes to behaviour without retraining the rest of the model.</li>
+    <li>The architecture stays competitive with non-interpretable architectures at scale on standard pretraining metrics. Interpretability that costs twenty points of perplexity is interpretability that never gets deployed.</li>
+    <li>The interpretability isn&rsquo;t bolted on with an auxiliary system living below the model&rsquo;s own capacity. It&rsquo;s part of the same forward pass, trained on the same compute.</li>
   </ul>
-  <p class="body">This is closer to the von Neumann picture than to the black-box transformer picture. Programs live
-  in addressable memory, the execution loop is shared, and editing a program does not require rebuilding the CPU. Put
-  more bluntly: if a language model plus persistent memory is already a new kind of Turing machine &mdash; more than
-  one person has noticed that independently &mdash; the goal is to make that machine <b>reliable</b> rather than
-  merely possible in principle. Chain-of-thought is already argued to be Turing-complete in the loose sense. It is
-  nowhere near reliable. <b>Reliability, not existence, is the open problem.</b></p>
+  <p class="body">This is closer to the von Neumann picture of a computer than to the current black-box transformer picture. Programs live in addressable memory. The execution loop is shared. Editing a program doesn&rsquo;t require rebuilding the CPU. A cruder but more visceral framing that has landed better in conversation: if a language model plus persistent memory is already, in some sense, a new kind of Turing machine (more than one person I&rsquo;ve pitched this to has noticed that independently), the goal is to make that Turing machine reliable rather than merely possible in principle. Chain-of-thought reasoning inside a transformer is already argued to be Turing-complete in the loose sense. It&rsquo;s just nowhere near reliable yet. Reliability, not existence, is the actual open problem.</p>
 </section>
 
 <section class="card">
-  <h2>8 &middot; The combination under test</h2>
-  <p class="body">Monet supplies the substrate: monosemantic experts at scale via sparse dictionary learning during
-  pretraining. Percepta supplies a different proof of concept &mdash; its construction is analytical rather than
-  learned, but the existence proof matters: deterministic operations, including a full WASM interpreter, can live
-  inside a transformer's forward pass with exact correctness and competitive speed.</p>
+  <h2>The combination, concrete</h2>
+  <p class="body">Monet supplies the architectural substrate. Horizontal and vertical decomposition gets expert counts up to 262,144 per layer with square-root parameter scaling, while keeping experts monosemantic via sparse dictionary learning during pretraining. Existing demonstrations show clean knowledge manipulation across domains, languages, and toxicity mitigation without degrading general performance. This is the closest existing approach to named, addressable circuits at scale.</p>
+
+  <p class="sub" style="margin-top:26px">What square-root parameter scaling buys, at the expert counts Monet reaches.</p>
+  <svg id="sqrtscale" viewBox="0 0 1000 290" width="100%"></svg>
+  <p class="src">PARAMETER MULTIPLIER UNDER THE SQUARE-ROOT LAW &middot; HAIRLINE LINE</p>
+
+  <p class="body">Percepta supplies the proof of concept for the kind of behaviours that can be compiled into transformer weights. Its core construction is analytical rather than learned, but the existence proof matters: deterministic operations, including a full WASM interpreter, can live inside a transformer&rsquo;s forward pass with exact correctness and competitive inference speed.</p>
+  <p class="body">The combination under test:</p>
   <ul class="tight">
-    <li>Pretrain a Monet-style model on standard data and objectives, exposing a subset of expert slots as
-    <b>compiler-grounded candidates</b>.</li>
-    <li>On those slots, add an RL signal tied to compiler-verifiable micro-environments (arithmetic, regex, AST
-    transforms, small WASM programs), each producing deterministic ground truth, so rewards are <b>exact rather than
-    learned</b>.</li>
-    <li>The RL pressure pushes verifiable behaviours to route through those slots and to internally implement the
-    verified operation, while routing itself stays learned at the boundary.</li>
-    <li>The rest of the network keeps its standard pretraining loss, so the grounded slots <b>compose</b> with the
-    model instead of replacing it.</li>
+    <li>Pretrain a Monet-style model on standard data with standard objectives, exposing a subset of expert slots as compiler-grounded candidates.</li>
+    <li>On those candidate slots, add an RL signal tied to a curriculum of compiler-verifiable micro-environments (arithmetic, regex matching, AST transformations, small WASM programs), each producing deterministic ground truth so rewards are exact rather than learned.</li>
+    <li>The RL pressure on those slots pushes verifiable behaviours to route through them and to internally implement the verified operation, while routing itself stays learned at the boundary.</li>
+    <li>The rest of the network keeps its standard pretraining loss, so the compiler-grounded slots compose with the rest of the model instead of replacing it.</li>
   </ul>
   <div class="verdict">
-    <span class="tag">One disambiguation, up front</span>
-    <p>This is <b>not &ldquo;formal methods everywhere&rdquo;</b>. Verification is a training signal on a subset of
-    expert slots, not a runtime proof over the whole model. The rest of the network trains and behaves like an
-    ordinary pretrained model. Only the compiler-grounded slots carry the guarantee.</p>
+    <span class="tag">One disambiguation worth stating up front</span>
+    <p>Since it&rsquo;s the fastest way a sharp technical reader dismisses this: this isn&rsquo;t &ldquo;formal methods
+    everywhere.&rdquo; Verification is a training signal applied to a subset of expert slots, not a runtime proof
+    carried over the whole model. The rest of the network trains and behaves exactly like an ordinary pretrained
+    model. Only the compiler-grounded slots carry the verified-behaviour guarantee.</p>
   </div>
-  <p class="body">A load-bearing decision, sharpened over the summer: <b>do not assume a full pretraining run is
-  needed before testing anything</b>. Current frontier open-weight MoEs may already carry enough sparsity to test the
-  core premise &mdash; that expert count correlates with monosemanticity &mdash; without spending a dollar on
-  pretraining. If the correlation holds and existing models are close enough, the product becomes <b>tooling for
-  editing existing weights</b> rather than a from-scratch architecture bet.</p>
+  <p class="body">A load-bearing decision, sharpened over the summer: don&rsquo;t assume the full pretraining run is necessary before testing anything. Current frontier open-weight MoEs (Kimi K3 at roughly 800 experts, DeepSeek V4 at 384 routed plus one shared, GLM, MiniMax) may already carry enough sparsity to test the core premise, that scaling expert count correlates with monosemanticity, without spending a single dollar on a pretraining run. If the correlation holds and existing models are already close enough, the actual product becomes tooling for editing existing weights rather than a from-scratch architecture bet.</p>
 </section>
 
 <section class="card">
-  <h2>9 &middot; What I have not figured out</h2>
-  <p class="sub">The honest section.</p>
+  <h2>Why agentic coding is the sharpest wedge</h2>
+  <p class="body">Coding fits this architecture unusually well for a simple structural reason: functions are tokens. If a model picks the right tokens in the right sequence, it has produced the right function. There&rsquo;s no extra layer of representation to bridge. This is plausibly why LLMs are already unusually good at coding relative to other domains: the thing being predicted and the thing that counts as success are the same object.</p>
+
+  <p class="body">The actual bottleneck in long-horizon agentic coding isn&rsquo;t code generation, it&rsquo;s attribution. A model working through a five-hundred-step agentic coding trajectory can diverge from the correct path at any one of those steps, and right now there&rsquo;s no way to pinpoint which step it was, the equivalent of teaching a child advanced mathematics by giving them only the final answer and no way to identify which line of their own working went wrong. Over ten steps this is tractable by inspection. Over five hundred, it&rsquo;s practically impossible to localise, which is exactly why current RL post-training for coding throws entire trajectories at a verifier and hopes the gradient sorts it out.</p>
+
+  <p class="body">If a model architecture could perfectly attribute which expert or path is responsible for which behaviour, that ablation could run automatically at every step of a rollout, not just at the end. That upgrades post-training coding from &ldquo;generate five hundred steps, verify once, hope the signal is dense enough&rdquo; to &ldquo;verify continuously, at every branch point, using the model&rsquo;s own internal attribution.&rdquo; Pushed to the extreme: a sufficiently large, sufficiently sparse model could run verification against its own knowledge of code entirely inside its own weights, a compiler living inside the weights, verifying its own outputs without needing an external verifier loop for every rollout. That&rsquo;s speculative and needs testing, but it&rsquo;s the direct, literal endpoint of &ldquo;functions are tokens plus perfect attribution.&rdquo;</p>
+
+  <p class="body">Rysana AI is the existing evidence this direction isn&rsquo;t fantasy. They already got roughly a thousand-fold improvement in coding throughput over standard approaches in 2024, using some combination of mixture-of-experts and constrained decoding (the exact mechanism is proprietary and unconfirmed by outside verification, so treat this as suggestive rather than validated, not a load-bearing citation). The point isn&rsquo;t to compete with them on throughput. It&rsquo;s that if a comparable throughput gain is achievable through routing and token-level structure, a comparable gain from attribution-driven, verifier-light post-training is plausible too. It&rsquo;s the four-minute mile: proof the barrier isn&rsquo;t physical, even without knowing precisely how it was broken.</p>
+
+  <p class="body">This wedge also solves the go-to-market problem the safety framing alone doesn&rsquo;t. Every frontier lab already wants to improve agentic coding, so this isn&rsquo;t a hard sell requiring anyone to first believe an interpretability thesis. A pitch that says &ldquo;this measurably improves sample efficiency on long-horizon coding post-training&rdquo; gets taken seriously by an audience that would otherwise not care about attribution or interpretability for their own sake. The Elon Musk framing applies directly here: you don&rsquo;t win by being twenty percent better, you need one dimension where you&rsquo;re an order of magnitude better, and coding throughput is the dimension every lab already has a reason to care about.</p>
+</section>
+
+<section class="card">
+  <h2>What I have not figured out yet</h2>
+  <p class="sub">This is the honest section, updated to reflect where the open problems actually sit as of September.</p>
   <ul class="tight">
-    <li><b>The training objective.</b> What loss pushes compiler-verifiable behaviour into specific slots rather than
-    diffusing it? Monet's monosemanticity loss is the anchor, but stacking a grounded RL term on top risks collapsing
-    the dictionary structure.</li>
-    <li><b>Whether monosemanticity is even the right proxy.</b> An expert can correlate with a concept without being
-    causally responsible for the behaviour. Measuring causal responsibility separately is unsolved. One alternative
-    kept in the back pocket, not pursued: give experts shared, competitive space to read and write, so boundaries are
-    enforced by competition rather than hoped for from raw expert count. That is someone else's idea, floated in
-    conversation, and the plan deliberately does not depend on it.</li>
-    <li><b>Routing stability under RL pressure.</b> Monet's assignments are stable under pretraining loss. Not
-    obvious they stay stable when a subset of slots is optimised differently. Worst case is monosemanticity decay
-    across the broader pool.</li>
-    <li><b>Curriculum design.</b> Arithmetic and regex are the obvious start; the right mix that gives signal without
-    overfitting is unclear. Percepta's WASM substrate is suggestive but expensive.</li>
-    <li><b>Mode collapse on the grounded slots.</b> Too sharp an RL pressure and the slots learn a trivial
-    implementation that satisfies the verifier without generalising. The verifier becomes the adversary.</li>
-    <li><b>Capacity loss elsewhere.</b> Even if the grounded slots work, the rest could degrade subtly. Monet's
-    ablations are encouraging, not conclusive.</li>
-    <li><b>The minimum viable first experiment.</b> Is the cheapest test a small Monet-style model with grounded slots
-    on an arithmetic curriculum, or is it faster and more diagnostic to first exhaust what can be learned from
-    ablating existing open-weight MoEs before training anything?</li>
+    <li><b>Training objective formalism.</b> What&rsquo;s the precise loss that pushes compiler-verifiable behaviour into specific expert slots rather than diffusing it across the MoE? Monet&rsquo;s existing monosemanticity loss is the natural anchor, but stacking a compiler-grounded RL term on top needs careful design to avoid collapsing the dictionary structure.</li>
+    <li><b>Whether monosemanticity is even the right proxy.</b> An expert can correlate with a concept without being causally responsible for the behaviour associated with it. It&rsquo;s not yet clear how to measure causal responsibility separately from raw monosemanticity, or whether it matters enough to be worth a dedicated fix versus something the current ablation sweep already surfaces as a side effect. One alternative worth keeping in the back pocket, not pursuing yet: instead of a bare per-token router, give experts some shared, competitive space to read from and write to, so cleaner boundaries get enforced by competition rather than hoped for from raw expert count alone. This is someone else&rsquo;s idea, floated in conversation, not mine to take further without them, and the current plan deliberately doesn&rsquo;t depend on it. If the brute-force expert-count approach stalls, it&rsquo;s the first place to look.</li>
+    <li><b>Routing stability under RL pressure.</b> Monet&rsquo;s expert assignments are stable under standard pretraining loss. It&rsquo;s not obvious they stay stable when a subset of slots gets optimised under a different objective. The worst failure mode is monosemanticity decay across the broader expert pool.</li>
+    <li><b>Curriculum design for compiler-grounded environments.</b> Arithmetic and regex are the obvious starting points, but the right mix of micro-environments to give signal without overfitting is unclear. Percepta&rsquo;s WASM substrate is suggestive but expensive.</li>
+    <li><b>Mode collapse on the compiler-grounded slots.</b> If the RL pressure is too sharp, the slots might learn a trivial implementation that satisfies the verifier without generalising. The verifier becomes the adversary.</li>
+    <li><b>Capacity loss elsewhere in the network.</b> Even if the compiler-grounded slots work, the rest of the model could degrade in subtle ways. Existing Monet ablations are encouraging but not conclusive on this point.</li>
+    <li><b>The minimum viable first experiment.</b> Is the right cheapest test a small Monet-style model with compiler-grounded slots on an arithmetic curriculum, or is it faster and more diagnostic to first exhaust what can be learned from ablating existing frontier open-weight MoEs before training anything new?</li>
   </ul>
   <div class="links" style="margin-top:28px">
     <a href="https://scholar.google.com/citations?user=WbPQ45kAAAAJ&amp;hl=zh-CN">GOOGLE SCHOLAR</a><span>&middot;</span>
     <a href="https://x.com/VoidAsuka">X &middot; @VOIDASUKA</a><span>&middot;</span>
     <a href="https://github.com/Odysseusailoon/trace">GITHUB &middot; ODYSSEUSAILOON/TRACE</a>
   </div>
-  <p class="src">MONET ARXIV:2412.04139 &middot; ATTRIBUTION DATA FROM THIS REPO &middot; EVERYTHING ELSE IS A BET</p>
+  <p class="src">REF &middot; MONET, ARXIV:2412.04139</p>
 </section>
 
 </div>
 <script>
+
 
 const INK='#58402E',PAPER='#F0EFEB',MUTED='rgba(88,64,46,.60)',GRID='rgba(88,64,46,.16)';
 const GREEN='#43593B',OLIVE='#ACAD79',AMBER='#D4A017';
@@ -336,40 +262,6 @@ obsReveal('experts',s=>{
 });
 })();
 
-/* ════ C8 · dumbbell queue — measured mirror replay, o_0 to o_1 ════ */
-(()=>{
-const D=[['AVG+GROUP BY · 10015',.22,1.00],['OTHER · 10001',.22,.98],
-         ['OTHER · 10005',.22,.00],['INTDIV · 10000',.22,.00],['INTDIV · 10003',.22,.00]];
-obsReveal('mirror',s=>{
-  const y0=i=>52+i*42,X0=210,X1=880,mapX=v=>X0+v*(X1-X0);
-  el(s,'line',{x1:mapX(.22),y1:34,x2:mapX(.22),y2:252,stroke:'rgba(88,64,46,.26)','stroke-width':1,
-    'stroke-dasharray':'3 4',class:'fade'});
-  txt(s,{x:mapX(.22),y:28,'font-size':8.5,'font-weight':700,fill:MUTED,'text-anchor':'middle',class:'fade'},'same state · o₀ = 0.22');
-  D.forEach(([name,was,now],i)=>{
-    const y=y0(i),xa=mapX(was),xb=mapX(now),up=now>was;
-    txt(s,{x:198,y:y+3,'font-size':8,'font-weight':700,fill:'rgba(88,64,46,.72)','text-anchor':'end',
-      'letter-spacing':'.05em',class:'fade',style:`animation-delay:${i*.08}s`},name);
-    el(s,'line',{x1:X0-6,y1:y,x2:X1+6,y2:y,stroke:'rgba(88,64,46,.12)','stroke-width':.7,
-      class:'fade',style:`animation-delay:${i*.08}s`});
-    const n=Math.round(Math.abs(was-now)*50);
-    for(let k=0;k<n;k++){const t=(k+.5)/n,x=xa+t*(xb-xa),yy=y+(rnd(k+1,i+3)-.5)*2.8;
-      el(s,'circle',{cx:x,cy:yy,r:1.4+rnd(k+2,i+4)*.8,fill:up?OLIVE:AMBER,opacity:.8,
-        class:'pop',style:`animation-delay:${.3+i*.08+k*.012}s`});}
-    el(s,'circle',{cx:xa,cy:y,r:4.2,fill:PAPER,stroke:INK,'stroke-width':1.3,
-      class:'pop',style:`animation-delay:${.2+i*.08}s`});
-    const after=el(s,'circle',{cx:xb,cy:y,r:4.8,fill:up?GREEN:AMBER,
-      class:'pop',style:`animation-delay:${.6+i*.08}s`});
-    tip(after,`${name} — o₀ ${was.toFixed(2)} → o₁ ${now.toFixed(2)} (K=50)`);
-    txt(s,{x:xb+(up?11:-11),y:y+3.5,'font-size':11,'font-weight':800,fill:INK,
-      'text-anchor':up?'start':'end',class:'fade',style:`animation-delay:${.7+i*.08}s`},now.toFixed(2));});
-  txt(s,{x:X0,y:274,'font-size':7.5,'font-weight':600,fill:'rgba(88,64,46,.32)',class:'fade'},'0.00  DOOMED');
-  txt(s,{x:X1,y:274,'font-size':7.5,'font-weight':600,fill:'rgba(88,64,46,.32)','text-anchor':'end',class:'fade'},'CERTAIN  1.00');
-  txt(s,{x:(X0+X1)/2,y:292,'font-size':7.5,'font-weight':600,fill:'rgba(88,64,46,.32)','text-anchor':'middle',
-    'letter-spacing':'.12em',class:'fade',style:'animation-delay:1s'},
-    'ONE BEAD = ONE OF 50 REPLAYS WHOSE VERDICT FLIPPED · HOLLOW = BEFORE THE FIRST QUERY');
-});
-})();
-
 /* ════ B2 · hairline line — what square-root scaling buys ════ */
 (()=>{
 obsReveal('sqrtscale',s=>{
@@ -401,6 +293,7 @@ obsReveal('sqrtscale',s=>{
     'X = EXPERTS PER LAYER · Y = PARAMETER MULTIPLIER UNDER THE SQUARE-ROOT LAW (LOG)');
 });
 })();
+
 
 </script>
 </body>
