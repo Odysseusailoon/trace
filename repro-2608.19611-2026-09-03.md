@@ -64,19 +64,27 @@ P(correct) = 0.22 at K = 50; replay after each one's own first query and they se
 ![Mirror replay: the same pre-decision state gives 0.22 for both episodes, and their two first
 queries send it to 0.00 and 1.00](forkscope/xfigs/output/plot1_t4_mirror.png)
 
-**2. Entropy is a cheap gate, but not the one we assumed.** We measured the recall and it came out the
-other way round: of 25 flagged positions, **1 sat in the top 20% of token entropy**, and the median
-flagged position sat below the median entropy. The agent arm shows why. The entropy peak inside the
-fatal tool call is ` Average`, an alias name that changes nothing.
+**2. Entropy gating works, and the misses are the story.** Tested on Forking Fast's own public
+release, where the ground truth exists: Llama-3-8B, 100 questions, S=200 `o_t` grids, gating positions
+by 1−p_base and checking recall of PELT-detected forks. Recall is **78.3% at the top 20%** of positions
+and **88.0% at the top 30%**, against a random-gate null of 51.2% and 67.7%. Roughly 2x enrichment, and
+a two-stage instrument (entropy screen, then replay only at gated positions) cuts measurement cost
+3-5x.
 
-![The entropy peak is a decorative alias name; the causal tokens are not
-peaks](forkscope/xfigs/output/plot3_entropy_vs_fork.png)
+The residual is what matters: **13-29% of forks happen where the model is confident.** No
+entropy-based monitor can see those, and the agent arm shows why that is not a rounding error. Inside
+the fatal turn there are two entropy peaks and only one is a fork. At t=17, writing ` COUNT`
+(H=1.31, the turn's maximum), the outcome distribution starts collapsing and is welded shut four
+tokens later. At t=28, naming an alias ` Average` (H=1.02), it does not move at all. After the die
+lands, the trap path runs at near-zero entropy: confidently doomed.
 
-Entropy is good for the lossless direction only. A point-mass distribution has no alternative to
-resample, so a zero-entropy token cannot fork and skipping it is free: the tool-call envelope measures
-0.000 bits while the decisive tokens sit at 0.63, 0.53 and 0.60, and 44% of positions carry no second
-branch at a 0.02 threshold, worth 1.8x. **A safe filter for what cannot fork, a bad ranking of what
-does.**
+![Two entropy peaks, one fork: the distribution collapses at ` COUNT` and ignores the alias
+peak](forkscope/xfigs/output/plot3_entropy_vs_fork.png)
+
+Hesitation and fate are different things, and only measurement tells them apart. The one thing entropy
+gives for free is the floor: a point-mass distribution has no alternative to resample, so a
+zero-entropy token cannot fork and skipping it is lossless. 44% of positions carry no second branch at
+a 0.02 threshold, worth 1.8x.
 
 ### What we have not found out yet
 
@@ -157,48 +165,32 @@ the agent commits to it.
 
 Nanda's team at DeepMind already shipped this: **Building Production-Ready Probes For Gemini**
 (Kramár, Engels, Wang, Chughtai, Shah, Nanda, Conmy, arXiv:2601.11516), activation probes for misuse
-detection on Gemini 2.5, with AlphaEvolve automating the architecture search. Three things transfer.
+detection on Gemini 2.5, with AlphaEvolve automating the architecture search.
 
-**Their failure mode is mean-pooling, and the fix is a max.** A standard attention probe reaches
-**87.88% false-negative rate on long-context attacks**; a max of rolling means gets it to **3.03%**. A
-mean over a long context divides a signal carried by few positions by the length of the context. Same
-pathology as our mixture curve one index set over, and `fork_score` is the same fix. When the signal
-lives in a few members of a large index set, a weighted mean is an attenuator, not a summary.
+Agent traces, however, are exactly the long, multi-turn inputs their probes break on, so a probe
+validated on short chain of thought will not survive the move, and training directly on long context
+costs **22x** more. Hidden states you can get anywhere by loading weights; **the production
+long-context distribution only a serving vendor has.** With in-house data it may be possible to build
+a probe that addresses this.
 
-**The production shape is a cascade.** The probe loses on accuracy alone, but at **1/50th of Gemini
-2.5 Flash's inference cost** the cascade beats Flash while **deferring to it on under 10% of samples**.
-Substitute "resample this fork" for "call the LLM judge" and the argument transfers unchanged.
-
-**Their hard case is our regime, which decides who this is for.** Agent traces are the long,
-multi-turn inputs their probes break on, so a probe validated on short chain of thought will not
-survive the move, and training directly on long context costs **22x** more. Hidden states you can get
-anywhere by loading weights; **the production long-context distribution only a serving vendor has.**
-
-Caveat that could kill it: probes may read the text, not the state. Boxo, Neelappa and Raval
-(arXiv:2509.21344) strip explicit textual evidence and watch AUROC fall 0.94 to 0.57 on sandbagging.
-The n-gram baseline has to be beaten, not reported.
 
 ### 3. Quality assurance for RL environments
 
 Read the fork-path outcome distribution to find out what an RL environment is actually teaching.
+Companies are now building and buying significant numbers of RL environments, yet there is no cheap,
+scalable way to sanity-check one. The fork-path outcome distribution looks like an easier way to
+evaluate an environment: whether it is hard enough, and whether it hides unknown bugs. Training costs
+far more than inspecting rollouts, and what you conclude from it depends heavily on the
+hyperparameters and framework you happened to pick.
 
-Resampling is already what the better RL methods do under other names. Math-Shepherd (Wang et al.,
-arXiv:2312.08935) builds process-reward labels by resampling from each prefix; VinePPO (Kazemnejad et
-al., arXiv:2410.01679) shows PPO's learned value function estimates the true value badly and that
-Monte-Carlo estimates from resampled intermediate states improve credit assignment. Not a new
-quantity, then, but the one those methods estimate, and evidence that estimating it badly costs
-performance. Three things the audit catches:
+Three things the audit catches:
 
 - **Dead items.** A degenerate `o_0` gives no advantage variance and no gradient. One MMLU item
   answered the same way in 48 of 48 fresh samples: it can neither teach a policy gradient nor host a
   fork. Cheap to find before a run, not after.
 - **Noise items.** The mirror failure, where the distribution never resolves and the advantage
   estimate is mostly variance.
-- **Outcome variables measuring the wrong thing.** The one I did not expect. On another item most
-  continuations hit the length cap before answering, so the recorded distribution reported where the
-  cap fell; raise it and the item answers unanimously. That reward partly scores "did you finish in
-  budget", a specification bug aggregate accuracy hides and a fork-path distribution shows, because
-  the unfinished mass is its own outcome.
+- **The ratio.** How many rollouts does GRPO need before it learns something meaningful?
 
 ## What I am doing first
 
