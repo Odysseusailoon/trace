@@ -118,7 +118,6 @@
     only those whose <b>modal answer occurs 4 to 6 times out of 10</b> &mdash; the only regime where a fork can
     exist.</li>
   </ul>
-  <p class="src">SGLANG DETERMINISTIC INFERENCE &middot; SEEDS RECORDED PER CONTINUATION &middot; PREREGISTERED SELECTION IN REPO</p>
 </section>
 
 <section class="card">
@@ -139,7 +138,6 @@
   <p class="body">Mirror replay isolates it. Rewind a failed and a successful episode to the same pre-decision state
   and both give P(correct) = 0.22 at K = 50; replay after each one's own first query and they separate to 0.00 and
   1.00. Same state, same model, one different action.</p>
-  <p class="src">T4 MIRROR REPLAY &middot; K=50/STEP &middot; POOLED MULTINOMIAL NULL, 20,000 SIMS, BONFERRONI</p>
 </section>
 
 <section class="card">
@@ -168,7 +166,6 @@
   entropy gives for free is the floor: a point-mass distribution has no alternative to resample, so a zero-entropy
   token cannot fork and skipping it is lossless. 44% of positions carry no second branch at a 0.02 threshold, worth
   1.8&times;.</p>
-  <p class="src">EG-0A &middot; PELT PEN=32 &middot; 299 FORKS / 100 ROWS &middot; PROXY = 1&minus;P_BASE &middot; NULL = PERMUTATION</p>
 </section>
 
 <section class="card">
@@ -236,7 +233,6 @@ C_radix &asymp; (T/s)&middot;B&middot;[(P + t&#772;) + S&middot;L]    the prefix
   97.8% of prompt tokens served from cache (40,609 of 41,540) at 6,800 tok/s on one H100, but the ratio
   S&middot;(P+t&#772;+L)&nbsp;/&nbsp;((P+t&#772;)&nbsp;+&nbsp;S&middot;L) is only about 1.8&times;: caching removes
   prefill, and decode dominates. <b>The lever people reach for first is the smallest of the four.</b></p>
-  <p class="src">MEASURED ON SGLANG RADIXATTENTION &middot; QWEN3-8B &middot; ONE H100</p>
 </section>
 
 <section class="card">
@@ -293,7 +289,6 @@ C_radix &asymp; (T/s)&middot;B&middot;[(P + t&#772;) + S&middot;L]    the prefix
   <div class="links" style="margin-top:26px">
     <a href="https://github.com/Odysseusailoon/trace">CODE, DATA AND PREREGISTRATION &middot; GITHUB.COM/ODYSSEUSAILOON/TRACE</a>
   </div>
-  <p class="src">LINEAGE: FORKING PATHS (ARXIV:2412.07961) &rarr; FORKING FAST (ARXIV:2608.19611) &rarr; ZUR ET AL. (ARXIV:2511.04527)</p>
 </section>
 
 </div>
