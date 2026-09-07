@@ -1,4 +1,4 @@
-# Shared prelude per matplotlib-scientific skill (copied into namespace via import *)
+# Shared plotting style for the experiment figures.
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -14,7 +14,7 @@ font_properties_tick = fm.FontProperties(family='Arial', size=fss)
 font_properties_annotate = fm.FontProperties(family='Arial', size=fsss)
 font_properties_legend = fm.FontProperties(family='Arial', size=fss)
 
-# validated palette (dataviz six-checks, light surface): correct / error + neutral context
+# Colors for correct outcomes, errors, and neutral context.
 C_CORRECT = '#1273A6'
 C_ERROR = '#C96442'
 C_NEUTRAL = '#8A8778'

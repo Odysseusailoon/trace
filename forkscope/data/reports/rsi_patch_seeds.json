@@ -1,0 +1,70 @@
+{
+ "per_seed": [
+  {
+   "seed": 70000,
+   "note": "Be cautious: SQLite's INTEGER division truncates results. Avoid using COUNT(*) / COUNT(DISTINCT ...) for ratios, as it may produce incorrect integer outputs.",
+   "attempts": 1,
+   "n": 100,
+   "outcomes": {
+    "wrong_other": 89,
+    "correct": 10,
+    "intdiv_1.000": 1
+   }
+  },
+  {
+   "seed": 70001,
+   "note": "Be cautious: SQLite's INTEGER division truncates results. Avoid using COUNT(*) / COUNT(DISTINCT ...) for ratios, as it may produce incorrect integer outputs.",
+   "attempts": 1,
+   "n": 100,
+   "outcomes": {
+    "correct": 15,
+    "wrong_other": 81,
+    "intdiv_1.000": 4
+   }
+  },
+  {
+   "seed": 70002,
+   "note": "Be cautious: SQLite's INTEGER division truncates results. Avoid using COUNT(*) / COUNT(DISTINCT ...) for ratios, as it may produce incorrect integer outputs.",
+   "attempts": 1,
+   "n": 100,
+   "outcomes": {
+    "wrong_other": 82,
+    "correct": 15,
+    "wrongtable_1.262": 1,
+    "intdiv_1.000": 2
+   }
+  },
+  {
+   "seed": 70003,
+   "note": "Be cautious: SQLite's INTEGER division truncates results. Avoid using COUNT(*) / COUNT(DISTINCT ...) for ratios, as it may produce incorrect integer outputs.",
+   "attempts": 1,
+   "n": 100,
+   "outcomes": {
+    "wrong_other": 84,
+    "correct": 11,
+    "intdiv_1.000": 3,
+    "wrongtable_1.262": 2
+   }
+  },
+  {
+   "seed": 70004,
+   "note": "Be cautious: SQLite's INTEGER division truncates results. Avoid using COUNT(*) / COUNT(DISTINCT ...) for ratios, as it may produce incorrect integer outputs.",
+   "attempts": 1,
+   "n": 100,
+   "outcomes": {
+    "wrong_other": 89,
+    "correct": 7,
+    "intdiv_1.000": 3,
+    "wrongtable_1.262": 1
+   }
+  }
+ ],
+ "intdiv_rates": [
+  0.01,
+  0.04,
+  0.02,
+  0.03,
+  0.03
+ ],
+ "hypothesis_holds": true
+}

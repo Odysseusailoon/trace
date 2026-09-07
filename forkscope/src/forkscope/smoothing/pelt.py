@@ -1,4 +1,4 @@
-"""PELT segmentation on per-position count vectors, cost = L2 (see RFC F6)."""
+"""PELT segmentation on per-position count vectors with L2 cost."""
 from __future__ import annotations
 
 import numpy as np

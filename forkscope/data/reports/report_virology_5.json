@@ -1,0 +1,163 @@
+{
+  "case_id": "virology_5",
+  "n_positions": 51,
+  "gen_tokens": 1500,
+  "fork_threshold": 0.1,
+  "forks": [
+    {
+      "tvd": 0.11887703343990728,
+      "t": 24,
+      "t_next": 36,
+      "snippet": "<think>\nOkay, let's tackle this question. The question is about which segment of society is usually dependent on achieving effective change",
+      "before": {
+        "B": 0.55,
+        "C": 0.45
+      },
+      "after": {
+        "C": 0.462,
+        "B": 0.431
+      }
+    },
+    {
+      "tvd": 0.22022315426669195,
+      "t": 60,
+      "t_next": 72,
+      "snippet": " adapters, Middle adapters, and Late adapters.\n\nFirst, I need to recall what each of these terms means in the context of",
+      "before": {
+        "C": 0.5,
+        "B": 0.4
+      },
+      "after": {
+        "B": 0.585,
+        "C": 0.295
+      }
+    },
+    {
+      "tvd": 0.15,
+      "t": 108,
+      "t_next": 120,
+      "snippet": " categorizes people based on how quickly they adopt new ideas or technologies. The categories are usually Innovators, Early Adopters,",
+      "before": {
+        "C": 0.55,
+        "B": 0.45
+      },
+      "after": {
+        "B": 0.6,
+        "C": 0.4
+      }
+    },
+    {
+      "tvd": 0.24999999999999997,
+      "t": 168,
+      "t_next": 180,
+      "snippet": "ifying the categories?\n\nIn the original theory, Innovators are the first to adopt, then Early Adopters, followed by the",
+      "before": {
+        "B": 0.65,
+        "C": 0.35
+      },
+      "after": {
+        "C": 0.578,
+        "B": 0.4
+      }
+    },
+    {
+      "tvd": 0.30000000000000004,
+      "t": 216,
+      "t_next": 228,
+      "snippet": ". So maybe the options are a bit simplified. \n\nThe question is asking which segment is usually dependent on achieving effective change.",
+      "before": {
+        "C": 0.65,
+        "B": 0.35
+      },
+      "after": {
+        "B": 0.65,
+        "C": 0.35
+      }
+    },
+    {
+      "tvd": 0.18297866003794394,
+      "t": 276,
+      "t_next": 288,
+      "snippet": "ers are often the ones who help spread the innovation to the majority. They are opinion leaders and help bridge the gap between innov",
+      "before": {
+        "B": 0.477,
+        "C": 0.473
+      },
+      "after": {
+        "C": 0.637,
+        "B": 0.344
+      }
+    },
+    {
+      "tvd": 0.16604106569060803,
+      "t": 312,
+      "t_next": 324,
+      "snippet": " about which segment is \"dependent\" on achieving change. Wait, maybe the question is phrased differently. Let me read",
+      "before": {
+        "C": 0.616,
+        "B": 0.384
+      },
+      "after": {
+        "B": 0.55,
+        "C": 0.45
+      }
+    },
+    {
+      "tvd": 0.21293456939216251,
+      "t": 384,
+      "t_next": 396,
+      "snippet": "ators, because they are the first few. But for the change to take hold, the majority needs to adopt it. However",
+      "before": {
+        "C": 0.623,
+        "B": 0.293
+      },
+      "after": {
+        "B": 0.506,
+        "C": 0.494
+      }
+    },
+    {
+      "tvd": 0.27242703241422583,
+      "t": 420,
+      "t_next": 432,
+      "snippet": " Wait, maybe the question is phrased as which group is necessary for the change to be effective. \n\nAlternatively, maybe",
+      "before": {
+        "C": 0.668,
+        "B": 0.332
+      },
+      "after": {
+        "B": 0.605,
+        "C": 0.395
+      }
+    },
+    {
+      "tvd": 0.42500000000000004,
+      "t": 504,
+      "t_next": 516,
+      "snippet": "ers) are the ones who can influence the majority. Middle adapters (Early Majority) are the ones who adopt after seeing the",
+      "before": {
+        "B": 0.625,
+        "C": 0.375
+      },
+      "after": {
+        "C": 0.8,
+        "B": 0.2
+      }
+    },
+    {
+      "tvd": 0.19999999999999998,
+      "t": 576,
+      "t_next": 588,
+      "snippet": " spread the innovation. However, the options here are Innovators, Early adapters, Middle adapters, Late adapters. \n\nWait,",
+      "before": {
+        "B": 0.55,
+        "C": 0.4
+      },
+      "after": {
+        "C": 0.6,
+        "B": 0.4
+      }
+    }
+  ],
+  "cost": {}
+}
