@@ -1,0 +1,22 @@
+model: Qwen/Qwen3-8B
+server:
+  port: 30000
+  mem_fraction_static: 0.85
+fpa:
+  branch_prob_threshold: 0.05
+  samples_per_branch: 20        # S
+  samples_t0: 100               # N0 (anchor position gets extra draws)
+  spacing: 4                    # N (token) / 1 (tool_call)
+  spacing_mode: token
+  max_continuation_tokens: 1500  # thinking continuations run 700-1000 tokens
+  top_logprobs_num: 10          # paper value
+reference:                      # dev 2 题 only
+  samples_per_branch: 200
+  spacing: 1
+smoothing:
+  pelt_cost: l2
+  penalty_grid: [1, 4, 16, 64, 256]
+  bandwidth_grid: [2, 4, 8, 16]
+  cv_folds: 5
+fork_threshold: 0.10
+concurrency: 32

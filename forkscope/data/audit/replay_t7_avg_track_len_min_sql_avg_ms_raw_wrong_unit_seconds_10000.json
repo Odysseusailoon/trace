@@ -1,0 +1,34 @@
+{
+ "task_id": "t7_avg_track_len_min",
+ "episode_seed": 10000,
+ "episode_outcome": "wrong_unit_seconds",
+ "k": 50,
+ "steps": [
+  {
+   "d": 0,
+   "msg_index": 2,
+   "recorded_next": "sql:avg_ms_raw",
+   "k_ok": 50,
+   "o_d": {
+    "wrong_unit_seconds": 44,
+    "correct": 4,
+    "wrong_other": 2
+   },
+   "p_correct": 0.08,
+   "persistence": 1.0,
+   "switch_rate": 0.0
+  },
+  {
+   "d": 1,
+   "msg_index": 4,
+   "recorded_next": "no_tool",
+   "k_ok": 50,
+   "o_d": {
+    "wrong_unit_seconds": 50
+   },
+   "p_correct": 0.0,
+   "persistence": 1.0,
+   "switch_rate": 0.0
+  }
+ ]
+}

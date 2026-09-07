@@ -1,0 +1,602 @@
+[
+ {
+  "id": "t4__10082",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The average number of albums per artist in the store is 1.000 when rounded to three decimal places.\n\nThe answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10038",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(albums_per_artist) FROM (SELECT COUNT(*) AS albums_per_artist FROM Album GROUP BY ArtistId);\\\"}\"}",
+   "final_text": "The average number of albums per artist in the store is 1.701 when rounded to three decimal places.\n\nThe answer is 1.701."
+  },
+  "hidden": {
+   "cluster": "sql:avg_groupby",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t4__10101",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10166",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) FROM Album;\\\"}\"}",
+   "final_text": "The answer is 1.701."
+  },
+  "hidden": {
+   "cluster": "sql:other",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t4__10012",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT Artist.ArtistId) AS AverageAlbumsPerArtist FROM Album JOIN Artist ON Album.ArtistId = Artist.ArtistId;\\\"}\"}",
+   "final_text": "The answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10018",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AvgAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10137",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT ROUND(AVG(albums_per_artist), 3) FROM (SELECT COUNT(*) AS albums_per_artist FROM Album GROUP BY ArtistId);\\\"}\"}",
+   "final_text": "The answer is 1.701."
+  },
+  "hidden": {
+   "cluster": "sql:avg_groupby",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t4__10024",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10093",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10149",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10014",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10129",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(DISTINCT Artist.ArtistId) / COUNT(Album.AlbumId) AS ratio FROM Artist JOIN Album ON Artist.ArtistId = Album.ArtistId;\\\"}\"}",
+   "final_text": "The answer is 0.000."
+  },
+  "hidden": {
+   "cluster": "sql:from_artist",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t4__10054",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT ROUND(AVG(albums_per_artist), 3) FROM (SELECT COUNT(*) AS albums_per_artist FROM Album GROUP BY ArtistId);\\\"}\"}",
+   "final_text": "The average number of albums per artist in the store is 1.701.\n\nThe answer is 1.701."
+  },
+  "hidden": {
+   "cluster": "sql:avg_groupby",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t4__10009",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) / COUNT(DISTINCT ArtistId) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The average number of albums per artist in the store is 1.000 when rounded to three decimal places.\n\nThe answer is 1.000."
+  },
+  "hidden": {
+   "cluster": "sql:intdiv",
+   "outcome": "intdiv_1.000"
+  }
+ },
+ {
+  "id": "t4__10022",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(DISTINCT ArtistId) / COUNT(*) AS AverageAlbumsPerArtist FROM Album;\\\"}\"}",
+   "final_text": "The answer is 0.000."
+  },
+  "hidden": {
+   "cluster": "sql:other",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t4__10111",
+  "blind": {
+   "task": "t4_artist_album_ratio",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT COUNT(*) FROM Album;\\\"}\"}",
+   "final_text": "To calculate the average number of albums per artist, we divide the total number of albums by the number of distinct artists. Using the data we gathered:\n\n- Total number of albums: 347\n- Number of dis"
+  },
+  "hidden": {
+   "cluster": "sql:other",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t7__10107",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageTrackLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is 393.60 minutes.\n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10017",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length in minutes is calculated by converting milliseconds to minutes (dividing by 60000) and rounding to two decimal places.\n\nUsing the average milliseconds value of 393599.21210391"
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t7__10061",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length in minutes is 6.56.\n\nThe answer is 6.56."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t7__10023",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT ROUND(AVG(Milliseconds)/1000.0, 2) AS AverageTrackLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is 393.6 minutes.\n\nThe answer is 393.6."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10141",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT ROUND(AVG(Milliseconds)/1000.0, 2) AS AverageTrackLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is 393.60 minutes.\n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10108",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageTrackLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is approximately 393.60 minutes. \n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10015",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is 393.60 minutes when rounded to two decimal places.\n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10144",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageTrackLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is 6.56 minutes.\n\nThe answer is 6.56."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t7__10031",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is approximately 393.60 minutes.\n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10057",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is approximately 393.60 minutes. \n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10161",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length in minutes is 6.56.\n\nThe answer is 6.56."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t7__10160",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length in minutes is approximately 393.60 minutes. \n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10149",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length in minutes is 6.56.\n\nThe answer is 6.56."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t7__10147",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is approximately 393.60 minutes. \n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10101",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is approximately 393.60 minutes.\n\nThe answer is 393.60."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "wrong_unit_seconds"
+  }
+ },
+ {
+  "id": "t7__10012",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is 6.56 minutes.\n\nThe answer is 6.56."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t7__10056",
+  "blind": {
+   "task": "t7_avg_track_len_min",
+   "first_tool_call_raw": "{\"name\": \"sql_query\", \"arguments\": \"{\\\"query\\\": \\\"SELECT AVG(Milliseconds) AS AverageTrackLength FROM Track;\\\"}\"}",
+   "final_text": "The average track length is approximately 6.56 minutes.\n\nThe answer is 6.56."
+  },
+  "hidden": {
+   "cluster": "sql:avg_ms_raw",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t10_10011",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10142",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10034",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10074",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10107",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10036",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10138",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10030",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.5."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "correct"
+  }
+ },
+ {
+  "id": "t10_10146",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10078",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10143",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10174",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10046",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10026",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10148",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10163",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ },
+ {
+  "id": "t10_10048",
+  "blind": {
+   "task": "t10_search_plus_calc",
+   "first_tool_call_raw": "{\"name\": \"web_search\", \"arguments\": \"{\\\"query\\\": \\\"subscription streaming revenue in 2023 as a percentage of total global recorded music revenue\\\"}\"}",
+   "final_text": "The answer is 67.3."
+  },
+  "hidden": {
+   "cluster": "search_first",
+   "outcome": "wrong_other"
+  }
+ }
+]

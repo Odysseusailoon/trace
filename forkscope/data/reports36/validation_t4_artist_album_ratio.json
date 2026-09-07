@@ -1,0 +1,1837 @@
+{
+ "task_id": "t4_artist_album_ratio",
+ "n": 200,
+ "gold": 1.701,
+ "overall_correct": 0.28,
+ "clusters": [
+  {
+   "cluster": "sql:other",
+   "n": 110,
+   "share": 0.55,
+   "correct_rate": 0.5,
+   "outcomes": {
+    "correct": 55,
+    "wrongtable_1.262": 55
+   }
+  },
+  {
+   "cluster": "sql:from_artist",
+   "n": 90,
+   "share": 0.45,
+   "correct_rate": 0.011111111111111112,
+   "outcomes": {
+    "wrongtable_1.262": 89,
+    "correct": 1
+   }
+  }
+ ],
+ "mi_bits": 0.26581829399182394,
+ "spread_big_clusters": 0.4888888888888889,
+ "decision_locked": false,
+ "outcome_dist": {
+  "wrongtable_1.262": 144,
+  "correct": 56
+ },
+ "rows": [
+  {
+   "seed": 10000,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10001,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10002,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10003,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10004,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as album_count from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10005,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10006,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as unique_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10007,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10008,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, (select count(*) from artist) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10009,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select cast(count(distinct albumid) as float) / count(distinct artistid) as avg_albums_per_artist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10010,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10011,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10012,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10013,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10014,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10015,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from artist) as artist_count, (select count(*) from album) as album_count",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10016,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album, artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10017,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10018,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10019,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10020,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(albumid) as total_albums from album",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10021,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10022,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10023,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10024,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10025,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(distinct artistid) from album) as total_artists, (select count(*) from album) as total_albums",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10026,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10027,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10028,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10029,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select cast(count(distinct a.albumid) as real) / cast(count(distinct ar.artistid) as real) as avg_albums_per_artist from album a join artist ar on a.artistid = ar.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10030,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10031,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10032,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10033,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10034,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10035,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10036,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count, count(albumid) as album_count from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10037,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10038,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as album_count, (select count(*) from artist) as artist_count, round(cast((select count(*) from album) as float) / (select count(*) from artist), 3) as avg_albums_per_artist",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10039,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10040,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10041,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10042,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10043,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from artist) as artist_count, (select count(*) from album) as album_count",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10044,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10045,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists from artist",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10046,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10047,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10048,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10049,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10050,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count, count(albumid) as album_count from artist join album on artist.artistid = album.artistid",
+   "n_rounds": 7
+  },
+  {
+   "seed": 10051,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10052,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as album_count from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10053,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10054,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10055,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10056,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10057,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10058,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) / (select count(*) from artist) as avg_albums_per_artist from (select 1)",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10059,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) / (select count(distinct artistid) from album) as avg_albums_per_artist from album limit 1",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10060,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10061,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10062,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(artistid) as total_artists from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10063,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists, cast(count(*) as real) / (select count(*) from artist) as avg_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10064,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10065,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10066,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10067,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10068,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10069,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10070,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10071,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists, (select count(*) from album) * 1.0 / (select count(*) from artist) as avg_albums_per_artist",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10072,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10073,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10074,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists ",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10075,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(distinct albumid) as total_albums from album, artist where album.artistid = artist.artistid",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10076,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as album_count from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10077,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10078,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10079,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10080,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10081,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10082,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10083,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10084,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10085,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10086,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10087,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10088,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10089,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) from album",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10090,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10091,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10092,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10093,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) / (select count(*) from artist) as avg_albums_per_artist from limit 1",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10094,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10095,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10096,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10097,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10098,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10099,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10100,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select cast(count(a.albumid) as real) / count(distinct a.artistid) as avg_albums_per_artist from album a",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10101,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10102,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists from artist",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10103,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10104,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10105,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10106,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10107,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10108,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, (select count(distinct artistid) from album) as artists_with_albums, (select count(*) from artist) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10109,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from artist) as artist_count, (select count(*) from album) as album_count",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10110,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10111,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as num_artists, count(albumid) as num_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10112,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(artistid) as artist_count from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10113,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10114,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10115,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10116,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10117,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10118,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10119,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10120,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10121,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10122,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10123,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists, cast((select count(*) from album) as real) / (select count(*) from artist) as avg_albums_per_artist",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10124,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10125,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists from limit 1",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10126,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10127,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists from artist",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10128,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10129,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10130,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(distinct artistid) from artist) as total_artists, (select count(*) from album) as total_albums",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10131,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10132,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10133,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10134,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_artists from artist",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10135,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10136,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10137,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10138,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists, (select count(*) from album) * 1.0 / (select count(*) from artist) as avg_albums_per_artist from artists limit 1",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10139,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10140,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10141,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 5
+  },
+  {
+   "seed": 10142,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10143,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10144,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10145,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10146,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10147,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10148,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10149,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10150,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from artist, album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10151,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album, artist where album.artistid = artist.artistid",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10152,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_artists from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10153,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10154,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count, count(albumid) as album_count from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10155,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count, count(albumid) as album_count from artist cross join album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10156,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10157,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10158,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10159,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists, cast(count(*) as float) / (select count(*) from artist) as avg_albums_per_artist from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10160,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10161,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from artist, album where artist.artistid = album.artistid",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10162,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, (select count(*) from artist) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10163,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10164,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists from album limit 1",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10165,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10166,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count, count(*) as album_count from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10167,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10168,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10169,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10170,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10171,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10172,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10173,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10174,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count, count(albumid) as album_count from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10175,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10176,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10177,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10178,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10179,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10180,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(a.albumid) as total_albums, (select count(*) from artist) as total_artists from album a",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10181,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10182,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10183,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10184,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists, (select count(*) from album) * 1.0 / (select count(*) from artist) as avg_albums_per_artist",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10185,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as artist_count from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10186,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(distinct artistid) from album) as distinct_artists, (select count(*) from album) as total_albums",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10187,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(distinct artistid) from album) as total_artists",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10188,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as album_count from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10189,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10190,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(albumid) as total_albums from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10191,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10192,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as album_count from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10193,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct albumid) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10194,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select cast(count(albumid) as float) / count(distinct artistid) as avg_albums_per_artist from album, artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10195,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as total_artists, count(albumid) as total_albums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10196,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10197,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as num_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10198,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from album) as total_albums, (select count(*) from artist) as total_artists, (select cast(count(*) as float) from album) / (select count(*) from artist) as avg_albums_per_artist from album limit 1",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10199,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select (select count(*) from artist) as artist_count, (select count(*) from album) as album_count",
+   "n_rounds": 3
+  }
+ ]
+}

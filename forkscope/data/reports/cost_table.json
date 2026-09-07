@@ -1,0 +1,67 @@
+{
+ "K": 50,
+ "hit_rate": 0.985,
+ "rows": [
+  {
+   "episode": "t4_10000",
+   "boundaries": 2,
+   "prefix_tokens": [
+    572,
+    643
+   ],
+   "naive_prefill": 60750,
+   "ideal_prefill": 643,
+   "anchored_prefill": 911,
+   "ratio_ideal": 94.5,
+   "ratio_anchored": 66.7,
+   "naive_pflop": 0.97
+  },
+  {
+   "episode": "t4_10015",
+   "boundaries": 2,
+   "prefix_tokens": [
+    572,
+    660
+   ],
+   "naive_prefill": 61600,
+   "ideal_prefill": 660,
+   "anchored_prefill": 924,
+   "ratio_ideal": 93.3,
+   "ratio_anchored": 66.7,
+   "naive_pflop": 0.99
+  },
+  {
+   "episode": "t7_10000",
+   "boundaries": 2,
+   "prefix_tokens": [
+    563,
+    636
+   ],
+   "naive_prefill": 59950,
+   "ideal_prefill": 636,
+   "anchored_prefill": 899,
+   "ratio_ideal": 94.3,
+   "ratio_anchored": 66.7,
+   "naive_pflop": 0.96
+  },
+  {
+   "episode": "t7_10003",
+   "boundaries": 5,
+   "prefix_tokens": [
+    563,
+    640,
+    716,
+    802,
+    871
+   ],
+   "naive_prefill": 179600,
+   "ideal_prefill": 871,
+   "anchored_prefill": 2694,
+   "ratio_ideal": 206.2,
+   "ratio_anchored": 66.7,
+   "naive_pflop": 2.87
+  }
+ ],
+ "total_naive": 361900,
+ "total_ideal": 2810
+}

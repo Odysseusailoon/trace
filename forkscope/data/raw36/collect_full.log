@@ -1,0 +1,27 @@
+  [t4_artist_album_ratio] 25/200
+  [t4_artist_album_ratio] 50/200
+  [t4_artist_album_ratio] 75/200
+  [t4_artist_album_ratio] 100/200
+  [t4_artist_album_ratio] 125/200
+  [t4_artist_album_ratio] 150/200
+  [t4_artist_album_ratio] 175/200
+  [t4_artist_album_ratio] 200/200
+[collect] t4_artist_album_ratio: 200 episodes (0 errors) -> data/raw36/episodes_t4_artist_album_ratio.jsonl
+  [t7_avg_track_len_min] 25/200
+  [t7_avg_track_len_min] 50/200
+  [t7_avg_track_len_min] 75/200
+  [t7_avg_track_len_min] 100/200
+  [t7_avg_track_len_min] 125/200
+  [t7_avg_track_len_min] 150/200
+  [t7_avg_track_len_min] 175/200
+  [t7_avg_track_len_min] 200/200
+[collect] t7_avg_track_len_min: 200 episodes (0 errors) -> data/raw36/episodes_t7_avg_track_len_min.jsonl
+  [t10_search_plus_calc] 25/200
+  [t10_search_plus_calc] 50/200
+  [t10_search_plus_calc] 75/200
+  [t10_search_plus_calc] 100/200
+  [t10_search_plus_calc] 125/200
+  [t10_search_plus_calc] 150/200
+  [t10_search_plus_calc] 175/200
+  [t10_search_plus_calc] 200/200
+[collect] t10_search_plus_calc: 200 episodes (0 errors) -> data/raw36/episodes_t10_search_plus_calc.jsonl

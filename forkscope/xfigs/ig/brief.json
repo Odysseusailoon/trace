@@ -1,0 +1,52 @@
+{
+  "meta": {
+    "reader": "an ML engineer on X who runs and debugs LLM agents; knows sampling and tool calls; has never met Forking Paths Analysis or forkscope",
+    "mode": "lesson",
+    "page": "slide",
+    "theme": "iris",
+    "contradicts": "the reader believes a failed transcript shows its mistake somewhere, and that high-entropy tokens mark the decisive step; here the fatal step looks clean and is found only by replaying futures",
+    "source": "forkscope-report.md + data/reports/replay_t4_*.json (Qwen3-8B, SGLang deterministic inference, Chinook DB)",
+    "spine_rejected": "instrument-pipeline diagram (trajectory in, resampler, o_d out): teaches the architecture, not the phenomenon; the reader learns to read the instrument faster by watching it applied to one real failing run"
+  },
+  "sections": [
+    {
+      "id": "one-run",
+      "asks": "What does one agent run hide?",
+      "teaches": ["trajectory", "decision step"],
+      "form": "figure",
+      "rank": 1,
+      "view": "whole-path-side-view",
+      "shows": "the real t4 run as a two-step path: question, one SQL tool call returning 1, a confident wrong answer; at each decision step, ghost branches the sampler could have taken fade off the path",
+      "instead_of": {
+        "block": "process",
+        "because": "a process chain shows the steps taken; the claim is the untaken branches, which only a drawing can put beside the path"
+      }
+    },
+    {
+      "id": "replay",
+      "asks": "How does forkscope measure one decision step?",
+      "teaches": ["replay", "outcome distribution o_d"],
+      "form": "figure",
+      "rank": 2,
+      "view": "one-step-cross-section",
+      "shows": "the prefix frozen at step d, K=50 full continuations fanning out, every tool call really executed, endpoints binned by final answer into a tally: that tally is o_d",
+      "instead_of": {
+        "block": "progressive",
+        "because": "the mechanism is one simultaneous fan, not an accumulation of parts"
+      }
+    },
+    {
+      "id": "lock",
+      "asks": "Which step locked the failure?",
+      "teaches": ["fork", "lock-in"],
+      "form": "figure",
+      "rank": 3,
+      "view": "instrument-readout",
+      "shows": "o_d as stacked tallies at d=0 and d=1: mixed (22% correct / 58% integer-division / 20% other) collapsing to a single bin after the first SQL, both directions shown, 1.00 on the AVG path and 0.00 on the COUNT/COUNT path",
+      "instead_of": {
+        "block": "share",
+        "because": "two share bars carry the proportions but not the collapse between them, which is the finding"
+      }
+    }
+  ]
+}

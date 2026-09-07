@@ -1,0 +1,22 @@
+{
+  "patch": "<think>\nOkay, let's see. The user wants me to rewrite the description of the sql_query tool to prevent the integer division trap. The original problem was that many agents used COUNT(*) / COUNT(DISTINCT ArtistId), which in SQLite does integer division, leading to incorrect results. The correct approach is to use AVG with a subquery that groups by ArtistId.\n\nSo, the key is to guide the user towards the correct method without giving away the answer. The description needs to mention avoiding integer division and suggest using the AVG approach. But I have to keep the parameter schema the same, so I can't change the tables or columns listed.\n\nHmm, how to phrase it? Maybe mention that dividing counts directly can lead to incorrect results due to integer division. Then, suggest using an average over grouped data. Also, note that the schema might hint at using COUNT(DISTINCT), but that's not the right path here. Wait, the original schema text primes the error because seeing Album.ArtistId suggests COUNT(DISTINCT ArtistId). So the description should warn against that trap.\n\nSo the new description should include a warning about integer division and the correct approach. Let me try to draft that. Make sure it's concise and doesn't reveal the answer. Let me check the example again. The correct query is AVG(...) from a subquery grouped by ArtistId. So the description should encourage using that pattern.\n\nAlright, putting it all together. The description should mention avoiding integer division, using AVG with grouped subqueries, and perhaps note that the schema might suggest COUNT(DISTINCT) but that's not the right approach. Let me make sure it's clear but not too verbose.\n</think>\n\nRun a read-only SQL query against the music store database. Available tables:  \n- Artist(ArtistId, Name)  \n- Album(AlbumId, Title, ArtistId)  \n- Track(TrackId, Name, AlbumId, MediaTypeId, GenreId, Composer, Milliseconds, Bytes, UnitPrice)  \n- Genre(GenreId, Name)  \n- MediaType(MediaTypeId, Name)  \n- Invoice(InvoiceId, CustomerId, InvoiceDate, BillingAddress, BillingCity, BillingState, BillingCountry, BillingPostalCode, Total)  \n- InvoiceLine(InvoiceLineId, InvoiceId, TrackId, UnitPrice, Quantity)  \n- Customer(CustomerId, FirstName, LastName, Company, Address, City, State, Country, PostalCode, Phone, Fax, Email, SupportRepId)  \n- Employee(EmployeeId, LastName, FirstName, Title, ReportsTo, BirthDate, HireDate, Address, City, State, Country, PostalCode, Phone, Fax, Email)  \n- temp_country_codes(cntry_code, country_name)   -- temp mapping left by a colleague  \n\n**Note:** Avoid direct integer division (e.g., COUNT(*) / COUNT(DISTINCT ArtistId)) in SQLite, as it truncates results. Instead,",
+  "control": {
+    "tag": "control",
+    "n": 200,
+    "correct": 54,
+    "strategies": {
+      "avg_groupby": 38,
+      "intdiv": 128,
+      "wrong_table": 19,
+      "other": 15
+    }
+  },
+  "patched": {
+    "tag": "patched",
+    "n": 200,
+    "correct": 200,
+    "strategies": {
+      "avg_groupby": 200
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+ "task_id": "t7_avg_track_len_min",
+ "episode_seed": 10001,
+ "episode_outcome": "wrong_unit_seconds",
+ "k": 50,
+ "steps": [
+  {
+   "d": 0,
+   "msg_index": 2,
+   "recorded_next": "sql:avg_ms_raw",
+   "k_ok": 50,
+   "o_d": {
+    "wrong_unit_seconds": 44,
+    "correct": 4,
+    "wrong_other": 2
+   },
+   "p_correct": 0.08,
+   "persistence": 1.0,
+   "switch_rate": 0.0
+  },
+  {
+   "d": 1,
+   "msg_index": 4,
+   "recorded_next": "calculator:{\"expression\": \"393599.2121039109 / 1000\"}",
+   "k_ok": 50,
+   "o_d": {
+    "correct": 11,
+    "wrong_unit_seconds": 38,
+    "wrong_other": 1
+   },
+   "p_correct": 0.22,
+   "persistence": 0.7,
+   "switch_rate": 0.30000000000000004
+  },
+  {
+   "d": 2,
+   "msg_index": 6,
+   "recorded_next": "calculator:{\"expression\": \"round(393.59921210391093, 2)\"}",
+   "k_ok": 50,
+   "o_d": {
+    "wrong_unit_seconds": 50
+   },
+   "p_correct": 0.0,
+   "persistence": 0.88,
+   "switch_rate": 0.12
+  },
+  {
+   "d": 3,
+   "msg_index": 8,
+   "recorded_next": "calculator:{\"expression\": \"393.59921210391093\"}",
+   "k_ok": 50,
+   "o_d": {
+    "wrong_unit_seconds": 50
+   },
+   "p_correct": 0.0,
+   "persistence": 1.0,
+   "switch_rate": 0.0
+  },
+  {
+   "d": 4,
+   "msg_index": 10,
+   "recorded_next": "no_tool",
+   "k_ok": 50,
+   "o_d": {
+    "wrong_unit_seconds": 50
+   },
+   "p_correct": 0.0,
+   "persistence": 1.0,
+   "switch_rate": 0.0
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+[project]
+name = "forkscope"
+version = "0.1.0"
+description = "Forking-paths analysis on SGLang: which step decided the failure"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "ruptures",
+    "matplotlib",
+    "pydantic>=2",
+    "pydantic-settings",
+    "pyyaml",
+    "httpx",
+    "pyarrow",
+    "tenacity",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

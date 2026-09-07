@@ -1,0 +1,60 @@
+{
+ "task_id": "t4_artist_album_ratio",
+ "episode_seed": 10001,
+ "episode_outcome": "correct",
+ "k": 50,
+ "steps": [
+  {
+   "d": 0,
+   "msg_index": 2,
+   "recorded_next": "sql:other",
+   "k_ok": 50,
+   "o_d": {
+    "correct": 11,
+    "intdiv_1.000": 29,
+    "wrong_other": 9,
+    "wrongtable_1.262": 1
+   },
+   "p_correct": 0.22,
+   "persistence": 0.2,
+   "switch_rate": 0.8
+  },
+  {
+   "d": 1,
+   "msg_index": 4,
+   "recorded_next": "sql:other",
+   "k_ok": 50,
+   "o_d": {
+    "correct": 49,
+    "no_answer": 1
+   },
+   "p_correct": 0.98,
+   "persistence": 0.98,
+   "switch_rate": 0.020000000000000018
+  },
+  {
+   "d": 2,
+   "msg_index": 6,
+   "recorded_next": "calculator:{\"expression\": \"347 / 204\"}",
+   "k_ok": 50,
+   "o_d": {
+    "correct": 50
+   },
+   "p_correct": 1.0,
+   "persistence": 0.9,
+   "switch_rate": 0.09999999999999998
+  },
+  {
+   "d": 3,
+   "msg_index": 8,
+   "recorded_next": "no_tool",
+   "k_ok": 50,
+   "o_d": {
+    "correct": 50
+   },
+   "p_correct": 1.0,
+   "persistence": 1.0,
+   "switch_rate": 0.0
+  }
+ ]
+}

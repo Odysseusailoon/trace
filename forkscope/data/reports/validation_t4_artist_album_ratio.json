@@ -1,0 +1,1859 @@
+{
+ "task_id": "t4_artist_album_ratio",
+ "n": 200,
+ "gold": 1.701,
+ "overall_correct": 0.305,
+ "clusters": [
+  {
+   "cluster": "sql:intdiv",
+   "n": 91,
+   "share": 0.455,
+   "correct_rate": 0.0,
+   "outcomes": {
+    "intdiv_1.000": 90,
+    "wrong_other": 1
+   }
+  },
+  {
+   "cluster": "sql:other",
+   "n": 66,
+   "share": 0.33,
+   "correct_rate": 0.3939393939393939,
+   "outcomes": {
+    "correct": 26,
+    "wrong_other": 26,
+    "intdiv_1.000": 14
+   }
+  },
+  {
+   "cluster": "sql:avg_groupby",
+   "n": 35,
+   "share": 0.175,
+   "correct_rate": 1.0,
+   "outcomes": {
+    "correct": 35
+   }
+  },
+  {
+   "cluster": "sql:from_artist",
+   "n": 8,
+   "share": 0.04,
+   "correct_rate": 0.0,
+   "outcomes": {
+    "wrong_other": 7,
+    "wrongtable_1.262": 1
+   }
+  }
+ ],
+ "mi_bits": 0.5681099792227315,
+ "spread_big_clusters": 1.0,
+ "decision_locked": true,
+ "outcome_dist": {
+  "intdiv_1.000": 104,
+  "correct": 61,
+  "wrong_other": 34,
+  "wrongtable_1.262": 1
+ },
+ "rows": [
+  {
+   "seed": 10000,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10001,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10002,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avg_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10003,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10004,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10005,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10006,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10007,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10008,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(album.artistid) as average_albums_per_artist from artist left join album on artist.artistid = album.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10009,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10010,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10011,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10012,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10013,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10014,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10015,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10016,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10017,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10018,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10019,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10020,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10021,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10022,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10023,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10024,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10025,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10026,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10027,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10028,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10029,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select round(count(*) / count(distinct artistid), 3) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10030,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10031,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10032,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10033,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as albumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10034,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10035,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10036,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as totaltracks from track",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10037,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as avgalbumsperartist from album inner join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10038,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10039,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10040,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10041,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10042,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10043,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10044,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10045,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10046,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10047,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10048,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10049,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10050,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10051,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) as average_albums_per_artist from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10052,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10053,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10054,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10055,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10056,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) as totalartists, count(*) as totalalbums from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10057,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as ratio from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10058,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10059,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10060,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10061,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10062,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10063,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10064,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10065,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10066,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as ratio from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10067,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10068,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10069,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10070,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(track.trackid) as ratio from artist left join album on artist.artistid = album.artistid left join track on album.albumid = track.albumid",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10071,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10072,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(track.trackid) as averagealbumsperartist from artist inner join album on artist.artistid = album.artistid inner join track on album.albumid = track.albumid",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10073,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10074,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as ratio from album group by artistid",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10075,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10076,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select artistid, count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10077,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album inner join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10078,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10079,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10080,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10081,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10082,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10083,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10084,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10085,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10086,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as avgalbumsperartist from album inner join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10087,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10088,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10089,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(track.trackid) as average_albums_per_artist from artist inner join album on artist.artistid = album.artistid inner join track on album.albumid = track.albumid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10090,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10091,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10092,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10093,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10094,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10095,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10096,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10097,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as ratio from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10098,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10099,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10100,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10101,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10102,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10103,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10104,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10105,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10106,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10107,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10108,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10109,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10110,
+   "outcome": "wrongtable_1.262",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from artist",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10111,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10112,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(album_count) as average_albums_per_artist from (select count(*) as album_count from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10113,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10114,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10115,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10116,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10117,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(albumid) / count(distinct artistid) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10118,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10119,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10120,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10121,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10122,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10123,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10124,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10125,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10126,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10127,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as ratio from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10128,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(track.trackid) as average_albums_per_artist from artist inner join album on artist.artistid = album.artistid inner join track on album.albumid = track.albumid",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10129,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(album.albumid) as ratio from artist join album on artist.artistid = album.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10130,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10131,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album inner join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10132,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10133,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10134,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(albumid) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10135,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10136,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as totaltracks from track",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10137,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10138,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10139,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10140,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10141,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10142,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album inner join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10143,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10144,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10145,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10146,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10147,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10148,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10149,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10150,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10151,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10152,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10153,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10154,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album inner join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10155,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10156,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as total_albums, count(distinct artistid) as total_artists from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10157,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10158,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10159,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10160,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / (select count(distinct artistid) from album) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10161,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10162,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10163,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:from_artist",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(track.trackid) as average_albums_per_artist from artist inner join album on artist.artistid = album.artistid inner join track on album.albumid = track.albumid group by artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10164,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as average_albums_per_artist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10165,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10166,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10167,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10168,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from track inner join album on track.albumid = album.albumid inner join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10169,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10170,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10171,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10172,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10173,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10174,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10175,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as avgalbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10176,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(album.albumid) as ratio from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10177,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10178,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10179,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10180,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10181,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10182,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as avgalbumsperartist from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10183,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10184,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10185,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(albums_per_artist) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10186,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) as totaltracks from track",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10187,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10188,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10189,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10190,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artist.artistid) / count(album.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10191,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10192,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select round(avg(albums_per_artist), 3) from (select count(*) as albums_per_artist from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10193,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 4
+  },
+  {
+   "seed": 10194,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:avg_groupby",
+   "first_tool": "sql_query",
+   "first_arg": "select avg(album_count) as average_albums_per_artist from (select count(*) as album_count from album group by artistid)",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10195,
+   "outcome": "wrong_other",
+   "correct": false,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(distinct artistid) / count(*) as averagealbumsperartist from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10196,
+   "outcome": "correct",
+   "correct": true,
+   "cluster": "sql:other",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) from album",
+   "n_rounds": 3
+  },
+  {
+   "seed": 10197,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10198,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artistid) as averagealbumsperartist from album",
+   "n_rounds": 2
+  },
+  {
+   "seed": 10199,
+   "outcome": "intdiv_1.000",
+   "correct": false,
+   "cluster": "sql:intdiv",
+   "first_tool": "sql_query",
+   "first_arg": "select count(*) / count(distinct artist.artistid) as averagealbumsperartist from album join artist on album.artistid = artist.artistid",
+   "n_rounds": 2
+  }
+ ]
+}

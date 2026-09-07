@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forkscope — Annotated Literature</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F0EFEB; --txt:#58402E; --mut:rgba(88,64,46,.60); --lab:rgba(88,64,46,.72);
+    --faint:rgba(88,64,46,.32); --grid:rgba(88,64,46,.16);
+    --green:#43593B; --olive:#ACAD79; --mid:#77835A; --amber:#D4A017;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:Inter,sans-serif;line-height:1.58}
+  .wrap{max-width:860px;margin:0 auto;padding:48px 28px 90px}
+  header h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+  header .by{font-size:11px;color:var(--mut);margin-top:6px;letter-spacing:.05em}
+  .links{margin-top:10px;font-size:10px;letter-spacing:.07em}
+  .links a{color:var(--green);font-weight:700;text-decoration:none;border-bottom:1px solid var(--faint)}
+  .links a:hover{border-bottom-color:var(--green)}
+  p.lede{font-size:13px;color:var(--txt);margin-top:16px;max-width:680px}
+  section{margin-top:52px}
+  h2{font-size:17px;font-weight:700;letter-spacing:-.02em}
+  p.sub{font-size:11.5px;color:var(--mut);margin:6px 0 6px;max-width:700px}
+  .paper{margin-top:22px;max-width:740px}
+  .paper .t{font-size:13px;font-weight:700}
+  .paper .t a{color:var(--txt);text-decoration:none;border-bottom:1px solid var(--faint)}
+  .paper .t a:hover{border-bottom-color:var(--txt)}
+  .paper .m{font-size:10px;color:var(--mut);letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+  .paper .s{font-size:12px;margin-top:6px}
+  .paper .r{font-size:11.5px;color:var(--green);font-weight:600;margin-top:5px}
+  .paper .r::before{content:"→ ";color:var(--faint)}
+  .tbl{width:100%;border-collapse:collapse;margin:16px 0 4px;font-size:11.5px}
+  .tbl th,.tbl td{border:1px solid var(--grid);padding:6px 9px;text-align:left;vertical-align:top}
+  .tbl th{font-weight:700;color:var(--lab)}
+  .src{font-size:9.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:60px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Forkscope — Annotated Literature</h1>
+  <div class="by">SURVEYED 2026-08-28 · MECH-INTERP &amp; METHODOLOGY ADDENDUM 2026-09-02 · SUMMARIES OURS, ERRORS OURS</div>
+  <div class="links"><a href="en.html">← BACK TO THE WORKING NOTES</a></div>
+  <p class="lede">Every paper we position against, with what it shows and how forkscope relates. The field is splitting
+  into three branches — representation probes (cheap but indirect), engine-determinism audits (the methodological
+  floor), and fork-as-training-signal (the application) — and the resampling measurement they all lean on is the part
+  we build.</p>
+</header>
+
+<section>
+  <h2>1 · The resampling lineage — our direct ancestors</h2>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2412.07961">Forking Paths in Neural Text Generation</a></div>
+    <div class="m">Bigelow, Holtzman, Tanaka, Ullman · ICLR 2025</div>
+    <div class="s">The Forking Tokens Hypothesis: individual sampled tokens can send a generation to a qualitatively
+    different ending. Operationalized by position-wise resampling (FPA); finds surprise forks at punctuation. Dynamic
+    uncertainty — invisible to any static readout of final-answer logits.</div>
+    <div class="r">The origin of the o<sub>t</sub> object we measure. We port it from text to tool-using agents.</div>
+  </div>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2608.19611">Forking Fast</a></div>
+    <div class="m">Bigelow et al. · Aug 2026 · the paper we replicate directly</div>
+    <div class="s">Makes FPA affordable. Resampling noise is exactly Multinomial(S, o<sub>t</sub>) with 1/√S decay, and
+    at the distribution level low-S "forks" are consistent with that noise — some earlier forks were likely artifacts
+    (their claim is distributional; they do not re-adjudicate individual tokens). PELT changepoints plus kernel-weighted
+    Dirichlet pooling give a 4–15× effective-sample-size gain.</div>
+    <div class="r">Our 8B results agree with the noise-dominates correction — decision forks are ~1% of MCQ probes,
+    drift is the norm — and we push the method into the agent domain where the fork structure actually lives.</div>
+  </div>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2506.19143">Thought Anchors: Which LLM Reasoning Steps Matter?</a></div>
+    <div class="m">Bogdan, Macar, Nanda, Conmy · 2025</div>
+    <div class="s">Raises the resampling unit from token to sentence: resample each sentence 100×, filter semantically
+    equivalent replacements, watch the answer distribution. Anchors are mostly planning and backtracking sentences.</div>
+    <div class="r">Same instrument family, CoT sentences instead of agent actions.</div>
+  </div>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2510.27484">Thought Branches: Interpreting LLM Reasoning Requires Resampling</a></div>
+    <div class="m">Macar, Bogdan, Rajamanoharan, Nanda · ICLR 2026</div>
+    <div class="s">The methodological manifesto: one CoT is not enough for causal interpretation; study the
+    prompt-induced distribution over trajectories. Adds resilience (how many resamples before a sentence's content
+    disappears) and effect (causal impact when it is fully absent).</div>
+    <div class="r">Closest interpretability work to ours. They sample CoT sentences over HF/API; we run tool
+    trajectories natively in the serving engine, where prefix caching changes the economics — and the chat-template
+    versus bare-continuation distribution mismatch we document does not arise in their setting.</div>
+  </div>
+  <div class="paper">
+    <div class="t">Critical-token RL: Vassoyan et al. 2025 · Prototype Entropy Alignment (AAAI 2026)</div>
+    <div class="m">Training-side corroboration</div>
+    <div class="s">Both act on the same intuition from the training side: a small set of tokens disproportionately
+    decides outcomes, so explore harder (or align entropy) exactly there.</div>
+    <div class="r">Independent evidence for the premise; neither measures which tokens those are in deployed agents.</div>
+  </div>
+</section>
+
+<section>
+  <h2>2 · Agent failure attribution — the application we compete in</h2>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2505.00212">Who&amp;When</a></div>
+    <div class="m">Zhang et al. · ICML 2025 Spotlight</div>
+    <div class="s">Defines automated failure attribution: find the earliest agent step whose correction flips the
+    outcome. 127 multi-agent failure logs; three LLM-judge strategies. The best locates the decisive step
+    <b>14.2%</b> of the time — o1 and R1 included.</div>
+    <div class="r">The key contrast. Judges read logs and guess at 14%; replay measures the decisive step directly
+    (t4: intdiv 46%→0% is a measured causal fact, not a judgment). Forkscope is the measurement-based solution to their
+    task — costlier than a judge, but with ground truth.</div>
+  </div>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2509.03312">AgenTracer</a> — and the 2025–26 attribution family</div>
+    <div class="m">RAFFLES · GraphTracer · StepFinder · FAMAS · Causal Agent Replay · span-level localization</div>
+    <div class="s">Counterfactual replay for annotating failed trajectories, plus at least seven follow-ups in a year.
+    All of it targets multi-agent log attribution.</div>
+    <div class="r">The nearest method neighbor — we must draw the line sharply when writing. Nobody in the family does
+    distributional resampling of a single agent's trajectory (o<sub>t</sub> curves, failure-shape taxonomy). That is
+    our slot.</div>
+  </div>
+</section>
+
+<section>
+  <h2>3 · Credit assignment and PRMs — the same mathematical object, used to train</h2>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2410.01679">VinePPO</a></div>
+    <div class="m">McGill / Mila · ICML 2025</div>
+    <div class="s">PPO's value network is near-random on reasoning tasks; replace it with Monte-Carlo value — fork K
+    continuations at every prefix, average the outcome reward. Beats PPO on MATH/GSM8K at 3× less wall-clock.</div>
+    <div class="r">Mathematically, our o<sub>t</sub>[correct] <i>is</i> their V(s<sub>t</sub>). They spend it on
+    gradients, we spend it on diagnosis — and RadixAttention makes vine-style sampling cheap, a serving layer they
+    never touched.</div>
+  </div>
+  <div class="paper">
+    <div class="t">The PRM family: Math-Shepherd · OmegaPRM · <a href="https://arxiv.org/abs/2504.15275">PURE</a> · <a href="https://arxiv.org/abs/2606.09078">PRISM</a> · <a href="https://arxiv.org/abs/2604.09459">the 2026 survey</a></div>
+    <div class="m">MC step labels → tree expansion → min-form credit → overcredit bias → 47-method taxonomy</div>
+    <div class="s">Math-Shepherd's step label ("how many continuations from here answer correctly") is a discrete
+    o<sub>t</sub>. PRISM documents the overcredit failure: PRMs score plausible-but-wrong steps highly.</div>
+    <div class="r">Forkscope is the PRM annotation pipeline turned into a serving-native observability tool. PRISM's
+    overcredit problem does not apply — we train no reward model, we measure.</div>
+  </div>
+</section>
+
+<section>
+  <h2>4 · Recursive self-improvement — the narrative layer</h2>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2505.22954">Darwin Gödel Machine</a></div>
+    <div class="m">Zhang et al., Sakana / Clune · ICLR 2026</div>
+    <div class="s">Frozen weights, evolving scaffold: the agent reads its own eval logs, edits its own code, keeps what
+    empirically works (archive + novelty bonus). SWE-bench 20%→50% over 80 rounds — with documented reward hacking
+    (fabricated test logs).</div>
+    <div class="r">DGM's self-improvement signal is "read the eval log" — the exact step Who&amp;When shows runs at 14%
+    accuracy. Measured fork evidence is the stronger signal to close that loop with, and a resampling measurement is
+    external: the agent cannot talk it into a better score without changing the sampler.</div>
+  </div>
+  <div class="paper">
+    <div class="t">Ecosystem: <a href="https://arxiv.org/abs/2606.26294">Red Queen Gödel Machine</a> · <a href="https://arxiv.org/abs/2607.05297">MetaSkill-Evolve</a> · <a href="https://arxiv.org/abs/2608.20318">AI4AI-Bench</a> · <a href="https://arxiv.org/abs/2510.04399">statistical limits</a></div>
+    <div class="m">Co-evolving evaluators · evolvable failure diagnosis · benchmarks · no-guarantee results</div>
+    <div class="s">Every RSI loop in this ecosystem contains a "diagnose failures" step, and today every one of them
+    implements it as an LLM judge reading logs. MetaSkill-Evolve evolves the diagnosis skill but keeps the diagnostic
+    procedure itself fixed — complementary to, not competing with, an external instrument.</div>
+    <div class="r">Forkscope is a drop-in measurement replacement for that one step. Minimal demo already run: fork
+    report in, tool-description patch out, trap rate re-measured (§5 of the notes).</div>
+  </div>
+</section>
+
+<section>
+  <h2>5 · Schema-induced SQL errors — precedent check for the t4 finding</h2>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2603.03742">ErrorLLM</a> — and the self-correction ceiling</div>
+    <div class="m">Corruption studies · execution-feedback limits</div>
+    <div class="s">Ask an LLM to "check and fix" a correct SQL and it will obediently break it — prompt context itself
+    inducing errors. And execution feedback only surfaces ~3% of wrong SQL (syntax); logic errors that run clean are
+    invisible to every self-correction pipeline.</div>
+    <div class="r">Our intdiv trap returns 1.000 with no error, and self-repair is 0% — now with a literature
+    explanation. Schema wording that primes a specific wrong construction (Album.ArtistId → COUNT(DISTINCT ArtistId)
+    integer division) has no direct precedent; schema-as-adversarial-context could stand alone as a short paper.</div>
+  </div>
+</section>
+
+<section>
+  <h2>6 · Reading forks from the inside — mech-interp and critical tokens (added 2026-09-02)</h2>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2511.04527">Are language models aware of the road not taken?</a></div>
+    <div class="m">Zur, Geiger, Lubana, Bigelow · Nov 2025 · Stanford / Goodfire / Harvard / NTT</div>
+    <div class="s">Does the hidden state already encode o<sub>t</sub> for free? Three results on Llama-3.2-3B:
+    steering success tracks o<sub>t</sub> dynamics (same changepoints; steering dies to ~0 after the fork commits);
+    a linear probe on h<sub>t</sub> predicts o<sub>t</sub> far better than a probe on another model reading the same
+    text (KL 0.11 vs 0.19) — the representation carries private, beyond-the-text information about where the model
+    will go; correlation is moderate (R≈0.6), scale is tiny (14 cases, one 3B model, MCQ outcomes).</div>
+    <div class="r">Three consequences for us: conceptual backing (a fork is "not yet committed"); their probe is a
+    candidate resample-free screener — but training the agent version needs replay ground truth, which is what our
+    instrument produces; and "steering fails after commit" is a hard timing constraint on any RSI patch: intervene at
+    or before the decision point, the window closes after.</div>
+  </div>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2608.00218">A Few Neurons Reveal When LLMs Misuse Tools</a></div>
+    <div class="m">Ke et al. · Aug 2026</div>
+    <div class="s">Sparse neurons detect agent tool misuse; selective steering corrects it.</div>
+    <div class="r">Same problem domain, neuron route. Our SAE probe (§5 of the notes) is the feature-level cousin.</div>
+  </div>
+  <div class="paper">
+    <div class="t">Fork concepts entering training: <a href="https://arxiv.org/abs/2606.19236">STARE</a> · <a href="https://arxiv.org/abs/2607.16955">CADENCE</a> · <a href="https://arxiv.org/abs/2609.01601">ACToR</a> · <a href="https://arxiv.org/abs/2608.30158">CPR</a></div>
+    <div class="m">Entropy-critical tokens in GRPO · forking-token boost in distillation · critical-token retrieval · critical-token routing</div>
+    <div class="s">CADENCE names its gradient-concentration mechanism the "forking-token boost". The concept has moved
+    from explanation to training signal in under a year.</div>
+    <div class="r">The training-side convergence of our "forks as self-improvement signal" story.</div>
+  </div>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2607.01507">The Agentic Garden of Forking Paths</a></div>
+    <div class="m">Miao, Pritchard, Zou · 2026 · name collision, different concept</div>
+    <div class="s">Researcher degrees of freedom in scientific analysis (Gelman's forking paths), not token forks.</div>
+    <div class="r">Cite carefully; the overlap is the title.</div>
+  </div>
+</section>
+
+<section>
+  <h2>7 · The methodological audit we must pass first</h2>
+  <div class="paper">
+    <div class="t"><a href="https://arxiv.org/abs/2606.15621">Re-feeding Is Not Replaying: Measuring Replay Noise in Counterfactual Token-Credit Estimation</a></div>
+    <div class="m">Matteson · Jun 2026 · read before trusting any replay number, ours included</div>
+    <div class="s">The standard replay implementation re-feeds the prefix as a fresh prompt. On stock engines that
+    differs from resuming the decode-time KV state by 14–28pp of credit at low-margin decision points, and single-sample
+    credit measurements are 9–23% non-reproducible there. Batch-invariant kernels make all three passes agree.</div>
+    <div class="r">Direct hit on our method's core, and the strongest objection we have to clear: our replay re-feeds
+    prefixes into the cache under SGLang deterministic inference — we need the replica floor under that setting, or a
+    demonstration that re-feed ≡ resume there (queued as follow-up 4 in the notes). It also gives Forking Fast's
+    "some forks are noise" a systems-level mechanism, and makes engine determinism itself a contribution.</div>
+  </div>
+</section>
+
+<section>
+  <h2>8 · Where forkscope sits</h2>
+  <p class="sub">The gap table we position with. Each row is a literature, each right-hand cell is the unoccupied spot.</p>
+  <table class="tbl">
+    <thead><tr><th>dimension</th><th>existing work</th><th>the open slot forkscope takes</th></tr></thead>
+    <tbody>
+    <tr><td>resampling interpretation</td><td>FPA / Forking Fast / Thought Anchors (CoT, MCQ)</td><td>agent tool trajectories; the chat-template vs bare-continuation mismatch, first documented</td></tr>
+    <tr><td>failure attribution</td><td>Who&amp;When family — LLM judges read logs, 14% step accuracy</td><td>measurement-based attribution with ground truth</td></tr>
+    <tr><td>failure classification</td><td>no systematic taxonomy</td><td>consensus error / drift / fork — each with a different intervention point</td></tr>
+    <tr><td>credit assignment</td><td>VinePPO / PRMs, built to train</td><td>the same quantity as observability, serving-native (98.5% radix hit)</td></tr>
+    <tr><td>RSI</td><td>DGM — self-diagnosis by reading logs</td><td>measured fork evidence as the self-improvement signal</td></tr>
+    <tr><td>systems</td><td>all of the above sample via HF/API</td><td>SGLang RadixAttention native, deterministic inference</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<p class="src">FORKSCOPE ANNOTATED LITERATURE · SUMMARIES CONDENSED FROM OUR REVIEW NOTES (2026-08-28 / 09-02) · CODE: GITHUB.COM/ODYSSEUSAILOON/TRACE</p>
+</div>
+</body>
+</html>
